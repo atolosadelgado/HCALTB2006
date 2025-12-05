@@ -32,6 +32,7 @@ file(GLOB sources ${PROJECT_SOURCE_DIR}/src/YourActionInitialization.cc
                   ${PROJECT_SOURCE_DIR}/src/YourEventAction.cc
                   ${PROJECT_SOURCE_DIR}/src/YourSteppingAction.cc
                   ${PROJECT_SOURCE_DIR}/src/YourDetectorConstructor.cc
+                    ${PROJECT_SOURCE_DIR}/src/YourPrimaryGenerator.cc
 
                   )
 file(GLOB headers   ${PROJECT_SOURCE_DIR}/include/YourDetectorConstructor.hh
