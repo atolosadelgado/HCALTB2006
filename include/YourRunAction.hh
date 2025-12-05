@@ -5,6 +5,9 @@
 
 #include <string>
 
+class YourHistogram;
+class YourPrimaryGenerator;
+
 class YourRunAction : public G4UserRunAction {
 
   public:
@@ -15,7 +18,11 @@ class YourRunAction : public G4UserRunAction {
     void   BeginOfRunAction(const G4Run* run) override;
     void   EndOfRunAction(const G4Run* run) override;
 
+    void SetPrimaryGenerator(YourPrimaryGenerator * g);
+
     std::string _ofilename;
+    YourHistogram * fHenergyResponse;
+    YourPrimaryGenerator * fPrimaryGenerator;
 };
 
 #endif
