@@ -17,11 +17,13 @@ YourEventAction::~YourEventAction() {
 }
 
 void YourEventAction::BeginOfEventAction(const G4Event* /*anEvent*/) {
+  visible_energy = 0;
 
 }
 
 
-void YourEventAction::EndOfEventAction(const G4Event* evt) {
+void YourEventAction::EndOfEventAction(const G4Event* /*evt*/) {
+  fRunAction->FillEventEnergy(visible_energy);
 
 }
 

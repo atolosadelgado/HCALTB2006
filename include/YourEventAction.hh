@@ -15,9 +15,13 @@ public:
   void BeginOfEventAction(const G4Event* evt) override;
   void EndOfEventAction(const G4Event* evt) override;
 
+  // add energy, natural units
+  void AddVisibleEnergy(double e){visible_energy+=e;}
+
 private:
   YourRunAction * fRunAction;
   YourPrimaryGenerator * fPrimaryGenerator;
+  double visible_energy;
 };
 
 #endif

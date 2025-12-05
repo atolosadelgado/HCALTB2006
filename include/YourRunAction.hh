@@ -20,6 +20,8 @@ class YourRunAction : public G4UserRunAction {
 
     void SetPrimaryGenerator(YourPrimaryGenerator * g);
 
+    void FillEventEnergy(double energy_MeV);
+
     std::string _ofilename;
     YourHistogram * fHenergyResponse;
     YourPrimaryGenerator * fPrimaryGenerator;

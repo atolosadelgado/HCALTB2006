@@ -24,6 +24,7 @@ void YourActionInitialization::Build() const {
   // Set UserRunAction
   // run action owns histograms to be written at the end
   YourRunAction* runAction = new YourRunAction(_ofilename);
+  runAction->SetPrimaryGenerator(gen);
   SetUserAction(runAction);
 
   // Set UserEventAction
