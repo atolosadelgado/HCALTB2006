@@ -68,34 +68,13 @@ install(TARGETS gdml_sim DESTINATION bin)
 enable_testing()
 
 add_test(
-    NAME RunGdmlSimMatScan
+    NAME RunGPS
     COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
-            ${CMAKE_SOURCE_DIR}/RunD121_HGCal.gdml
-            original_cuts
-            matscan
+            ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
             FTFP_BERT
-            ${CMAKE_SOURCE_DIR}/gun_matscan.mac
+            ${CMAKE_SOURCE_DIR}/gps4testing.mac
 )
 
-add_test(
-    NAME RunGdmlSimOriginalCuts
-    COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
-            ${CMAKE_SOURCE_DIR}/RunD121_HGCal.gdml
-            original_cuts
-            profile
-            FTFP_BERT
-            ${CMAKE_SOURCE_DIR}/gun.mac
-)
-
-add_test(
-    NAME RunGdmlSimNewCuts
-    COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
-            ${CMAKE_SOURCE_DIR}/RunD121_HGCal.gdml
-            new_cuts
-            profile
-            FTFP_BERT
-            ${CMAKE_SOURCE_DIR}/gun.mac
-)
-set_tests_properties(RunGdmlSimNewCuts PROPERTIES
+set_tests_properties(RunGPS PROPERTIES
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
