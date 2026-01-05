@@ -35,5 +35,7 @@ void YourActionInitialization::Build() const {
 
   // Set UserSteppingAction
   // steping action updates histograms owned by event action, for energy deposited and shower width
-  SetUserAction( new YourSteppingAction(eventAction) );
+  YourSteppingAction * steppingAction = new YourSteppingAction(eventAction);
+  runAction->SetSteppingAction(steppingAction);
+  SetUserAction( steppingAction );
 }

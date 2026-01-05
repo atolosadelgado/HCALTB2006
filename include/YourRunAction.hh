@@ -5,8 +5,9 @@
 
 #include <string>
 
-class YourHistogram;
+class HistoEnergyResponse;
 class YourPrimaryGenerator;
+class YourSteppingAction;
 
 class YourRunAction : public G4UserRunAction {
 
@@ -19,12 +20,15 @@ class YourRunAction : public G4UserRunAction {
     void   EndOfRunAction(const G4Run* run) override;
 
     void SetPrimaryGenerator(YourPrimaryGenerator * g);
+    void SetSteppingAction(YourSteppingAction * s);
 
-    void FillEventEnergy(double energy_MeV);
+    void FillEventEnergyECAL(double energy_MeV);
+    void FillEventEnergyHCAL(double energy_MeV);
 
     std::string _ofilename;
-    YourHistogram * fHenergyResponse;
+    HistoEnergyResponse * fHenergyResponse;
     YourPrimaryGenerator * fPrimaryGenerator;
+    YourSteppingAction * fSteppingAction;
 };
 
 #endif

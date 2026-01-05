@@ -17,13 +17,16 @@ YourEventAction::~YourEventAction() {
 }
 
 void YourEventAction::BeginOfEventAction(const G4Event* /*anEvent*/) {
-  visible_energy = 0;
+  visible_energy_ecal = 0;
+  visible_energy_hcal = 0;
 
 }
 
 
 void YourEventAction::EndOfEventAction(const G4Event* /*evt*/) {
-  fRunAction->FillEventEnergy(visible_energy);
+  fRunAction->FillEventEnergyECAL(visible_energy_ecal);
+  fRunAction->FillEventEnergyHCAL(visible_energy_hcal);
+
 
 }
 

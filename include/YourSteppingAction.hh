@@ -4,6 +4,7 @@
 #include "G4UserSteppingAction.hh"
 
 class YourEventAction;
+class G4Region;
 
 class YourSteppingAction : public G4UserSteppingAction {
   public:
@@ -11,10 +12,14 @@ class YourSteppingAction : public G4UserSteppingAction {
     ~YourSteppingAction() override;
 
     void UserSteppingAction(const G4Step* step) override;
+    void SetEcalRegion(G4Region * r){ecal_region = r;}
+    void SetHcalRegion(G4Region * r){hcal_region = r;}
 
   private:
 
     YourEventAction*             fYourEventAction;
+    G4Region * ecal_region;
+    G4Region * hcal_region;
 };
 
 #endif

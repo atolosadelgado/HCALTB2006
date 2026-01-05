@@ -16,12 +16,14 @@ public:
   void EndOfEventAction(const G4Event* evt) override;
 
   // add energy, natural units
-  void AddVisibleEnergy(double e){visible_energy+=e;}
+  void AddVisibleEnergyECAL(double e){visible_energy_ecal+=e;}
+  void AddVisibleEnergyHCAL(double e){visible_energy_hcal+=e;}
 
 private:
   YourRunAction * fRunAction;
   YourPrimaryGenerator * fPrimaryGenerator;
-  double visible_energy;
+  double visible_energy_ecal;
+  double visible_energy_hcal;
 };
 
 #endif
