@@ -33,6 +33,7 @@ file(GLOB sources ${PROJECT_SOURCE_DIR}/src/YourActionInitialization.cc
                   ${PROJECT_SOURCE_DIR}/src/YourSteppingAction.cc
                   ${PROJECT_SOURCE_DIR}/src/YourDetectorConstructor.cc
                     ${PROJECT_SOURCE_DIR}/src/YourPrimaryGenerator.cc
+                    ${PROJECT_SOURCE_DIR}/src/HistoEnergyResponse.cc
 
                   )
 file(GLOB headers   ${PROJECT_SOURCE_DIR}/include/YourDetectorConstructor.hh
@@ -41,6 +42,7 @@ file(GLOB headers   ${PROJECT_SOURCE_DIR}/include/YourDetectorConstructor.hh
                     ${PROJECT_SOURCE_DIR}/include/YourEventAction.hh
                     ${PROJECT_SOURCE_DIR}/include/YourSteppingAction.hh
                     ${PROJECT_SOURCE_DIR}/include/YourPrimaryGenerator.hh
+                    ${PROJECT_SOURCE_DIR}/include/HistoEnergyResponse.hh
                     )
 
 #----------------------------------------------------------------------------
