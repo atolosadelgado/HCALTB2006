@@ -5,7 +5,17 @@
 #include <stdexcept>
 #include <cmath>
 
+#include "TH1.h"
+
+
 class YourHistogram {
+private:
+    int nbins_;
+    double xmin_;
+    double xmax_;
+    double binWidth_;
+    std::vector<int> bins_;
+
 public:
     YourHistogram(int nbins, double xmin, double xmax)
         : nbins_(nbins), xmin_(xmin), xmax_(xmax), bins_(nbins, 0)
@@ -111,17 +121,20 @@ public:
         return sigma / std::sqrt(sumW);
     }
 
+    void FillTH1(TH1 * h)
+    {
+        for (int i = 0; i < nbins_; ++i) {
+            h->SetBinContent(i + 1, bins_[i]);
+        }
+    }
+
+
     int getNBins() const { return nbins_; }
     double getXMin() const { return xmin_; }
     double getXMax() const { return xmax_; }
     double getBinWidth() const { return binWidth_; }
 
-private:
-    int nbins_;
-    double xmin_;
-    double xmax_;
-    double binWidth_;
-    std::vector<int> bins_;
+
 };
 
 #endif
