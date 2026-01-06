@@ -75,6 +75,7 @@ add_test(
             ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
             FTFP_BERT
             ${CMAKE_SOURCE_DIR}/gps4testing.mac
+            kk.root
 )
 
 set_tests_properties(RunGPS PROPERTIES

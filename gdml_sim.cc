@@ -35,9 +35,7 @@ std::string get_basename(const std::string& filepath) {
 
 void help(int argc, char** argv){
     std::cout << "Usage:" << std::endl;
-    std::cout << "\t" << argv[0] << " <geometry.gdml> <physics list> <gun.mac>" << std::endl;
-    std::cout << "\t  <cut_type>: extra regions defined inside the application. Options: original_cuts, new_cuts, no_cuts" << std::endl;
-    std::cout << "\t  <action_type>: action for the Geant4 application. Options: secondaries (for just stats of secondaries), secondaries_permaterial, profile (for shower profile), matscan" << std::endl;
+    std::cout << "\t" << argv[0] << " <geometry.gdml> <physics list> <gun.mac> <ofilenmae>" << std::endl;
     std::cout << "\t  <physics option>: name of physics list to be used (e.g., FTFP_BERT_EMZ)" << std::endl;
 }
 
@@ -46,24 +44,33 @@ int main(int argc, char** argv)
     help(argc, argv);
 
     auto geometry_filename = argv[1];
-    auto physics_list_name = std::string( argv[2] );
+    G4String physics_list_name = G4String( argv[2] );
     bool vis_mode = false;
 
     G4String g4macro_filename;
 
     // if g4 macro file is provided
-    if( argc == 4 )
+    if( argc >= 4 )
         g4macro_filename =G4String( argv[3] );
     else
         vis_mode = true;
 
     // create ofilename based on input parameters
-    std::string ofilename = "meanEnergyResponse";
+    G4String ofilename = "meanEnergyResponse";
         ofilename += "_";
         ofilename += get_basename(geometry_filename);
         ofilename += "_";
         ofilename += physics_list_name;
         ofilename += ".root";
+    if( argc >= 5 )
+        ofilename = G4String( argv[4] );
+
+    std::cout << "Configuration:\n";
+    std::cout << "\tGDML: "<< geometry_filename << "\n";
+    std::cout << "\tPL: "<< physics_list_name << "\n";
+    std::cout << "\tMac: "<< g4macro_filename << "\n";
+    std::cout << "\tofile: "<< ofilename<< "\n";
+
 
     // create run manager
     auto* runManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::SerialOnly);
@@ -79,7 +86,7 @@ int main(int argc, char** argv)
     runManager->SetUserInitialization(physics_list);
 
     // create user actions
-    runManager->SetUserInitialization(new YourActionInitialization(geometry_filename));
+    runManager->SetUserInitialization(new YourActionInitialization(ofilename));
 
     // initialize detector and physics
     runManager->Initialize();
