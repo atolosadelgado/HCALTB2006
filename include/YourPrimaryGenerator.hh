@@ -24,6 +24,8 @@ public:
     G4double y0_mm{-999.};
     G4double E0_MeV{-999.};
 
+    std::string primary_particle_name;
+
 private:
     G4VPrimaryGenerator* fPrimaryGen = nullptr;  // ← único puntero
     SourceType fType;

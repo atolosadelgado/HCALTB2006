@@ -24,5 +24,10 @@ void YourPrimaryGenerator::GeneratePrimaries(G4Event* event)
     x0_mm = vertex->GetPosition().x() / CLHEP::mm;
     y0_mm = vertex->GetPosition().y() / CLHEP::mm;
     E0_MeV = vertex->GetPrimary()->GetKineticEnergy() / CLHEP::MeV;
+
+    if( "" == primary_particle_name )
+    {
+        primary_particle_name = vertex->GetPrimary(0)->GetParticleDefinition()->GetParticleName();
+    }
 }
 
