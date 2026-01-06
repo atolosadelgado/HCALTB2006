@@ -24,6 +24,11 @@ class YourRunAction : public G4UserRunAction {
 
     void FillEventEnergy(double ecal_energy, double hcal_energy);
 
+    void ConstructOutputTree();
+    void BeginOutputTree();
+    void EndOutputTree();
+    void FillOutputTree(double ecal_eresponse, double hcal_eresponse);
+
     std::string _ofilename;
     HistoEnergyResponse * fHenergyResponse;
     YourPrimaryGenerator * fPrimaryGenerator;

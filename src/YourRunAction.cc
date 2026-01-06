@@ -9,6 +9,8 @@
 #include "G4RegionStore.hh"
 #include <iostream>
 
+#include "G4AnalysisManager.hh"
+
 #include "TFile.h"
 
 
@@ -17,6 +19,7 @@ YourRunAction::YourRunAction(std::string ofilename):
           _ofilename(ofilename)
           {
               fHenergyResponse = new HistoEnergyResponse("HCAL2006TB", 10000,0.,1.);
+              this->ConstructOutputTree();
         }
 
 
@@ -32,6 +35,8 @@ void YourRunAction::BeginOfRunAction(const G4Run* ) {
         G4Region * hcal_region =  G4RegionStore::GetInstance()->GetRegion("HcalRegion");
         if(nullptr == hcal_region) throw std::runtime_error("No HCAL region found in G4RegionStore");
         else                       fSteppingAction->SetHcalRegion(hcal_region);
+
+        this->BeginOutputTree();
 }
 
 void YourRunAction::EndOfRunAction(const G4Run* ){
@@ -51,10 +56,13 @@ void YourRunAction::EndOfRunAction(const G4Run* ){
 //     ofilename += std::to_string( int(fPrimaryGenerator->E0_MeV/1000.) );
 //     ofilename += ".root";
 
-    TFile * ofile = TFile::Open( _ofilename.c_str() , "recreate");
+    // this will overwrite existing file
+    this->EndOutputTree();
+    auto analysisManager = G4AnalysisManager::Instance();
+    // update root file with histograms
+    TFile * ofile = TFile::Open( analysisManager->GetFileName().c_str() , "update");
     fHenergyResponse->write(ofile);
     ofile->Close();
-
 }
 
 void YourRunAction::SetPrimaryGenerator(YourPrimaryGenerator* g)
@@ -81,5 +89,41 @@ void YourRunAction::FillEventEnergy(double ecal_energy, double hcal_energy)
     fHenergyResponse->hEHcalos->Fill(ecal_eventEnergyResponse, hcal_eventEnergyResponse);
 
 
-
+    this->FillOutputTree(ecal_eventEnergyResponse, hcal_eventEnergyResponse);
 }
+
+void YourRunAction::ConstructOutputTree()
+{
+  auto analysisManager = G4AnalysisManager::Instance();
+
+  analysisManager->SetDefaultFileType("root");
+  analysisManager->SetVerboseLevel(1);
+  analysisManager->SetNtupleMerging(true);  // important for MT
+
+  analysisManager->CreateNtuple("tree", "tree for HCAL 2006 TB experiment");
+  analysisManager->CreateNtupleDColumn("ECAL_eresponse");
+  analysisManager->CreateNtupleDColumn("HCAL_eresponse");
+  analysisManager->FinishNtuple();
+}
+
+void YourRunAction::BeginOutputTree()
+{
+    auto analysisManager = G4AnalysisManager::Instance();
+    analysisManager->OpenFile(_ofilename);
+}
+
+void YourRunAction::EndOutputTree()
+{
+    auto analysisManager = G4AnalysisManager::Instance();
+    analysisManager->Write();
+    analysisManager->CloseFile();
+}
+
+void YourRunAction::FillOutputTree(double ecal_eresponse, double hcal_eresponse)
+{
+    auto analysisManager = G4AnalysisManager::Instance();
+    analysisManager->FillNtupleDColumn(0, ecal_eresponse);
+    analysisManager->FillNtupleDColumn(1, hcal_eresponse);
+    analysisManager->AddNtupleRow();
+}
+
