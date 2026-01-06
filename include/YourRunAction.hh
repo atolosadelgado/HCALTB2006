@@ -22,13 +22,14 @@ class YourRunAction : public G4UserRunAction {
     void SetPrimaryGenerator(YourPrimaryGenerator * g);
     void SetSteppingAction(YourSteppingAction * s);
 
-    void FillEventEnergyECAL(double energy_MeV);
-    void FillEventEnergyHCAL(double energy_MeV);
+    void FillEventEnergy(double ecal_energy, double hcal_energy);
 
     std::string _ofilename;
     HistoEnergyResponse * fHenergyResponse;
     YourPrimaryGenerator * fPrimaryGenerator;
     YourSteppingAction * fSteppingAction;
+
+    int verbosity = 0;
 };
 
 #endif

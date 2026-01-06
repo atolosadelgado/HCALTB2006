@@ -11,11 +11,12 @@
 
 #include "TFile.h"
 
+
 YourRunAction::YourRunAction(std::string ofilename):
           G4UserRunAction(),
           _ofilename(ofilename)
           {
-              fHenergyResponse = new HistoEnergyResponse("HCAL2006TB", 100,0.,1.);
+              fHenergyResponse = new HistoEnergyResponse("HCAL2006TB", 10000,0.,1.);
         }
 
 
@@ -34,14 +35,23 @@ void YourRunAction::BeginOfRunAction(const G4Run* ) {
 }
 
 void YourRunAction::EndOfRunAction(const G4Run* ){
-    double mean = fHenergyResponse->ecal->mean();
-    double meanError = fHenergyResponse->ecal->meanError();
-    std::cout << "ECAL Energy response (mean, mean error): " << mean << "\t" << meanError << std::endl;
-    mean = fHenergyResponse->hcal->mean();
-    meanError = fHenergyResponse->hcal->meanError();
-    std::cout << "HCAL Energy response (mean, mean error): " << mean << "\t" << meanError << std::endl;
+    if( 0 < verbosity )
+    {
+        double mean = fHenergyResponse->ecal->mean();
+        double meanError = fHenergyResponse->ecal->meanError();
+        std::cout << "ECAL Energy response (mean, mean error): " << mean << "\t" << meanError << std::endl;
+        mean = fHenergyResponse->hcal->mean();
+        meanError = fHenergyResponse->hcal->meanError();
+        std::cout << "HCAL Energy response (mean, mean error): " << mean << "\t" << meanError << std::endl;
+    }
 
-    TFile * ofile = TFile::Open( "test.root" , "recreate");
+//     std::string ofilename = "HCAL2006TB_";
+//     ofilename += fPrimaryGenerator->primary_particle_name;
+//     ofilename += "_";
+//     ofilename += std::to_string( int(fPrimaryGenerator->E0_MeV/1000.) );
+//     ofilename += ".root";
+
+    TFile * ofile = TFile::Open( _ofilename.c_str() , "recreate");
     fHenergyResponse->write(ofile);
     ofile->Close();
 
@@ -57,19 +67,19 @@ void YourRunAction::SetSteppingAction ( YourSteppingAction* s )
     fSteppingAction = s;
 }
 
-
-void YourRunAction::FillEventEnergyECAL(double energy)
+void YourRunAction::FillEventEnergy(double ecal_energy, double hcal_energy)
 {
-    double energy_MeV = energy / CLHEP::MeV;
-    double eventEnergyResponse = energy_MeV / fPrimaryGenerator->E0_MeV;
-    fHenergyResponse->ecal->fill(eventEnergyResponse);
+
+    double ecal_energy_MeV = ecal_energy / CLHEP::MeV;
+    double ecal_eventEnergyResponse = ecal_energy_MeV / fPrimaryGenerator->E0_MeV;
+    fHenergyResponse->ecal->fill(ecal_eventEnergyResponse);
+
+    double hcal_energy_MeV = hcal_energy / CLHEP::MeV;
+    double hcal_eventEnergyResponse = hcal_energy_MeV / fPrimaryGenerator->E0_MeV;
+    fHenergyResponse->hcal->fill(hcal_eventEnergyResponse);
+
+    fHenergyResponse->hEHcalos->Fill(ecal_eventEnergyResponse, hcal_eventEnergyResponse);
+
+
+
 }
-
-
-void YourRunAction::FillEventEnergyHCAL(double energy)
-{
-    double energy_MeV = energy / CLHEP::MeV;
-    double eventEnergyResponse = energy_MeV / fPrimaryGenerator->E0_MeV;
-    fHenergyResponse->hcal->fill(eventEnergyResponse);
-}
-

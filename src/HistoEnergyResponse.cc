@@ -5,6 +5,10 @@ HistoEnergyResponse::HistoEnergyResponse(std::string name, int nbins, double xmi
     ecal = std::make_unique<YourHistogram>(nbins, xmin, xmax);
     hcal = std::make_unique<YourHistogram>(nbins, xmin, xmax);
     fname = name;
+    std::string h2title = "visible energy in ECAL vs HCAL";
+    std::string h2name = fname + "_ECAL_vs_HCAL";
+    hEHcalos = std::make_unique<TH2D>( h2name.c_str() , h2title.c_str(), nbins, xmin, xmax, nbins, xmin, xmax  );
+    hEHcalos->SetDirectory(0);
 }
 
 void HistoEnergyResponse::write ( TDirectory* d )
@@ -22,4 +26,6 @@ void HistoEnergyResponse::write ( TDirectory* d )
     hcal->FillTH1(hHCAL);
     hHCAL->SetDirectory(d);
     hHCAL->Write();
+
+    hEHcalos->Write();
 }

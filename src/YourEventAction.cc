@@ -16,18 +16,18 @@ YourEventAction::~YourEventAction() {
 
 }
 
-void YourEventAction::BeginOfEventAction(const G4Event* /*anEvent*/) {
+void YourEventAction::BeginOfEventAction(const G4Event* anEvent) {
   visible_energy_ecal = 0;
   visible_energy_hcal = 0;
+
+  if( anEvent->GetEventID() % 10 == 0 )
+    std::cout << "Event\t" << anEvent->GetEventID() << std::endl;
 
 }
 
 
 void YourEventAction::EndOfEventAction(const G4Event* /*evt*/) {
-  fRunAction->FillEventEnergyECAL(visible_energy_ecal);
-  fRunAction->FillEventEnergyHCAL(visible_energy_hcal);
-
-
+  fRunAction->FillEventEnergy(visible_energy_ecal,visible_energy_hcal);
 }
 
 
