@@ -36,12 +36,14 @@ std::string get_basename(const std::string& filepath) {
 void help(int argc, char** argv){
     std::cout << "Usage:" << std::endl;
     std::cout << "\t" << argv[0] << " <geometry.gdml> <physics list> <gun.mac> <ofilenmae>" << std::endl;
-    std::cout << "\t  <physics option>: name of physics list to be used (e.g., FTFP_BERT_EMZ)" << std::endl;
+    std::cout << "\t  <physics list>: name of physics list to be used (e.g., FTFP_BERT_EMZ)" << std::endl;
+    std::cout << "\t  <gun.mac file>: file with particle gun or GPS" << std::endl;
 }
 
 int main(int argc, char** argv)
 {
     help(argc, argv);
+    if( 2 > argc ) return -1;
 
     auto geometry_filename = argv[1];
     G4String physics_list_name = G4String( argv[2] );
@@ -108,6 +110,8 @@ int main(int argc, char** argv)
     }
     else
     {
+        UImanager->ApplyCommand("/control/alias PARTICLE_ENERGY_GEV 50");
+        UImanager->ApplyCommand("/control/alias PARTICLE_NAME pi-");
         G4String command = "/control/execute ";
         UImanager->ApplyCommand(command + g4macro_filename);
     }

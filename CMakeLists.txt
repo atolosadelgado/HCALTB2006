@@ -81,3 +81,15 @@ add_test(
 set_tests_properties(RunGPS PROPERTIES
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
+
+add_test(
+    NAME RunGPS_templateMac
+    COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
+            ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
+            FTFP_BERT
+            ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
+)
+
+set_tests_properties(RunGPS_templateMac PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
