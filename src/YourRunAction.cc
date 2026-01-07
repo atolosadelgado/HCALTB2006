@@ -36,6 +36,14 @@ void YourRunAction::BeginOfRunAction(const G4Run* ) {
         if(nullptr == hcal_region) throw std::runtime_error("No HCAL region found in G4RegionStore");
         else                       fSteppingAction->SetHcalRegion(hcal_region);
 
+        G4Material * ecal_sensitivemat = G4Material::GetMaterial("E_PbWO4");
+        if(nullptr == ecal_sensitivemat)  throw std::runtime_error("No ECAL sensitive material (E_PbWO4) found");
+        else                              fSteppingAction->SetEcalSensMat(ecal_sensitivemat);
+
+        G4Material * hcal_sensitivemat = G4Material::GetMaterial("Scintillator");
+        if(nullptr == hcal_sensitivemat)  throw std::runtime_error("No HCAL sensitive material (Scintillator) found");
+        else                              fSteppingAction->SetHcalSensMat(hcal_sensitivemat);
+
         this->BeginOutputTree();
 }
 

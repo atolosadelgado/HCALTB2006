@@ -19,14 +19,15 @@ YourSteppingAction::~YourSteppingAction() {
 #include "G4LossTableManager.hh"
 #include "G4EmSaturation.hh"
 #include "G4Step.hh"
+#include "G4Material.hh"
 
 void YourSteppingAction::UserSteppingAction(const G4Step* theStep) {
 
     G4Region * current_region = theStep->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume()->GetRegion();
-    auto matname = theStep->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume()->GetMaterial()->GetName();
-    if( ecal_region == current_region && "E_PbWO4" == matname)
+    auto mat = theStep->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume()->GetMaterial();
+    if( ecal_region == current_region && ecal_sensitivemat == mat)
         fYourEventAction->AddVisibleEnergyECAL(theStep->GetTotalEnergyDeposit());
-    if( hcal_region == current_region && "Scintillator" == matname)
+    if( hcal_region == current_region && hcal_sensitivemat == mat)
     {
     G4double evis = G4LossTableManager::Instance()
                         ->EmSaturation()
