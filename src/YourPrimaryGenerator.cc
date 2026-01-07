@@ -25,6 +25,9 @@ void YourPrimaryGenerator::GeneratePrimaries(G4Event* event)
     y0_mm = vertex->GetPosition().y() / CLHEP::mm;
     E0_MeV = vertex->GetPrimary()->GetKineticEnergy() / CLHEP::MeV;
 
+    if(0 >= E0_MeV) throw std::runtime_error("YourPrimaryGenerator::GeneratePrimaries cannot generate negative or zero energy particles");
+
+
     if( "" == primary_particle_name )
     {
         primary_particle_name = vertex->GetPrimary(0)->GetParticleDefinition()->GetParticleName();
