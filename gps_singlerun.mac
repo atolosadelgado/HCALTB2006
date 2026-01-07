@@ -21,7 +21,7 @@
 # 2. Energy (GeV)
 ###############################################
 
-/gps/energy PARTICLE_ENERGY_GEV GeV
+/gps/energy {PARTICLE_ENERGY_GEV} GeV
 
 ###############################################
 # 3. Position of beam spot
