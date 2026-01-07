@@ -34,6 +34,7 @@ file(GLOB sources ${PROJECT_SOURCE_DIR}/src/YourActionInitialization.cc
                   ${PROJECT_SOURCE_DIR}/src/YourDetectorConstructor.cc
                     ${PROJECT_SOURCE_DIR}/src/YourPrimaryGenerator.cc
                     ${PROJECT_SOURCE_DIR}/src/HistoEnergyResponse.cc
+                    ${PROJECT_SOURCE_DIR}/src/YourInputArgsParser.cc
 
                   )
 file(GLOB headers   ${PROJECT_SOURCE_DIR}/include/YourDetectorConstructor.hh
@@ -43,6 +44,8 @@ file(GLOB headers   ${PROJECT_SOURCE_DIR}/include/YourDetectorConstructor.hh
                     ${PROJECT_SOURCE_DIR}/include/YourSteppingAction.hh
                     ${PROJECT_SOURCE_DIR}/include/YourPrimaryGenerator.hh
                     ${PROJECT_SOURCE_DIR}/include/HistoEnergyResponse.hh
+                    ${PROJECT_SOURCE_DIR}/include/YourInputArgsParser.hh
+
                     )
 
 #----------------------------------------------------------------------------
@@ -68,28 +71,40 @@ target_link_libraries(gdml_sim ${Geant4_LIBRARIES}  ${ROOT_LIBRARIES})
 install(TARGETS gdml_sim DESTINATION bin)
 
 enable_testing()
+#----------------------
+# Test hardcoding properties within the macro file
+SET( test_name "test_RunGPS_hardcoded" )
 
 add_test(
-    NAME RunGPS
+    NAME ${test_name}
     COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
-            ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
-            FTFP_BERT
-            ${CMAKE_SOURCE_DIR}/gps4testing.mac
-            kk.root
+            -g ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
+            -pl FTFP_BERT
+            -m ${CMAKE_SOURCE_DIR}/gps4testing.mac
+            -o kk.root
 )
 
-set_tests_properties(RunGPS PROPERTIES
+set_tests_properties(${test_name} PROPERTIES
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
+SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error" TIMEOUT 600)
 
+#----------------------
+# Test using alias within the macro file
+
+SET( test_name "test_RunGPS_templateMac" )
 add_test(
-    NAME RunGPS_templateMac
+    NAME ${test_name}
     COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
-            ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
-            FTFP_BERT
-            ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
+            -g ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
+            -pl FTFP_BERT
+            -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
+            -pname pi-
+            -penergy 50
+            -nevents 5
 )
 
-set_tests_properties(RunGPS_templateMac PROPERTIES
+set_tests_properties(${test_name} PROPERTIES
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
+SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error" TIMEOUT 600)

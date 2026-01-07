@@ -4,6 +4,7 @@
 
 #/control/alias PARTICLE_ENERGY_GEV 50
 #/control/alias PARTICLE_NAME pi-
+#/control/alias NEVENTS 5
 
 /control/verbose 1
 /run/verbose 1
@@ -60,4 +61,4 @@
 ###################
 # Ready to shoot!
 ###################
-/run/beamOn 5
+/run/beamOn {NEVENTS}

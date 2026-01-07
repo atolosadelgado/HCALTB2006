@@ -33,62 +33,38 @@ std::string get_basename(const std::string& filepath) {
 
 //________________________________________________________________________________
 
-void help(int argc, char** argv){
-    std::cout << "Usage:" << std::endl;
-    std::cout << "\t" << argv[0] << " <geometry.gdml> <physics list> <gun.mac> <ofilenmae>" << std::endl;
-    std::cout << "\t  <physics list>: name of physics list to be used (e.g., FTFP_BERT_EMZ)" << std::endl;
-    std::cout << "\t  <gun.mac file>: file with particle gun or GPS" << std::endl;
-}
+#include "YourInputArgsParser.hh"
 
 int main(int argc, char** argv)
 {
-    help(argc, argv);
-    if( 2 > argc ) return -1;
+    YourInputArgParser parser(argc, argv);
 
-    auto geometry_filename = argv[1];
-    G4String physics_list_name = G4String( argv[2] );
-    bool vis_mode = false;
+    if (!parser.parse())
+    {
+        YourInputArgParser::help(argv[0]);
+        return -1;
+    }
 
-    G4String g4macro_filename;
+    const YourInputArgs & a = parser.args();
 
-    // if g4 macro file is provided
-    if( argc >= 4 )
-        g4macro_filename =G4String( argv[3] );
-    else
-        vis_mode = true;
-
-    // create ofilename based on input parameters
-    G4String ofilename = "meanEnergyResponse";
-        ofilename += "_";
-        ofilename += get_basename(geometry_filename);
-        ofilename += "_";
-        ofilename += physics_list_name;
-        ofilename += ".root";
-    if( argc >= 5 )
-        ofilename = G4String( argv[4] );
-
-    std::cout << "Configuration:\n";
-    std::cout << "\tGDML: "<< geometry_filename << "\n";
-    std::cout << "\tPL: "<< physics_list_name << "\n";
-    std::cout << "\tMac: "<< g4macro_filename << "\n";
-    std::cout << "\tofile: "<< ofilename<< "\n";
+    std::cout << a;
 
 
     // create run manager
     auto* runManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::SerialOnly);
 
     // create detector from GDML file
-    YourDetectorConstructor * user_detector_constructor = new YourDetectorConstructor(geometry_filename);
+    YourDetectorConstructor * user_detector_constructor = new YourDetectorConstructor(a.geometry);
     runManager->SetUserInitialization(user_detector_constructor);
 
     // create Physics factory
     G4PhysListFactory pl_factory;
-    auto physics_list = pl_factory.GetReferencePhysList( physics_list_name );
-    if( ! physics_list ) throw std::runtime_error("No physics list named <"+ physics_list_name+"> found");
+    auto physics_list = pl_factory.GetReferencePhysList( a.physics_list );
+    if( ! physics_list ) throw std::runtime_error("No physics list named <"+ a.physics_list+"> found");
     runManager->SetUserInitialization(physics_list);
 
     // create user actions
-    runManager->SetUserInitialization(new YourActionInitialization(ofilename));
+    runManager->SetUserInitialization(new YourActionInitialization("ofilename_not_used"));
 
     // initialize detector and physics
     runManager->Initialize();
@@ -101,7 +77,7 @@ int main(int argc, char** argv)
     G4VisManager* visManager = new G4VisExecutive;
     visManager->Initialize();
 
-    if(vis_mode)
+    if( true == a.vis_mode )
     {
         G4UIExecutive* ui = new G4UIExecutive(argc, argv);
         UImanager->ApplyCommand("/control/execute vis.mac");
@@ -110,10 +86,16 @@ int main(int argc, char** argv)
     }
     else
     {
-        UImanager->ApplyCommand("/control/alias PARTICLE_ENERGY_GEV 50");
-        UImanager->ApplyCommand("/control/alias PARTICLE_NAME pi-");
-        G4String command = "/control/execute ";
-        UImanager->ApplyCommand(command + g4macro_filename);
+        UImanager->ApplyCommand(
+            "/control/alias PARTICLE_ENERGY_GEV " +
+            std::to_string(a.particle_energy_GeV)
+        );
+        UImanager->ApplyCommand("/control/alias PARTICLE_NAME " + a.particle_name);
+        UImanager->ApplyCommand(
+            "/control/alias NEVENTS " +
+            std::to_string(a.nevents)
+        );
+        UImanager->ApplyCommand("/control/execute " + a.macro);
     }
 
 
