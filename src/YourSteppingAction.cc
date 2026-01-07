@@ -16,8 +16,9 @@ YourSteppingAction::~YourSteppingAction() {
 
 }
 
-
-std::vector<std::string> sensitive_material_v = {"Scintillator", "E_PbWO4" };
+#include "G4LossTableManager.hh"
+#include "G4EmSaturation.hh"
+#include "G4Step.hh"
 
 void YourSteppingAction::UserSteppingAction(const G4Step* theStep) {
 
@@ -26,5 +27,15 @@ void YourSteppingAction::UserSteppingAction(const G4Step* theStep) {
     if( ecal_region == current_region && "E_PbWO4" == matname)
         fYourEventAction->AddVisibleEnergyECAL(theStep->GetTotalEnergyDeposit());
     if( hcal_region == current_region && "Scintillator" == matname)
-        fYourEventAction->AddVisibleEnergyHCAL(theStep->GetTotalEnergyDeposit());
+    {
+    G4double evis = G4LossTableManager::Instance()
+                        ->EmSaturation()
+                        ->VisibleEnergyDepositionAtAStep(theStep);
+
+        fYourEventAction->AddVisibleEnergyHCAL(evis);
+//         if( 0 < theStep->GetTotalEnergyDeposit() )
+//             std::cout << "\tevis/total = " << evis / theStep->GetTotalEnergyDeposit() << std::endl;
+//             std::cout << "\tNIEL/total = " << theStep->GetNonIonizingEnergyDeposit() / theStep->GetTotalEnergyDeposit() << std::endl;
+//         fYourEventAction->AddVisibleEnergyHCAL(theStep->GetTotalEnergyDeposit());
+    }
 }
