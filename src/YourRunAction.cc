@@ -96,9 +96,9 @@ void YourRunAction::ConstructOutputTree()
 {
   auto analysisManager = G4AnalysisManager::Instance();
 
-  analysisManager->SetDefaultFileType("root");
+//   analysisManager->SetDefaultFileType("root");
   analysisManager->SetVerboseLevel(1);
-  analysisManager->SetNtupleMerging(true);  // important for MT
+//   analysisManager->SetNtupleMerging(true);  // important for MT
 
   analysisManager->CreateNtuple("tree", "tree for HCAL 2006 TB experiment");
   analysisManager->CreateNtupleDColumn("ECAL_eresponse");
@@ -109,7 +109,7 @@ void YourRunAction::ConstructOutputTree()
 void YourRunAction::BeginOutputTree()
 {
     auto analysisManager = G4AnalysisManager::Instance();
-    analysisManager->OpenFile(_ofilename);
+//     analysisManager->OpenFile(_ofilename);
 }
 
 void YourRunAction::EndOutputTree()
