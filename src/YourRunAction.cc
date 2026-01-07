@@ -78,6 +78,8 @@ void YourRunAction::SetSteppingAction ( YourSteppingAction* s )
 void YourRunAction::FillEventEnergy(double ecal_energy, double hcal_energy)
 {
 
+    if(0 > ecal_energy || 0 > hcal_energy) throw std::runtime_error("YourRunAction::FillEventEnergy cannot save negative energy");
+
     double ecal_energy_MeV = ecal_energy / CLHEP::MeV;
     double ecal_eventEnergyResponse = ecal_energy_MeV / fPrimaryGenerator->E0_MeV;
     fHenergyResponse->ecal->fill(ecal_eventEnergyResponse);
@@ -95,8 +97,7 @@ void YourRunAction::FillEventEnergy(double ecal_energy, double hcal_energy)
 void YourRunAction::ConstructOutputTree()
 {
   auto analysisManager = G4AnalysisManager::Instance();
-
-//   analysisManager->SetDefaultFileType("root");
+//   analysisManager->SetDefaultFileType("root"); // set in macrofile
   analysisManager->SetVerboseLevel(1);
 //   analysisManager->SetNtupleMerging(true);  // important for MT
 
@@ -108,15 +109,16 @@ void YourRunAction::ConstructOutputTree()
 
 void YourRunAction::BeginOutputTree()
 {
-    auto analysisManager = G4AnalysisManager::Instance();
-//     analysisManager->OpenFile(_ofilename);
+    G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+    analysisManager->OpenFile(); // name set in macrofile
 }
 
 void YourRunAction::EndOutputTree()
 {
-    auto analysisManager = G4AnalysisManager::Instance();
+    G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
     analysisManager->Write();
     analysisManager->CloseFile();
+
 }
 
 void YourRunAction::FillOutputTree(double ecal_eresponse, double hcal_eresponse)
