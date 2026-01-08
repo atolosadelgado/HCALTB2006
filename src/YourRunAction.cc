@@ -11,12 +11,15 @@
 
 #include "G4AnalysisManager.hh"
 
+#include "YourInputArgs.hh"
+
 #include "TFile.h"
 
 
-YourRunAction::YourRunAction(std::string ofilename):
+YourRunAction::YourRunAction(std::string ofilename, const YourInputArgs * args):
           G4UserRunAction(),
-          _ofilename(ofilename)
+          _ofilename(ofilename),
+           fInputArgs(args)
           {
               fHenergyResponse = new HistoEnergyResponse("HCAL2006TB", 10000,0.,1.);
               this->ConstructOutputTree();
@@ -118,6 +121,23 @@ void YourRunAction::ConstructOutputTree()
 void YourRunAction::BeginOutputTree()
 {
     G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+    std::string ofilename = analysisManager->GetFileName();
+    const std::string phys = fInputArgs->physics_list;
+
+    // check position of '.'
+    std::size_t dotPos = ofilename.find_last_of('.');
+
+    if (std::string::npos != dotPos ) {
+        // if it has extension
+        std::string basename  = ofilename.substr(0, dotPos);
+        std::string extension = ofilename.substr(dotPos); // including '.'
+
+        ofilename = basename + "_" + phys + extension;
+    } else {
+        // if no extension
+        ofilename = ofilename + "_" + phys;
+    }
+    analysisManager->SetFileName(ofilename);
     analysisManager->OpenFile(); // name set in macrofile
 }
 

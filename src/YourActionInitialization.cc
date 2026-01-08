@@ -6,14 +6,14 @@
 #include "YourSteppingAction.hh"
 
 
-YourActionInitialization::YourActionInitialization(std::string ofilename)
-:   G4VUserActionInitialization(), _ofilename(ofilename){ }
+YourActionInitialization::YourActionInitialization(std::string ofilename, const YourInputArgs * args)
+:   G4VUserActionInitialization(), _ofilename(ofilename),fInputArgs(args){ }
 
 
 YourActionInitialization::~YourActionInitialization() {}
 
 void YourActionInitialization::BuildForMaster() const {
-  SetUserAction(new YourRunAction(_ofilename));
+  SetUserAction(new YourRunAction(_ofilename,fInputArgs));
 }
 
 void YourActionInitialization::Build() const {
@@ -23,7 +23,7 @@ void YourActionInitialization::Build() const {
 
   // Set UserRunAction
   // run action owns histograms to be written at the end
-  YourRunAction* runAction = new YourRunAction(_ofilename);
+  YourRunAction* runAction = new YourRunAction(_ofilename,fInputArgs);
   runAction->SetPrimaryGenerator(gen);
   SetUserAction(runAction);
 

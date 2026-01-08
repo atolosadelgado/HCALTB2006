@@ -8,12 +8,13 @@
 class HistoEnergyResponse;
 class YourPrimaryGenerator;
 class YourSteppingAction;
+class YourInputArgs;
 
 class YourRunAction : public G4UserRunAction {
 
   public:
 
-    YourRunAction(std::string ofilename);
+    YourRunAction(std::string ofilename, const YourInputArgs * args);
     virtual ~YourRunAction();
 
     void   BeginOfRunAction(const G4Run* run) override;
@@ -33,6 +34,7 @@ class YourRunAction : public G4UserRunAction {
     HistoEnergyResponse * fHenergyResponse;
     YourPrimaryGenerator * fPrimaryGenerator;
     YourSteppingAction * fSteppingAction;
+    const YourInputArgs * fInputArgs;
 
     int verbosity = 0;
 };

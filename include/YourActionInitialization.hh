@@ -5,12 +5,12 @@
 #include "G4VUserActionInitialization.hh"
 
 #include <string>
-
+class YourInputArgs;
 class YourActionInitialization : public G4VUserActionInitialization {
 
 public:
 
-    YourActionInitialization(std::string ofilename);
+    YourActionInitialization(std::string ofilename, const YourInputArgs * args);
     ~YourActionInitialization() override;
 
     void Build() const override;
@@ -19,6 +19,7 @@ public:
 
   private:
     std::string _ofilename;
+    const YourInputArgs * fInputArgs;
 };
 
 #endif
