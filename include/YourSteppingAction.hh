@@ -6,6 +6,7 @@
 class YourEventAction;
 class G4Region;
 class G4Material;
+class YourVEMSaturation;
 
 class YourSteppingAction : public G4UserSteppingAction {
   public:
@@ -19,6 +20,8 @@ class YourSteppingAction : public G4UserSteppingAction {
     void SetEcalSensMat(G4Material * m){ecal_sensitivemat = m;}
     void SetHcalSensMat(G4Material * m){hcal_sensitivemat = m;}
 
+    enum emsaturation{none,G4Birk,CMSBirk};
+
   private:
 
     YourEventAction*             fYourEventAction;
@@ -26,6 +29,8 @@ class YourSteppingAction : public G4UserSteppingAction {
     G4Region * hcal_region;
     G4Material * ecal_sensitivemat;
     G4Material * hcal_sensitivemat;
+    // general object that may apply G4 Birk quenching, CMS quadratic quenching or none
+    YourVEMSaturation * fHCAL_emsaturation;
 };
 
 #endif

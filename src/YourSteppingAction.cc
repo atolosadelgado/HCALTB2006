@@ -3,10 +3,19 @@
 #include "G4Step.hh"
 #include "G4RegionStore.hh"
 
+#include "YourEMSaturation.hh"
 
 YourSteppingAction::YourSteppingAction(YourEventAction* evtAction)
 :   G4UserSteppingAction(),
     fYourEventAction(evtAction) {
+
+        emsaturation emsaturation_type = emsaturation::G4Birk;
+        if( emsaturation::CMSBirk == emsaturation_type)
+            fHCAL_emsaturation = new YourEMSaturationCMSBirk;
+        else if (emsaturation::G4Birk == emsaturation_type)
+            fHCAL_emsaturation = new YourEMSaturationG4Birk;
+        else
+            fHCAL_emsaturation = new YourEMSaturationNone;
 
 
     }
@@ -29,9 +38,7 @@ void YourSteppingAction::UserSteppingAction(const G4Step* theStep) {
         fYourEventAction->AddVisibleEnergyECAL(theStep->GetTotalEnergyDeposit());
     if( hcal_region == current_region && hcal_sensitivemat == mat)
     {
-    G4double evis = G4LossTableManager::Instance()
-                        ->EmSaturation()
-                        ->VisibleEnergyDepositionAtAStep(theStep);
+    G4double evis = fHCAL_emsaturation->GetEnergy(theStep);
 
         fYourEventAction->AddVisibleEnergyHCAL(evis);
 //         if( 0 < theStep->GetTotalEnergyDeposit() )
