@@ -55,7 +55,7 @@
 /gps/time 0 ns
 ###############################################
 
-/analysis/setFileName HCALTB2006_{PARTICLE_NAME}_{PARTICLE_ENERGY_GEV}.root
+/analysis/setFileName HCALTB2006_{PARTICLE_NAME}_{PARTICLE_ENERGY_GEV}_{NEVENTS}evt.root
 /analysis/setDefaultFileType root
 
 ###################
