@@ -45,26 +45,26 @@ int main(int argc, char** argv)
         return -1;
     }
 
-    const YourInputArgs & a = parser.args();
+    const YourInputArgs & iargs = parser.args();
 
-    std::cout << a;
+    std::cout << iargs;
 
 
     // create run manager
     auto* runManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::SerialOnly);
 
     // create detector from GDML file
-    YourDetectorConstructor * user_detector_constructor = new YourDetectorConstructor(a.geometry);
+    YourDetectorConstructor * user_detector_constructor = new YourDetectorConstructor(iargs.geometry);
     runManager->SetUserInitialization(user_detector_constructor);
 
     // create Physics factory
     G4PhysListFactory pl_factory;
-    auto physics_list = pl_factory.GetReferencePhysList( a.physics_list );
-    if( ! physics_list ) throw std::runtime_error("No physics list named <"+ a.physics_list+"> found");
+    auto physics_list = pl_factory.GetReferencePhysList( iargs.physics_list );
+    if( ! physics_list ) throw std::runtime_error("No physics list named <"+ iargs.physics_list+"> found");
     runManager->SetUserInitialization(physics_list);
 
     // create user actions
-    runManager->SetUserInitialization(new YourActionInitialization("ofilename_not_used", &a));
+    runManager->SetUserInitialization(new YourActionInitialization("ofilename_not_used", &iargs));
 
     // initialize detector and physics
     runManager->Initialize();
@@ -77,7 +77,7 @@ int main(int argc, char** argv)
     G4VisManager* visManager = new G4VisExecutive;
     visManager->Initialize();
 
-    if( true == a.vis_mode )
+    if( true == iargs.vis_mode )
     {
         G4UIExecutive* ui = new G4UIExecutive(argc, argv);
         UImanager->ApplyCommand("/control/execute vis.mac");
@@ -88,14 +88,14 @@ int main(int argc, char** argv)
     {
         UImanager->ApplyCommand(
             "/control/alias PARTICLE_ENERGY_GEV " +
-            std::to_string(a.particle_energy_GeV)
+            std::to_string(iargs.particle_energy_GeV)
         );
-        UImanager->ApplyCommand("/control/alias PARTICLE_NAME " + a.particle_name);
+        UImanager->ApplyCommand("/control/alias PARTICLE_NAME " + iargs.particle_name);
         UImanager->ApplyCommand(
             "/control/alias NEVENTS " +
-            std::to_string(a.nevents)
+            std::to_string(iargs.nevents)
         );
-        UImanager->ApplyCommand("/control/execute " + a.macro);
+        UImanager->ApplyCommand("/control/execute " + iargs.macro);
     }
 
 
