@@ -4,7 +4,7 @@
 #include "YourRunAction.hh"
 #include "YourEventAction.hh"
 #include "YourSteppingAction.hh"
-
+#include "YourInputArgs.hh"
 
 YourActionInitialization::YourActionInitialization(std::string ofilename, const YourInputArgs * args)
 :   G4VUserActionInitialization(), _ofilename(ofilename),fInputArgs(args){ }
@@ -37,5 +37,11 @@ void YourActionInitialization::Build() const {
   // steping action updates histograms owned by event action, for energy deposited and shower width
   YourSteppingAction * steppingAction = new YourSteppingAction(eventAction);
   runAction->SetSteppingAction(steppingAction);
+  if( 0 == fInputArgs->saturation )
+    steppingAction->SetSaturationNone();
+  else if( 1 == fInputArgs->saturation )
+    steppingAction->SetSaturationG4Birk();
+  else if( 2 == fInputArgs->saturation )
+    steppingAction->SetSaturationCMSBirk();
   SetUserAction( steppingAction );
 }

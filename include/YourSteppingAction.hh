@@ -2,6 +2,7 @@
 #define YOURSTEPPINGACTION_HH
 
 #include "G4UserSteppingAction.hh"
+#include <memory>
 
 class YourEventAction;
 class G4Region;
@@ -20,7 +21,10 @@ class YourSteppingAction : public G4UserSteppingAction {
     void SetEcalSensMat(G4Material * m){ecal_sensitivemat = m;}
     void SetHcalSensMat(G4Material * m){hcal_sensitivemat = m;}
 
-    enum emsaturation{none,G4Birk,CMSBirk};
+
+    void SetSaturationNone();
+    void SetSaturationG4Birk();
+    void SetSaturationCMSBirk();
 
   private:
 
@@ -30,7 +34,7 @@ class YourSteppingAction : public G4UserSteppingAction {
     G4Material * ecal_sensitivemat;
     G4Material * hcal_sensitivemat;
     // general object that may apply G4 Birk quenching, CMS quadratic quenching or none
-    YourVEMSaturation * fHCAL_emsaturation;
+    std::unique_ptr<YourVEMSaturation> fHCAL_emsaturation;
 };
 
 #endif

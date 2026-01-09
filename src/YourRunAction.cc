@@ -73,6 +73,7 @@ void YourRunAction::EndOfRunAction(const G4Run* ){
     // update root file with histograms
     TFile * ofile = TFile::Open( analysisManager->GetFileName().c_str() , "update");
     fHenergyResponse->write(ofile);
+    fInputArgs->Write(ofile);
     ofile->Close();
 }
 

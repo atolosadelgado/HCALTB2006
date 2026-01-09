@@ -7,18 +7,25 @@
 
 YourSteppingAction::YourSteppingAction(YourEventAction* evtAction)
 :   G4UserSteppingAction(),
-    fYourEventAction(evtAction) {
+    fYourEventAction(evtAction)
+{
+    // by default, no saturation effects
+    this->SetSaturationNone();
+}
 
-        emsaturation emsaturation_type = emsaturation::G4Birk;
-        if( emsaturation::CMSBirk == emsaturation_type)
-            fHCAL_emsaturation = new YourEMSaturationCMSBirk;
-        else if (emsaturation::G4Birk == emsaturation_type)
-            fHCAL_emsaturation = new YourEMSaturationG4Birk;
-        else
-            fHCAL_emsaturation = new YourEMSaturationNone;
+void YourSteppingAction::SetSaturationNone()
+{
+    fHCAL_emsaturation = std::make_unique<YourEMSaturationNone>();
+}
+void YourSteppingAction::SetSaturationG4Birk()
+{
+    fHCAL_emsaturation = std::make_unique<YourEMSaturationG4Birk>();
+}
+void YourSteppingAction::SetSaturationCMSBirk()
+{
+    fHCAL_emsaturation = std::make_unique<YourEMSaturationCMSBirk>();
+}
 
-
-    }
 
 
 YourSteppingAction::~YourSteppingAction() {

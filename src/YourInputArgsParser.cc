@@ -82,6 +82,10 @@ bool YourInputArgParser::parse_one(int& i)
         if (!need_value(arg)) return false;
         args_.nevents = std::stoi(argv_[++i]);
     }
+    else if (arg == "-saturation") {
+        if (!need_value(arg)) return false;
+        args_.saturation = std::stoi(argv_[++i]);
+    }
     else if (arg == "-vis") {
         args_.vis_mode = true;
     }
@@ -117,5 +121,6 @@ void YourInputArgParser::help(const char* prog)
         << "  -nevents   Number of events (0 = macro/UI)\n"
         << "  -vis       Enable visualization\n"
         << "  -novis     Disable visualization (default)\n"
+        << "  -s         Saturation effect model; 0 = none, 1 = Geant4 Birk, 2 = CMS Birk \n"
         << "  -h         Show this help\n";
 }

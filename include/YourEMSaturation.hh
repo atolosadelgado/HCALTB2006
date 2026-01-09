@@ -9,6 +9,7 @@
 class YourVEMSaturation
 {
 public:
+    virtual ~YourVEMSaturation() = default;
     virtual double GetEnergy(const G4Step * theStep) = 0;
 };
 

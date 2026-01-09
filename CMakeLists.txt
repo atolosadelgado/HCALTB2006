@@ -102,6 +102,7 @@ add_test(
             -pname pi-
             -penergy 50
             -nevents 5
+            -saturation 2
 )
 
 set_tests_properties(${test_name} PROPERTIES
