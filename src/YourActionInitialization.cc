@@ -6,8 +6,12 @@
 #include "YourSteppingAction.hh"
 #include "YourInputArgs.hh"
 
+#include "G4MaterialScanner.hh"
+
 YourActionInitialization::YourActionInitialization(std::string ofilename, const YourInputArgs * args)
-:   G4VUserActionInitialization(), _ofilename(ofilename),fInputArgs(args){ }
+:   G4VUserActionInitialization(), _ofilename(ofilename),fInputArgs(args){
+  ms = new G4MaterialScanner();
+}
 
 
 YourActionInitialization::~YourActionInitialization() {}

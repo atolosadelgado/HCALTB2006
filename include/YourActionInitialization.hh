@@ -6,6 +6,7 @@
 
 #include <string>
 class YourInputArgs;
+class G4MaterialScanner;
 class YourActionInitialization : public G4VUserActionInitialization {
 
 public:
@@ -20,6 +21,7 @@ public:
   private:
     std::string _ofilename;
     const YourInputArgs * fInputArgs;
+    G4MaterialScanner * ms;
 };
 
 #endif
