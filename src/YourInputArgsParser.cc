@@ -92,6 +92,9 @@ bool YourInputArgParser::parse_one(int& i)
     else if (arg == "-novis") {
         args_.vis_mode = false;
     }
+    else if (arg == "-airECAL") {
+        args_.airECAL = true;
+    }
     else {
         std::cerr << "Unknown option: " << arg << "\n";
         return false;
@@ -122,5 +125,6 @@ void YourInputArgParser::help(const char* prog)
         << "  -vis       Enable visualization\n"
         << "  -novis     Disable visualization (default)\n"
         << "  -s         Saturation effect model; 0 = none, 1 = Geant4 Birk, 2 = CMS Birk \n"
+        << "  -airECAL   Make ECAL of air\n"
         << "  -h         Show this help\n";
 }

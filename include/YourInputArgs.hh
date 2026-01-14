@@ -28,6 +28,8 @@ struct YourInputArgs {
 
     int saturation = 0; // 0 = none, 1 = Geant4 Birk, 2 = CMS Birk
 
+    bool airECAL = false;
+
     void Write(TDirectory * d) const {
         if (!d) return;
 
@@ -56,6 +58,7 @@ struct YourInputArgs {
 
         // ---------- Boolean ----------
         (new TParameter<bool>("vis_mode", vis_mode))->Write();
+        (new TParameter<bool>("airECAL", airECAL))->Write();
 
         // ---------- Geant4 version ----------
         (new TNamed("geant4_version", G4Version))->Write();
@@ -83,6 +86,7 @@ struct YourInputArgs {
            << (a.vis_mode ? "ON" : "OFF") << "\n";
 
         os << "  Saturation type : " << a.saturation << "\n";
+        os << "  Air ECAL        : " << (a.airECAL ? "TRUE" : "FALSE") << "\n";
 
         return os;
     }

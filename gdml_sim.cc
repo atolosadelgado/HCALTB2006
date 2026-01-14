@@ -55,6 +55,9 @@ int main(int argc, char** argv)
 
     // create detector from GDML file
     YourDetectorConstructor * user_detector_constructor = new YourDetectorConstructor(iargs.geometry);
+    if(iargs.airECAL){
+        user_detector_constructor->ConfigureECALAsAir();
+    }
     runManager->SetUserInitialization(user_detector_constructor);
 
     // create Physics factory
