@@ -1,0 +1,5 @@
+# macro to perform material scan of Ecal
+# to test new feature "-airECAL"
+/control/matScan/verbose 2
+/control/matScan/region EcalRegion
+/control/matScan/scan

@@ -109,3 +109,21 @@ set_tests_properties(${test_name} PROPERTIES
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error" TIMEOUT 600)
+
+#----------------------
+# Test material scan when replacing ECAL materials with air
+SET( test_name "test_RunGPS_matscan" )
+
+add_test(
+    NAME ${test_name}
+    COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
+            -g ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
+            -pl FTFP_BERT
+            -m ${CMAKE_SOURCE_DIR}/g4matscan.mac
+            -airECAL
+)
+
+set_tests_properties(${test_name} PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error" TIMEOUT 600)
