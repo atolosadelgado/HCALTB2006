@@ -27,10 +27,13 @@ public:
     std::string primary_particle_name;
 
 private:
-    G4VPrimaryGenerator* fPrimaryGen = nullptr;  // ← único puntero
+    G4VPrimaryGenerator* fPrimaryGen = nullptr;
     SourceType fType;
 
     int counter = 0;
+
+    // Extract direction from beamline PV
+    void ShowBeamLineDirection();
 };
 
 #endif

@@ -16,8 +16,12 @@ YourPrimaryGenerator::~YourPrimaryGenerator()
     delete fPrimaryGen;
 }
 
+
 void YourPrimaryGenerator::GeneratePrimaries(G4Event* event)
 {
+    // for debugging
+    // this->ShowBeamLineDirection();
+
     fPrimaryGen->GeneratePrimaryVertex(event);
 
     auto vertex = event->GetPrimaryVertex(0);
@@ -34,3 +38,32 @@ void YourPrimaryGenerator::GeneratePrimaries(G4Event* event)
     }
 }
 
+#include "G4PhysicalVolumeStore.hh"
+void YourPrimaryGenerator::ShowBeamLineDirection()
+{
+    G4PhysicalVolumeStore * pvstore = G4PhysicalVolumeStore::GetInstance();
+    G4VPhysicalVolume * beamline_pv = nullptr;
+    for( auto & physvols : *pvstore )
+    {
+        if("HcalTestBeamLine" == physvols->GetName())
+        {
+            beamline_pv = physvols;
+            break;
+        }
+    }
+
+    if(not beamline_pv)
+    {
+        G4cout << "No HcalTestBeamLine found in physical volume store" << std::endl;
+        return;
+    }
+
+    // get the rotation matrix used to place the beamline into the world
+    G4RotationMatrix * m = beamline_pv->GetRotation();
+    // we need the inverse transformation: from the beamline to world
+    m->invert();
+    // the direction of the beamline (Z axis) in world coordinates corresponds to Z column
+    G4ThreeVector z_axis = m->colZ();
+    G4cout << "Z axis of HcalTestBeamLine in mother coords: " << z_axis << std::endl;
+    return;
+}
