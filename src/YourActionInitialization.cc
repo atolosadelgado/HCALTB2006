@@ -10,7 +10,7 @@
 
 YourActionInitialization::YourActionInitialization(std::string ofilename, const YourInputArgs * args)
 :   G4VUserActionInitialization(), _ofilename(ofilename),fInputArgs(args){
-  ms = new G4MaterialScanner();
+  // ms = new G4MaterialScanner();
 }
 
 
