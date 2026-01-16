@@ -40,17 +40,29 @@ YourSteppingAction::~YourSteppingAction() {
 void YourSteppingAction::UserSteppingAction(const G4Step* theStep) {
 
     G4Region * current_region = theStep->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume()->GetRegion();
-    auto mat = theStep->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume()->GetMaterial();
+    G4Material * mat = theStep->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume()->GetMaterial();
     if( ecal_region == current_region && ecal_sensitivemat == mat)
-        fYourEventAction->AddVisibleEnergyECAL(theStep->GetTotalEnergyDeposit());
+    {
+
+        double t = theStep->GetPostStepPoint()->GetGlobalTime();
+        if ( fYourEventAction->IsTimeWithinEventTimeWindow(t) ){
+            fYourEventAction->AddVisibleEnergyECAL(theStep->GetTotalEnergyDeposit());
+        }
+        else{
+            theStep->GetTrack()->SetTrackStatus(fStopAndKill);
+        }
+
+    }
     if( hcal_region == current_region && hcal_sensitivemat == mat)
     {
-    G4double evis = fHCAL_emsaturation->GetEnergy(theStep);
-
-        fYourEventAction->AddVisibleEnergyHCAL(evis);
-//         if( 0 < theStep->GetTotalEnergyDeposit() )
-//             std::cout << "\tevis/total = " << evis / theStep->GetTotalEnergyDeposit() << std::endl;
-//             std::cout << "\tNIEL/total = " << theStep->GetNonIonizingEnergyDeposit() / theStep->GetTotalEnergyDeposit() << std::endl;
-//         fYourEventAction->AddVisibleEnergyHCAL(theStep->GetTotalEnergyDeposit());
+        double t = theStep->GetPostStepPoint()->GetGlobalTime();
+        if ( fYourEventAction->IsTimeWithinEventTimeWindow(t) )
+        {
+            G4double evis = fHCAL_emsaturation->GetEnergy(theStep);
+            fYourEventAction->AddVisibleEnergyHCAL(evis);
+        }
+        else{
+            theStep->GetTrack()->SetTrackStatus(fStopAndKill);
+        }
     }
 }
