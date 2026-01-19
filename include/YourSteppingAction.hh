@@ -21,6 +21,8 @@ class YourSteppingAction : public G4UserSteppingAction {
     void SetEcalSensMat(G4Material * m){fEcalMat = m;}
     void SetHcalSensMat(G4Material * m){fHcalMat = m;}
 
+    void FindRegionsAndMaterials();
+
 
     void SetSaturationNone();
     void SetSaturationG4Birk();

@@ -26,10 +26,18 @@ YourRunAction::YourRunAction(std::string ofilename, const YourInputArgs * args):
 
 YourRunAction::~YourRunAction() {}
 
+#include "G4RunManager.hh"
+#include "G4VUserActionInitialization.hh"
 void YourRunAction::BeginOfRunAction(const G4Run*)
 {
     this->ConstructOutputTree();
     this->BeginOutputTree();
+    auto fSteppingAction_const = static_cast<const YourSteppingAction*>( G4RunManager::GetRunManager()->GetUserSteppingAction() );
+    auto fSteppingAction = const_cast<YourSteppingAction*>(fSteppingAction_const);
+    fSteppingAction->FindRegionsAndMaterials();
+
+
+
 }
 
 void YourRunAction::EndOfRunAction(const G4Run* ){
@@ -40,7 +48,6 @@ void YourRunAction::EndOfRunAction(const G4Run* ){
 
 }
 
-#include "G4RunManager.hh"
 const YourPrimaryGenerator * YourRunAction::GetPrimaryGenerator()
 {
     return static_cast<const YourPrimaryGenerator*>(

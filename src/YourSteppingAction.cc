@@ -12,39 +12,6 @@ YourSteppingAction::YourSteppingAction(YourEventAction* evtAction)
     // by default, no saturation effects
     this->SetSaturationNone();
 
-    fEcalRegion = G4RegionStore::GetInstance()->GetRegion("EcalRegion");
-    if (!fEcalRegion) {
-        G4Exception("YourSteppingAction",
-                    "ECAL001",
-                    FatalException,
-                    "ECAL region not found");
-    }
-
-    fHcalRegion = G4RegionStore::GetInstance()->GetRegion("HcalRegion");
-    if (!fHcalRegion) {
-        G4Exception("YourSteppingAction",
-                    "HCAL001",
-                    FatalException,
-                    "HCAL region not found");
-    }
-
-    fEcalMat = G4Material::GetMaterial("E_PbWO4");
-    if (!fEcalMat) {
-        G4Exception("YourSteppingAction",
-                    "MAT001",
-                    FatalException,
-                    "ECAL material not found");
-    }
-
-    fHcalMat = G4Material::GetMaterial("Scintillator");
-    if (!fHcalMat) {
-        G4Exception("YourSteppingAction",
-                    "MAT002",
-                    FatalException,
-                    "HCAL material not found");
-    }
-
-
 }
 
 void YourSteppingAction::SetSaturationNone()
@@ -57,6 +24,7 @@ void YourSteppingAction::SetSaturationG4Birk()
 }
 void YourSteppingAction::SetSaturationCMSBirk()
 {
+    G4cout << "*** kk 2  \n";
     fHCAL_emsaturation = std::make_unique<YourEMSaturationCMSBirk>();
 }
 
@@ -100,3 +68,39 @@ void YourSteppingAction::UserSteppingAction(const G4Step* theStep) {
         }
     }
 }
+
+void YourSteppingAction::FindRegionsAndMaterials()
+{
+        fEcalRegion = G4RegionStore::GetInstance()->GetRegion("EcalRegion");
+    if (!fEcalRegion) {
+        G4Exception("YourSteppingAction",
+                    "ECAL001",
+                    JustWarning,
+                    "ECAL region not found");
+    }
+
+    fHcalRegion = G4RegionStore::GetInstance()->GetRegion("HcalRegion");
+    if (!fHcalRegion) {
+        G4Exception("YourSteppingAction",
+                    "HCAL001",
+                    JustWarning,
+                    "HCAL region not found");
+    }
+
+    fEcalMat = G4Material::GetMaterial("E_PbWO4");
+    if (!fEcalMat) {
+        G4Exception("YourSteppingAction",
+                    "MAT001",
+                    JustWarning,
+                    "ECAL material not found");
+    }
+
+    fHcalMat = G4Material::GetMaterial("Scintillator");
+    if (!fHcalMat) {
+        G4Exception("YourSteppingAction",
+                    "MAT002",
+                    JustWarning,
+                    "HCAL material not found");
+    }
+}
+
