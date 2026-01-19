@@ -26,8 +26,11 @@ class YourRunAction : public G4UserRunAction {
     void EndOutputTree();
     void FillOutputTree(double ecal_eresponse, double hcal_eresponse);
 
+    void SetSteppingAction(YourSteppingAction * s) {fSteppingAction = s;}
+
     std::string _ofilename;
     const YourInputArgs * fInputArgs;
+    YourSteppingAction * fSteppingAction;
 
     int verbosity = 0;
 private:

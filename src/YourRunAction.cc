@@ -32,8 +32,6 @@ void YourRunAction::BeginOfRunAction(const G4Run*)
 {
     this->ConstructOutputTree();
     this->BeginOutputTree();
-    auto fSteppingAction_const = static_cast<const YourSteppingAction*>( G4RunManager::GetRunManager()->GetUserSteppingAction() );
-    auto fSteppingAction = const_cast<YourSteppingAction*>(fSteppingAction_const);
     fSteppingAction->FindRegionsAndMaterials();
 
 

@@ -46,4 +46,6 @@ void YourActionInitialization::Build() const {
   else if( 2 == fInputArgs->saturation )
     steppingAction->SetSaturationCMSBirk();
   SetUserAction( steppingAction );
+
+  runAction->SetSteppingAction(steppingAction);
 }
