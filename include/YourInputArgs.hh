@@ -7,6 +7,7 @@
 
 #include "TDirectory.h"
 #include "TParameter.h"
+#include "TFile.h"
 
 #include "G4Version.hh"
 
@@ -66,6 +67,13 @@ struct YourInputArgs {
         d->cd();
     }
 
+    void SaveToROOTfile(std::string ofilename) const
+    {
+        TFile * ofile = TFile::Open( ofilename.c_str() , "update");
+        this->Write(ofile);
+        ofile->Close();
+    }
+
     // -------- Inline operator<< --------
     friend std::ostream& operator<<(std::ostream& os, const YourInputArgs& a) {
         os << "Configuration:\n";
@@ -90,6 +98,7 @@ struct YourInputArgs {
 
         return os;
     }
+
 };
 
 #endif
