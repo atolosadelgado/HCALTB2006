@@ -92,7 +92,7 @@ SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Excepti
 #----------------------
 # Test using alias within the macro file
 
-SET( test_name "test_RunGPS_templateMac" )
+SET( test_name "test_RunGPS_templateMac_Seq" )
 add_test(
     NAME ${test_name}
     COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
