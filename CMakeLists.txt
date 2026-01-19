@@ -33,7 +33,7 @@ file(GLOB sources ${PROJECT_SOURCE_DIR}/src/YourActionInitialization.cc
                   ${PROJECT_SOURCE_DIR}/src/YourSteppingAction.cc
                   ${PROJECT_SOURCE_DIR}/src/YourDetectorConstructor.cc
                     ${PROJECT_SOURCE_DIR}/src/YourPrimaryGenerator.cc
-                    ${PROJECT_SOURCE_DIR}/src/HistoEnergyResponse.cc
+                    # ${PROJECT_SOURCE_DIR}/src/HistoEnergyResponse.cc
                     ${PROJECT_SOURCE_DIR}/src/YourInputArgsParser.cc
 
                   )
@@ -43,7 +43,7 @@ file(GLOB headers   ${PROJECT_SOURCE_DIR}/include/YourDetectorConstructor.hh
                     ${PROJECT_SOURCE_DIR}/include/YourEventAction.hh
                     ${PROJECT_SOURCE_DIR}/include/YourSteppingAction.hh
                     ${PROJECT_SOURCE_DIR}/include/YourPrimaryGenerator.hh
-                    ${PROJECT_SOURCE_DIR}/include/HistoEnergyResponse.hh
+                    # ${PROJECT_SOURCE_DIR}/include/HistoEnergyResponse.hh
                     ${PROJECT_SOURCE_DIR}/include/YourInputArgsParser.hh
 
                     )
@@ -109,6 +109,29 @@ set_tests_properties(${test_name} PROPERTIES
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error" TIMEOUT 600)
+
+#----------------------
+# Test using alias within the macro file + MT
+
+SET( test_name "test_RunGPS_templateMac_MT" )
+add_test(
+    NAME ${test_name}
+    COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
+            -g ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
+            -pl FTFP_BERT
+            -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
+            -pname pi-
+            -penergy 50
+            -nevents 50
+            -saturation 2
+            -nthreads 4
+)
+
+set_tests_properties(${test_name} PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error" TIMEOUT 600)
+
 
 #----------------------
 # Test material scan when replacing ECAL materials with air
