@@ -51,7 +51,13 @@ int main(int argc, char** argv)
 
 
     // create run manager
-    auto* runManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::SerialOnly);
+    G4RunManager* runManager;
+    if(1 < iargs.nthreads){
+        runManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::MTOnly);
+        runManager->SetNumberOfThreads( iargs.nthreads );
+    }
+    else
+        runManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::SerialOnly);
 
     // create detector from GDML file
     YourDetectorConstructor * user_detector_constructor = new YourDetectorConstructor(iargs.geometry);

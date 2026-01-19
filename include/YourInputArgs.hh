@@ -31,6 +31,8 @@ struct YourInputArgs {
 
     bool airECAL = false;
 
+    int nthreads = 1;
+
     void Write(TDirectory * d) const {
         if (!d) return;
 
@@ -56,6 +58,7 @@ struct YourInputArgs {
         (new TParameter<double>("particle_energy_GeV", particle_energy_GeV))->Write();
         (new TParameter<int>("nevents", nevents))->Write();
         (new TParameter<int>("saturation", saturation))->Write();
+        (new TParameter<int>("nthreads", nthreads))->Write();
 
         // ---------- Boolean ----------
         (new TParameter<bool>("vis_mode", vis_mode))->Write();
@@ -95,6 +98,7 @@ struct YourInputArgs {
 
         os << "  Saturation type : " << a.saturation << "\n";
         os << "  Air ECAL        : " << (a.airECAL ? "TRUE" : "FALSE") << "\n";
+        os << "  Number threads  : " << a.nthreads << "\n";
 
         return os;
     }

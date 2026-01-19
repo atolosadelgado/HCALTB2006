@@ -86,6 +86,10 @@ bool YourInputArgParser::parse_one(int& i)
         if (!need_value(arg)) return false;
         args_.saturation = std::stoi(argv_[++i]);
     }
+    else if (arg == "-nthreads") {
+        if (!need_value(arg)) return false;
+        args_.nthreads = std::stoi(argv_[++i]);
+    }
     else if (arg == "-vis") {
         args_.vis_mode = true;
     }
