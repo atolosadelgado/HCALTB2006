@@ -58,6 +58,8 @@
 /analysis/setFileName HCALTB2006_{PARTICLE_NAME}_{PARTICLE_ENERGY_GEV}_{NEVENTS}evt.root
 /analysis/setDefaultFileType root
 
+/run/printProgress 50
+
 ###################
 # Ready to shoot!
 ###################
