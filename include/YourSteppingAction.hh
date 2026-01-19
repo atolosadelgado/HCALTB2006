@@ -15,11 +15,11 @@ class YourSteppingAction : public G4UserSteppingAction {
     ~YourSteppingAction() override;
 
     void UserSteppingAction(const G4Step* step) override;
-    void SetEcalRegion(G4Region * r){ecal_region = r;}
-    void SetHcalRegion(G4Region * r){hcal_region = r;}
+    void SetEcalRegion(G4Region * r){fEcalRegion = r;}
+    void SetHcalRegion(G4Region * r){fHcalRegion = r;}
 
-    void SetEcalSensMat(G4Material * m){ecal_sensitivemat = m;}
-    void SetHcalSensMat(G4Material * m){hcal_sensitivemat = m;}
+    void SetEcalSensMat(G4Material * m){fEcalMat = m;}
+    void SetHcalSensMat(G4Material * m){fHcalMat = m;}
 
 
     void SetSaturationNone();
@@ -29,10 +29,10 @@ class YourSteppingAction : public G4UserSteppingAction {
   private:
 
     YourEventAction*             fYourEventAction;
-    G4Region * ecal_region;
-    G4Region * hcal_region;
-    G4Material * ecal_sensitivemat;
-    G4Material * hcal_sensitivemat;
+    G4Region * fEcalRegion;
+    G4Region * fHcalRegion;
+    G4Material * fEcalMat;
+    G4Material * fHcalMat;
     // general object that may apply G4 Birk quenching, CMS quadratic quenching or none
     std::unique_ptr<YourVEMSaturation> fHCAL_emsaturation;
 };

@@ -11,6 +11,40 @@ YourSteppingAction::YourSteppingAction(YourEventAction* evtAction)
 {
     // by default, no saturation effects
     this->SetSaturationNone();
+
+    fEcalRegion = G4RegionStore::GetInstance()->GetRegion("EcalRegion");
+    if (!fEcalRegion) {
+        G4Exception("YourSteppingAction",
+                    "ECAL001",
+                    FatalException,
+                    "ECAL region not found");
+    }
+
+    fHcalRegion = G4RegionStore::GetInstance()->GetRegion("HcalRegion");
+    if (!fHcalRegion) {
+        G4Exception("YourSteppingAction",
+                    "HCAL001",
+                    FatalException,
+                    "HCAL region not found");
+    }
+
+    fEcalMat = G4Material::GetMaterial("E_PbWO4");
+    if (!fEcalMat) {
+        G4Exception("YourSteppingAction",
+                    "MAT001",
+                    FatalException,
+                    "ECAL material not found");
+    }
+
+    fHcalMat = G4Material::GetMaterial("Scintillator");
+    if (!fHcalMat) {
+        G4Exception("YourSteppingAction",
+                    "MAT002",
+                    FatalException,
+                    "HCAL material not found");
+    }
+
+
 }
 
 void YourSteppingAction::SetSaturationNone()
@@ -41,7 +75,7 @@ void YourSteppingAction::UserSteppingAction(const G4Step* theStep) {
 
     G4Region * current_region = theStep->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume()->GetRegion();
     G4Material * mat = theStep->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume()->GetMaterial();
-    if( ecal_region == current_region && ecal_sensitivemat == mat)
+    if( fEcalRegion == current_region && fEcalMat == mat)
     {
 
         double t = theStep->GetPostStepPoint()->GetGlobalTime();
@@ -53,7 +87,7 @@ void YourSteppingAction::UserSteppingAction(const G4Step* theStep) {
         }
 
     }
-    if( hcal_region == current_region && hcal_sensitivemat == mat)
+    if( fHcalRegion == current_region && fHcalMat == mat)
     {
         double t = theStep->GetPostStepPoint()->GetGlobalTime();
         if ( fYourEventAction->IsTimeWithinEventTimeWindow(t) )
