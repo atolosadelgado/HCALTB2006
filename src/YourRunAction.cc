@@ -74,7 +74,9 @@ void YourRunAction::ConstructOutputTree()
   auto analysisManager = G4AnalysisManager::Instance();
 //   analysisManager->SetDefaultFileType("root"); // set in macrofile
   analysisManager->SetVerboseLevel(1);
-  analysisManager->SetNtupleMerging(true);  // important for MT
+  // just to avoid a warning
+  if(1<fInputArgs->nthreads)
+      analysisManager->SetNtupleMerging(true);  // important for MT
 
   analysisManager->CreateNtuple("tree", "tree for HCAL 2006 TB experiment");
   analysisManager->CreateNtupleDColumn("ECAL_eresponse");
