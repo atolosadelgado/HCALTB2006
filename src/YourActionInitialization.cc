@@ -28,7 +28,6 @@ void YourActionInitialization::Build() const {
   // Set UserRunAction
   // run action owns histograms to be written at the end
   YourRunAction* runAction = new YourRunAction(_ofilename,fInputArgs);
-  runAction->SetPrimaryGenerator(gen);
   SetUserAction(runAction);
 
   // Set UserEventAction
@@ -40,7 +39,6 @@ void YourActionInitialization::Build() const {
   // Set UserSteppingAction
   // steping action updates histograms owned by event action, for energy deposited and shower width
   YourSteppingAction * steppingAction = new YourSteppingAction(eventAction);
-  runAction->SetSteppingAction(steppingAction);
   if( 0 == fInputArgs->saturation )
     steppingAction->SetSaturationNone();
   else if( 1 == fInputArgs->saturation )

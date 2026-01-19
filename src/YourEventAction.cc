@@ -22,17 +22,19 @@ void YourEventAction::BeginOfEventAction(const G4Event* anEvent) {
   time_first_hit = 0;
   time_last_hit = 0;
 
-  if( anEvent->GetEventID() % 10 == 0 )
-    std::cout << "Event\t" << anEvent->GetEventID() << std::endl;
+  // superseeded by UI command /run/printProgress 50
+  // if( anEvent->GetEventID() % 10 == 0 )
+  //   std::cout << "Event\t" << anEvent->GetEventID() << std::endl;
 
 }
 
 
 void YourEventAction::EndOfEventAction(const G4Event* /*evt*/) {
   fRunAction->FillEventEnergy(visible_energy_ecal,visible_energy_hcal);
-  std::cout << "\tTime duration of event in calorimeters : "
-            << (time_last_hit - time_first_hit) / CLHEP::ns
-            << " ns\n";
+  if(0 < fRunAction->verbosity)
+    G4cout << "\tTime duration of event in calorimeters : "
+              << (time_last_hit - time_first_hit) / CLHEP::ns
+              << " ns" << std::endl;
 }
 
 void YourEventAction::RegisterTime(double t)

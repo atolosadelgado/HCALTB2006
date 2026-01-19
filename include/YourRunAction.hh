@@ -5,7 +5,6 @@
 
 #include <string>
 
-class HistoEnergyResponse;
 class YourPrimaryGenerator;
 class YourSteppingAction;
 class YourInputArgs;
@@ -20,9 +19,6 @@ class YourRunAction : public G4UserRunAction {
     void   BeginOfRunAction(const G4Run* run) override;
     void   EndOfRunAction(const G4Run* run) override;
 
-    void SetPrimaryGenerator(YourPrimaryGenerator * g);
-    void SetSteppingAction(YourSteppingAction * s);
-
     void FillEventEnergy(double ecal_energy, double hcal_energy);
 
     void ConstructOutputTree();
@@ -31,12 +27,11 @@ class YourRunAction : public G4UserRunAction {
     void FillOutputTree(double ecal_eresponse, double hcal_eresponse);
 
     std::string _ofilename;
-    HistoEnergyResponse * fHenergyResponse;
-    YourPrimaryGenerator * fPrimaryGenerator;
-    YourSteppingAction * fSteppingAction;
     const YourInputArgs * fInputArgs;
 
     int verbosity = 0;
+private:
+    inline const YourPrimaryGenerator* GetPrimaryGenerator();
 };
 
 #endif

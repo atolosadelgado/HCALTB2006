@@ -3,7 +3,6 @@
 #include "YourRunAction.hh"
 #include "YourEventAction.hh"
 #include "YourSteppingAction.hh"
-#include "HistoEnergyResponse.hh"
 
 #include "G4Material.hh"
 #include "G4RegionStore.hh"
@@ -13,7 +12,6 @@
 
 #include "YourInputArgs.hh"
 
-#include "TFile.h"
 
 
 YourRunAction::YourRunAction(std::string ofilename, const YourInputArgs * args):
@@ -21,87 +19,45 @@ YourRunAction::YourRunAction(std::string ofilename, const YourInputArgs * args):
           _ofilename(ofilename),
            fInputArgs(args)
           {
-              fHenergyResponse = new HistoEnergyResponse("HCAL2006TB", 10000,0.,1.);
-              this->ConstructOutputTree();
-        }
+            // to make UI commands available
+            auto analysisManager = G4AnalysisManager::Instance();
+}
 
 
 YourRunAction::~YourRunAction() {}
 
-
-void YourRunAction::BeginOfRunAction(const G4Run* ) {
-
-        G4Region * ecal_region =  G4RegionStore::GetInstance()->GetRegion("EcalRegion");
-        if(nullptr == ecal_region) throw std::runtime_error("No ECAL region found in G4RegionStore");
-        else                       fSteppingAction->SetEcalRegion(ecal_region);
-
-        G4Region * hcal_region =  G4RegionStore::GetInstance()->GetRegion("HcalRegion");
-        if(nullptr == hcal_region) throw std::runtime_error("No HCAL region found in G4RegionStore");
-        else                       fSteppingAction->SetHcalRegion(hcal_region);
-
-        G4Material * ecal_sensitivemat = G4Material::GetMaterial("E_PbWO4");
-        if(nullptr == ecal_sensitivemat)  throw std::runtime_error("No ECAL sensitive material (E_PbWO4) found");
-        else                              fSteppingAction->SetEcalSensMat(ecal_sensitivemat);
-
-        G4Material * hcal_sensitivemat = G4Material::GetMaterial("Scintillator");
-        if(nullptr == hcal_sensitivemat)  throw std::runtime_error("No HCAL sensitive material (Scintillator) found");
-        else                              fSteppingAction->SetHcalSensMat(hcal_sensitivemat);
-
-        this->BeginOutputTree();
+void YourRunAction::BeginOfRunAction(const G4Run*)
+{
+    this->ConstructOutputTree();
+    this->BeginOutputTree();
 }
 
 void YourRunAction::EndOfRunAction(const G4Run* ){
-    if( 0 < verbosity )
-    {
-        double mean = fHenergyResponse->ecal->mean();
-        double meanError = fHenergyResponse->ecal->meanError();
-        std::cout << "ECAL Energy response (mean, mean error): " << mean << "\t" << meanError << std::endl;
-        mean = fHenergyResponse->hcal->mean();
-        meanError = fHenergyResponse->hcal->meanError();
-        std::cout << "HCAL Energy response (mean, mean error): " << mean << "\t" << meanError << std::endl;
+    this->EndOutputTree();
+    if (G4Threading::IsMasterThread()){
+        fInputArgs->SaveToROOTfile( G4AnalysisManager::Instance()->GetFileName());
     }
 
-//     std::string ofilename = "HCAL2006TB_";
-//     ofilename += fPrimaryGenerator->primary_particle_name;
-//     ofilename += "_";
-//     ofilename += std::to_string( int(fPrimaryGenerator->E0_MeV/1000.) );
-//     ofilename += ".root";
-
-    // this will overwrite existing file
-    this->EndOutputTree();
-    auto analysisManager = G4AnalysisManager::Instance();
-    // update root file with histograms
-    TFile * ofile = TFile::Open( analysisManager->GetFileName().c_str() , "update");
-    fHenergyResponse->write(ofile);
-    fInputArgs->Write(ofile);
-    ofile->Close();
 }
 
-void YourRunAction::SetPrimaryGenerator(YourPrimaryGenerator* g)
+#include "G4RunManager.hh"
+const YourPrimaryGenerator * YourRunAction::GetPrimaryGenerator()
 {
-    fPrimaryGenerator = g;
-}
-
-void YourRunAction::SetSteppingAction ( YourSteppingAction* s )
-{
-    fSteppingAction = s;
+    return static_cast<const YourPrimaryGenerator*>(
+        G4RunManager::GetRunManager()->GetUserPrimaryGeneratorAction()
+    );
 }
 
 void YourRunAction::FillEventEnergy(double ecal_energy, double hcal_energy)
 {
-
     if(0 > ecal_energy || 0 > hcal_energy) throw std::runtime_error("YourRunAction::FillEventEnergy cannot save negative energy");
 
+    auto fPrimaryGenerator = this->GetPrimaryGenerator();
     double ecal_energy_MeV = ecal_energy / CLHEP::MeV;
     double ecal_eventEnergyResponse = ecal_energy_MeV / fPrimaryGenerator->E0_MeV;
-    fHenergyResponse->ecal->fill(ecal_eventEnergyResponse);
 
     double hcal_energy_MeV = hcal_energy / CLHEP::MeV;
     double hcal_eventEnergyResponse = hcal_energy_MeV / fPrimaryGenerator->E0_MeV;
-    fHenergyResponse->hcal->fill(hcal_eventEnergyResponse);
-
-    fHenergyResponse->hEHcalos->Fill(ecal_eventEnergyResponse, hcal_eventEnergyResponse);
-
 
     this->FillOutputTree(ecal_eventEnergyResponse, hcal_eventEnergyResponse);
 }
@@ -111,7 +67,7 @@ void YourRunAction::ConstructOutputTree()
   auto analysisManager = G4AnalysisManager::Instance();
 //   analysisManager->SetDefaultFileType("root"); // set in macrofile
   analysisManager->SetVerboseLevel(1);
-//   analysisManager->SetNtupleMerging(true);  // important for MT
+  analysisManager->SetNtupleMerging(true);  // important for MT
 
   analysisManager->CreateNtuple("tree", "tree for HCAL 2006 TB experiment");
   analysisManager->CreateNtupleDColumn("ECAL_eresponse");
@@ -157,5 +113,7 @@ void YourRunAction::FillOutputTree(double ecal_eresponse, double hcal_eresponse)
     analysisManager->FillNtupleDColumn(0, ecal_eresponse);
     analysisManager->FillNtupleDColumn(1, hcal_eresponse);
     analysisManager->AddNtupleRow();
+    if(0 < verbosity)
+        G4cout << "\tadding new row: " << ecal_eresponse << "\t" << hcal_eresponse << std::endl;
 }
 
