@@ -24,7 +24,6 @@ void YourSteppingAction::SetSaturationG4Birk()
 }
 void YourSteppingAction::SetSaturationCMSBirk()
 {
-    G4cout << "*** kk 2  \n";
     fHCAL_emsaturation = std::make_unique<YourEMSaturationCMSBirk>();
 }
 
@@ -69,8 +68,12 @@ void YourSteppingAction::UserSteppingAction(const G4Step* theStep) {
     }
 }
 
+#include "G4GeometryManager.hh"
 void YourSteppingAction::FindRegionsAndMaterials()
 {
+    auto geomgr = G4GeometryManager::GetInstance();
+    if(not geomgr || not geomgr->IsGeometryClosed()) return;
+
         fEcalRegion = G4RegionStore::GetInstance()->GetRegion("EcalRegion");
     if (!fEcalRegion) {
         G4Exception("YourSteppingAction",
