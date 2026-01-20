@@ -93,6 +93,9 @@ bool YourInputArgParser::parse_one(int& i)
     else if (arg == "-vis") {
         args_.vis_mode = true;
     }
+    else if (arg == "-visSensitiveOnly") {
+        args_.visSensitiveOnly = true;
+    }
     else if (arg == "-novis") {
         args_.vis_mode = false;
     }
@@ -130,5 +133,6 @@ void YourInputArgParser::help(const char* prog)
         << "  -novis     Disable visualization (default)\n"
         << "  -s         Saturation effect model; 0 = none, 1 = Geant4 Birk, 2 = CMS Birk \n"
         << "  -airECAL   Make ECAL of air\n"
+        << "  -visSensitiveOnly   Visualize sensitive vols only\n"
         << "  -h         Show this help\n";
 }

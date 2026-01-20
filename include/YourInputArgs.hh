@@ -31,6 +31,8 @@ struct YourInputArgs {
 
     bool airECAL = false;
 
+    bool visSensitiveOnly = false;
+
     int nthreads = 1;
 
     void Write(TDirectory * d) const {
@@ -63,6 +65,7 @@ struct YourInputArgs {
         // ---------- Boolean ----------
         (new TParameter<bool>("vis_mode", vis_mode))->Write();
         (new TParameter<bool>("airECAL", airECAL))->Write();
+        (new TParameter<bool>("visSensitiveOnly", visSensitiveOnly))->Write();
 
         // ---------- Geant4 version ----------
         (new TNamed("geant4_version", G4Version))->Write();
@@ -98,6 +101,7 @@ struct YourInputArgs {
 
         os << "  Saturation type : " << a.saturation << "\n";
         os << "  Air ECAL        : " << (a.airECAL ? "TRUE" : "FALSE") << "\n";
+        os << "  Vis Sensitive   : " << (a.visSensitiveOnly ? "TRUE" : "FALSE") << "\n";
         os << "  Number threads  : " << a.nthreads << "\n";
 
         return os;

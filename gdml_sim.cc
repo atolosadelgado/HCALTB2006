@@ -64,6 +64,9 @@ int main(int argc, char** argv)
     if(iargs.airECAL){
         user_detector_constructor->ConfigureECALAsAir();
     }
+    if(iargs.visSensitiveOnly)
+        user_detector_constructor->ConfigureVisSensitiveOnly();
+
     runManager->SetUserInitialization(user_detector_constructor);
 
     // create Physics factory

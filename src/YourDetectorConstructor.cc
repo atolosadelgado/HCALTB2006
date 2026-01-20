@@ -13,6 +13,11 @@ YourDetectorConstructor::YourDetectorConstructor(std::string fname) :  G4VUserDe
 
 
 #include "G4GDMLParser.hh"
+#include "G4LogicalVolumeStore.hh"
+#include "G4LogicalVolume.hh"
+#include "G4Material.hh"
+#include "G4VisAttributes.hh"
+#include "G4Colour.hh"
 
 G4VPhysicalVolume * YourDetectorConstructor::Construct(){
   G4GDMLParser Parser;
@@ -27,6 +32,20 @@ G4VPhysicalVolume * YourDetectorConstructor::Construct(){
   if(ECALAsAir)
     this->MakeECALAsAir();
 
+
+  if(visSensitiveOnly)
+  {
+    G4Colour green(0.0, 1.0, 0.0, 1.0);
+    G4Colour red(1.0, 0.0, 0.0, 1.0);
+
+    HighlightMaterial("E_PbWO4", true, green);
+    HighlightMaterial("Scintillator", false, red);
+  }
+
+// G4VisAttributes* invisibleVis = new G4VisAttributes();
+// invisibleVis->SetVisibility(false);
+// worldPV->GetLogicalVolume()->SetVisAttributes(invisibleVis);
+//   // worldPV->GetLogicalVolume()->SetVisAttributes( G4VisAttributes::GetInvisible() );
   return worldPV;
 }
 
@@ -95,4 +114,30 @@ void YourDetectorConstructor::ReplaceMaterialInTree(G4VPhysicalVolume* rootPV,
       queue.push(lv->GetDaughter(i));
     }
   }
+}
+
+
+
+void YourDetectorConstructor::HighlightMaterial(const G4String& targetMaterialName, bool makeOtherInvisible, G4Colour & color) {
+    auto lvStore = G4LogicalVolumeStore::GetInstance();
+
+    for (auto lv : *lvStore) {
+        G4Material* mat = lv->GetMaterial();
+
+
+        if (mat->GetName() == targetMaterialName) {
+            G4VisAttributes* visAtt = nullptr;
+            // Material objetivo: verde sólido
+            visAtt = new G4VisAttributes( color );
+            visAtt->SetVisibility(true);
+            visAtt->SetForceSolid(true);
+            lv->SetVisAttributes(visAtt);
+            std::cout << " New crystal for visualization: " << lv->GetName() << std::endl;
+        } else if(makeOtherInvisible){
+            // Todos los demás: invisibles
+            lv->SetVisAttributes( G4VisAttributes::GetInvisible() );
+        }
+
+
+    }
 }

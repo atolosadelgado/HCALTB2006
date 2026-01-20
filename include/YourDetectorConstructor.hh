@@ -6,6 +6,7 @@
 
 class G4Material;
 class G4VPhysicalVolume;
+class G4Colour;
 
 /// Detector construction allowing to use the geometry read from the GDML file
 class YourDetectorConstructor : public G4VUserDetectorConstruction
@@ -17,13 +18,16 @@ class YourDetectorConstructor : public G4VUserDetectorConstruction
   virtual G4VPhysicalVolume* Construct() override;
 
   void ConfigureECALAsAir(){ECALAsAir=true;}
+  void ConfigureVisSensitiveOnly(){visSensitiveOnly=true;}
 
   private:
       std::string gdml_filename;
       G4VPhysicalVolume * worldPV;
       bool ECALAsAir = false;;
+      bool visSensitiveOnly = false;;
       void MakeECALAsAir();
       void ReplaceMaterialInTree(G4VPhysicalVolume* rootPV, G4Material* newMat);
+      void HighlightMaterial(const G4String& targetMaterialName, bool makeOtherInvisible, G4Colour & color);
 };
 
 #endif
