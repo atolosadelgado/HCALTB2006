@@ -81,7 +81,15 @@ int main(int argc, char** argv)
 
     // Get the pointer to the User Interface manager
     G4UImanager* UImanager = G4UImanager::GetUIpointer();
-
+    UImanager->ApplyCommand(
+        "/control/alias PARTICLE_ENERGY_GEV " +
+        std::to_string(iargs.particle_energy_GeV)
+    );
+    UImanager->ApplyCommand("/control/alias PARTICLE_NAME " + iargs.particle_name);
+    UImanager->ApplyCommand(
+        "/control/alias NEVENTS " +
+        std::to_string(iargs.nevents)
+    );
     // Initialize visualization
     G4VisManager* visManager = new G4VisExecutive;
     visManager->Initialize();
@@ -95,15 +103,7 @@ int main(int argc, char** argv)
     }
     else
     {
-        UImanager->ApplyCommand(
-            "/control/alias PARTICLE_ENERGY_GEV " +
-            std::to_string(iargs.particle_energy_GeV)
-        );
-        UImanager->ApplyCommand("/control/alias PARTICLE_NAME " + iargs.particle_name);
-        UImanager->ApplyCommand(
-            "/control/alias NEVENTS " +
-            std::to_string(iargs.nevents)
-        );
+
         UImanager->ApplyCommand("/control/execute " + iargs.macro);
     }
 
