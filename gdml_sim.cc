@@ -12,7 +12,7 @@
 #include "YourDetectorConstructor.hh"
 #include "YourActionInitialization.hh"
 
-#include "ECalSD.h"
+#include "SimpleCaloSD.h"
 
 //________________________________________________________________________________
 #include <iostream>
@@ -39,7 +39,7 @@ std::string get_basename(const std::string& filepath) {
 
 int main(int argc, char** argv)
 {
-    ECalSD * sd = new ECalSD("mySD");
+    SimpleCaloSD * sd = new SimpleCaloSD("mySD");
     return -2;
 
     YourInputArgParser parser(argc, argv);
