@@ -27,14 +27,16 @@ class YourRunAction : public G4UserRunAction {
     void FillOutputTree(double ecal_eresponse, double hcal_eresponse);
 
     void SetSteppingAction(YourSteppingAction * s) {fSteppingAction = s;}
+    void SetPrimaryGenerator(YourPrimaryGenerator * p){fPrimaryGenerator = p;}
 
     std::string _ofilename;
     const YourInputArgs * fInputArgs;
     YourSteppingAction * fSteppingAction;
+    YourPrimaryGenerator * fPrimaryGenerator;
 
     int verbosity = 0;
 private:
-    inline const YourPrimaryGenerator* GetPrimaryGenerator();
+    // inline const YourPrimaryGenerator* GetPrimaryGenerator();
 };
 
 #endif

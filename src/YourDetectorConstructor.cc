@@ -35,11 +35,12 @@ G4VPhysicalVolume * YourDetectorConstructor::Construct(){
 
   if(visSensitiveOnly)
   {
-    G4Colour green(0.0, 1.0, 0.0, 1.0);
+    G4Colour green(0.0, 1.0, 0.0, 0.5);
     G4Colour red(1.0, 0.0, 0.0, 1.0);
+    G4Colour blue(0.0, 0.0, 1.0, 0.5);
 
     HighlightMaterial("E_PbWO4", true, green);
-    HighlightMaterial("Scintillator", false, red);
+    HighlightMaterial("Scintillator", false, blue);
   }
 
 // G4VisAttributes* invisibleVis = new G4VisAttributes();

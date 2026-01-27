@@ -46,18 +46,11 @@ void YourRunAction::EndOfRunAction(const G4Run* ){
 
 }
 
-const YourPrimaryGenerator * YourRunAction::GetPrimaryGenerator()
-{
-    return static_cast<const YourPrimaryGenerator*>(
-        G4RunManager::GetRunManager()->GetUserPrimaryGeneratorAction()
-    );
-}
 
 void YourRunAction::FillEventEnergy(double ecal_energy, double hcal_energy)
 {
     if(0 > ecal_energy || 0 > hcal_energy) throw std::runtime_error("YourRunAction::FillEventEnergy cannot save negative energy");
 
-    auto fPrimaryGenerator = this->GetPrimaryGenerator();
     double ecal_energy_MeV = ecal_energy / CLHEP::MeV;
     double ecal_eventEnergyResponse = ecal_energy_MeV / fPrimaryGenerator->E0_MeV;
 

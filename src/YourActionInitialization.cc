@@ -48,4 +48,5 @@ void YourActionInitialization::Build() const {
   SetUserAction( steppingAction );
 
   runAction->SetSteppingAction(steppingAction);
+  runAction->SetPrimaryGenerator(gen);
 }
