@@ -27,6 +27,8 @@ public:
     void Initialize(G4HCofThisEvent * ) override;
     void EndOfEvent(G4HCofThisEvent * ) override;
     void clearHits();
+    double Get_event_energy(){return event_energy;}
+
 private:
     double event_energy;
     int verbosity = 1;

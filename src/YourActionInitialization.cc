@@ -1,13 +1,19 @@
 #include "YourActionInitialization.hh"
 #include "YourPrimaryGenerator.hh"
 #include "YourInputArgs.hh"
+#include "YourRunAction.hh"
+#include "YourEventAction.hh"
 
 // #include "G4MaterialScanner.hh"
+
+// call manager here to load UI commands
 #include "G4AnalysisManager.hh"
 
 YourActionInitialization::YourActionInitialization(const YourInputArgs * args)
 :   G4VUserActionInitialization(), fInputArgs(args){
   // ms = new G4MaterialScanner();
+
+  // call manager here to load UI commands
   G4AnalysisManager::Instance();
 
 }
@@ -16,10 +22,16 @@ YourActionInitialization::YourActionInitialization(const YourInputArgs * args)
 YourActionInitialization::~YourActionInitialization() {}
 
 void YourActionInitialization::BuildForMaster() const {
+  YourRunAction * run = new YourRunAction(fInputArgs);
+  SetUserAction(run);
 }
 
 void YourActionInitialization::Build() const {
   // Set UserPrimaryGeneratorAction
   YourPrimaryGenerator * gen = new YourPrimaryGenerator();
   SetUserAction(gen);
+  YourEventAction * evt = new YourEventAction();
+  SetUserAction(evt);
+  YourRunAction * run = new YourRunAction(fInputArgs);
+  SetUserAction(run);
 }
