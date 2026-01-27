@@ -27,6 +27,7 @@ public:
     std::string primary_particle_name;
 
 private:
+    int verbosity = 1;
     G4VPrimaryGenerator* fPrimaryGen = nullptr;
     SourceType fType;
 

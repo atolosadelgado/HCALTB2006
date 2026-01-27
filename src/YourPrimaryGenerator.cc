@@ -36,7 +36,8 @@ void YourPrimaryGenerator::GeneratePrimaries(G4Event* event)
     if( "" == primary_particle_name )
     {
         primary_particle_name = vertex->GetPrimary(0)->GetParticleDefinition()->GetParticleName();
-        G4cout << "\tSetting primary particle name : " << primary_particle_name << std::endl;
+        if(0<verbosity)
+            G4cout << "\tSetting primary particle name : " << primary_particle_name << std::endl;
     }
 }
 
