@@ -1,11 +1,12 @@
 #include "YourEventAction.hh"
+#include "YourPrimaryGenerator.hh"
 #include "SimpleCaloSD.h"
 
 #include "G4SDManager.hh"
 #include "G4AnalysisManager.hh"
 
 void YourEventAction::EndOfEventAction(const G4Event*) {
-    auto* sdManager = G4SDManager::GetSDMpointer();
+        auto* sdManager = G4SDManager::GetSDMpointer();
 
     auto* ecalSD =
         static_cast<SimpleCaloSD*>(sdManager->FindSensitiveDetector("ecalSD"));
@@ -13,9 +14,15 @@ void YourEventAction::EndOfEventAction(const G4Event*) {
     auto* hcalSD =
         static_cast<SimpleCaloSD*>(sdManager->FindSensitiveDetector("hcalSD"));
 
+    double ecal_energy_MeV = ecalSD->Get_event_energy() / CLHEP::MeV;
+    double ecal_eventEnergyResponse = ecal_energy_MeV / fPrimaryGenerator->E0_MeV;
+
+    double hcal_energy_MeV = hcalSD->Get_event_energy() / CLHEP::MeV;
+    double hcal_eventEnergyResponse = hcal_energy_MeV / fPrimaryGenerator->E0_MeV;
+
     auto* ana = G4AnalysisManager::Instance();
-    ana->FillNtupleDColumn(0, ecalSD->Get_event_energy());
-    ana->FillNtupleDColumn(1, hcalSD->Get_event_energy());
+    ana->FillNtupleDColumn(0, ecal_eventEnergyResponse );
+    ana->FillNtupleDColumn(1, hcal_eventEnergyResponse);
     ana->AddNtupleRow();
 }
 

@@ -29,9 +29,11 @@ void YourActionInitialization::BuildForMaster() const {
 void YourActionInitialization::Build() const {
   // Set UserPrimaryGeneratorAction
   YourPrimaryGenerator * gen = new YourPrimaryGenerator();
-  SetUserAction(gen);
   YourEventAction * evt = new YourEventAction();
-  SetUserAction(evt);
   YourRunAction * run = new YourRunAction(fInputArgs);
+  evt->SetPrimaryGenerator(gen);
+
   SetUserAction(run);
+  SetUserAction(evt);
+  SetUserAction(gen);
 }
