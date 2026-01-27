@@ -10,6 +10,7 @@
 /run/verbose 1
 /event/verbose 0
 /tracking/verbose 0
+/gps/verbose 0
 
 ###############################################
 # 1. Particle type
@@ -40,7 +41,25 @@
 /gps/pos/halfx 0.0005 mm   # 0.5 μm
 /gps/pos/halfy 0.0005 mm   # 0.5 μm
 
-/gps/pos/centre -3406.43620861921 -448.465834736858 -2048.1871866804 mm
+# original in CMS (unknown coordinate system)
+#/gps/pos/centre 0.0 0.0 -800.0 mm
+#/gps/pos/centre 0.0 0.0 2.0 m
+
+# used for calibration with electrons
+/gps/pos/centre 0.0 0.0 0.123 m
+
+# centre of beam pipe (from Geant4 Placed volume), P
+#/gps/pos/centre -3406.43620861921 -448.465834736858 -2048.1871866804 mm
+
+# Size of beam pipe box envelope: 2000, 2000, 8000 mm
+# |-> displacement along z to position GPS on surface dz = 4000 m
+# direction of its Z axis in global coordinates
+#   u = 0.8602 0.1132 0.4971
+# to position GPS on surface of beampipe enveolpe,
+#   calculate new centre: P + dz * u
+#/gps/pos/centre 34.363791 4.3341653 -59.787187 mm
+
+
 
 ###############################################
 # 4. Beam direction
@@ -48,7 +67,25 @@
 # direction = (Px, Py, Pz)
 ###############################################
 
-/gps/direction 0.852 0.112 0.512
+# original direction CMS (unknown coordinate system)
+#/gps/direction 0.8602 -0.1132 0.4971
+
+# used for calibration with electrons
+/gps/direction 0.8602 -0.1132 0
+
+# from simulation output within cmssw
+#/gps/direction 0.96859183 0.12714848 0.21368933
+#/gps/direction 1 0 0
+
+# from Geant4 Placed volume, direction of the beampipe, u
+# /gps/direction 0.852 0.112 0.512
+
+# We take the direction of CMS, but changing sign of u_y
+#/gps/direction 0.8602 0.1132 0.4971
+
+# CMSSW: η = 0.21750000 y φ = −0.1309 rad
+/gps/direction 0.96845 -0.1275 0.21413
+
 
 ###############################################
 # 5. Time offset (TimeOffset=0 in CMSSW)
