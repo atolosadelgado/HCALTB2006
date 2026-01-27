@@ -49,11 +49,10 @@ int main(int argc, char** argv)
 
     std::cout << iargs;
 
-
     // create run manager
     G4RunManager* runManager;
     if(1 < iargs.nthreads){
-        runManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::MTOnly);
+        runManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::MT);
         runManager->SetNumberOfThreads( iargs.nthreads );
     }
     else
@@ -76,7 +75,7 @@ int main(int argc, char** argv)
     runManager->SetUserInitialization(physics_list);
 
     // create user actions
-    runManager->SetUserInitialization(new YourActionInitialization("ofilename_not_used", &iargs));
+    runManager->SetUserInitialization(new YourActionInitialization(&iargs));
 
     // initialize detector and physics
     runManager->Initialize();

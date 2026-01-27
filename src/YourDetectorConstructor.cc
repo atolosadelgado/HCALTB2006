@@ -1,7 +1,13 @@
-
 #include "YourDetectorConstructor.hh"
+
 #include "G4Exception.hh"
 #include "G4LossTableManager.hh"
+#include "G4GDMLParser.hh"
+#include "G4LogicalVolumeStore.hh"
+#include "G4LogicalVolume.hh"
+#include "G4Material.hh"
+#include "G4VisAttributes.hh"
+#include "G4Colour.hh"
 
 YourDetectorConstructor::YourDetectorConstructor(std::string fname) :  G4VUserDetectorConstruction() {
     if (fname.empty())
@@ -12,12 +18,7 @@ YourDetectorConstructor::YourDetectorConstructor(std::string fname) :  G4VUserDe
 }
 
 
-#include "G4GDMLParser.hh"
-#include "G4LogicalVolumeStore.hh"
-#include "G4LogicalVolume.hh"
-#include "G4Material.hh"
-#include "G4VisAttributes.hh"
-#include "G4Colour.hh"
+
 
 G4VPhysicalVolume * YourDetectorConstructor::Construct(){
   G4GDMLParser Parser;

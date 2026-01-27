@@ -5,7 +5,7 @@
 #include <G4VPrimaryGenerator.hh>
 #include <G4ParticleGun.hh>
 #include <G4GeneralParticleSource.hh>
-#include <CLHEP/Units/SystemOfUnits.h>
+// #include <CLHEP/Units/SystemOfUnits.h>
 
 class YourPrimaryGenerator : public G4VUserPrimaryGeneratorAction
 {
@@ -29,8 +29,6 @@ public:
 private:
     G4VPrimaryGenerator* fPrimaryGen = nullptr;
     SourceType fType;
-
-    int counter = 0;
 
     // Extract direction from beamline PV
     void ShowBeamLineDirection();

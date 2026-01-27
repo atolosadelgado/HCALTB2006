@@ -16,3 +16,7 @@ Header files defining Geant4 user actions and helper classes.
 
 src/
 Source files implementing the Geant4 user actions, detector construction, physics list, and other components of the simulation.
+
+Branches:
+* master: trial to make a simple (just scoring energy) Geant4 stand alone application to reproduce the results in the paper. It did not work. Project forked at commit ac5d8d72b37eca2fa0145743f3073476ec94f6b4 to the branch below
+* cmssw_actions: branch aiming to migrate the CMSSW actions for scoring energy and produce the mean energy plots as in the original paper
