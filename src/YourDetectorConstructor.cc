@@ -1,5 +1,8 @@
 #include "YourDetectorConstructor.hh"
 
+#include <queue>
+#include <set>
+
 #include "G4Exception.hh"
 #include "G4LossTableManager.hh"
 #include "G4GDMLParser.hh"
@@ -8,6 +11,12 @@
 #include "G4Material.hh"
 #include "G4VisAttributes.hh"
 #include "G4Colour.hh"
+#include "G4PhysicalVolumeStore.hh"
+#include "G4LogicalVolumeStore.hh"
+#include "G4GeometryManager.hh"
+#include "G4SDManager.hh"
+
+class EcalSD;
 
 YourDetectorConstructor::YourDetectorConstructor(std::string fname) :  G4VUserDetectorConstruction() {
     if (fname.empty())
@@ -56,9 +65,10 @@ YourDetectorConstructor::~YourDetectorConstructor(){
 
 }
 
-#include "G4PhysicalVolumeStore.hh"
-#include "G4LogicalVolumeStore.hh"
-#include "G4GeometryManager.hh"
+void YourDetectorConstructor::ConstructSDandField()
+{
+  this->ConstructSDecal();
+}
 
 void YourDetectorConstructor::MakeECALAsAir()
 {
@@ -88,8 +98,6 @@ void YourDetectorConstructor::MakeECALAsAir()
 
 }
 
-#include <queue>
-#include <set>
 
 void YourDetectorConstructor::ReplaceMaterialInTree(G4VPhysicalVolume* rootPV,
                             G4Material* newMat)
@@ -142,4 +150,36 @@ void YourDetectorConstructor::HighlightMaterial(const G4String& targetMaterialNa
 
 
     }
+}
+
+void YourDetectorConstructor::ConstructSDecal()
+{
+  //   EcalSD * ecalSD; // = new EcalSD;
+  // G4SDManager::GetSDMpointer()->AddNewDetector(ecalSD);
+  //
+  // std::queue<G4VPhysicalVolume*> queue;
+  // std::set<G4LogicalVolume*> visited;
+  //
+  // queue.push(rootPV);
+  //
+  // while (!queue.empty())
+  // {
+  // auto pv = queue.front();
+  // queue.pop();
+  //
+  // auto lv = pv->GetLogicalVolume();
+  //
+  // if (visited.insert(lv).second)
+  // {
+  //   lv->SetMaterial(newMat);
+  // }
+  //
+  // for (int i = 0; i < lv->GetNoDaughters(); ++i)
+  // {
+  //   queue.push(lv->GetDaughter(i));
+  // }
+  // }
+  //
+  // logicEcal->SetSensitiveDetector(ecalSD);
+
 }

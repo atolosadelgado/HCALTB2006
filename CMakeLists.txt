@@ -27,25 +27,20 @@ include_directories(${PROJECT_SOURCE_DIR}/include
                     ${Geant4_INCLUDE_DIR}
                     )
 
-file(GLOB sources ${PROJECT_SOURCE_DIR}/src/YourActionInitialization.cc
-                  ${PROJECT_SOURCE_DIR}/src/YourRunAction.cc
-                  ${PROJECT_SOURCE_DIR}/src/YourEventAction.cc
-                  ${PROJECT_SOURCE_DIR}/src/YourSteppingAction.cc
-                  ${PROJECT_SOURCE_DIR}/src/YourDetectorConstructor.cc
+file(GLOB sources   ${PROJECT_SOURCE_DIR}/src/YourDetectorConstructor.cc
+                    ${PROJECT_SOURCE_DIR}/src/YourActionInitialization.cc
                     ${PROJECT_SOURCE_DIR}/src/YourPrimaryGenerator.cc
-                    # ${PROJECT_SOURCE_DIR}/src/HistoEnergyResponse.cc
                     ${PROJECT_SOURCE_DIR}/src/YourInputArgsParser.cc
+                    )
 
-                  )
 file(GLOB headers   ${PROJECT_SOURCE_DIR}/include/YourDetectorConstructor.hh
                     ${PROJECT_SOURCE_DIR}/include/YourActionInitialization.hh
-                    ${PROJECT_SOURCE_DIR}/include/YourRunAction.hh
-                    ${PROJECT_SOURCE_DIR}/include/YourEventAction.hh
-                    ${PROJECT_SOURCE_DIR}/include/YourSteppingAction.hh
                     ${PROJECT_SOURCE_DIR}/include/YourPrimaryGenerator.hh
-                    # ${PROJECT_SOURCE_DIR}/include/HistoEnergyResponse.hh
                     ${PROJECT_SOURCE_DIR}/include/YourInputArgsParser.hh
-
+                    ${PROJECT_SOURCE_DIR}/include/ECalSD.h
+                    ${PROJECT_SOURCE_DIR}/include/CaloSD.h
+                    ${PROJECT_SOURCE_DIR}/include/SensitiveCaloDetector.h
+                    ${PROJECT_SOURCE_DIR}/include/SensitiveDetector.h
                     )
 
 #----------------------------------------------------------------------------

@@ -16,6 +16,9 @@ class YourDetectorConstructor : public G4VUserDetectorConstruction
   YourDetectorConstructor(std::string fname);
   ~YourDetectorConstructor() override;
   virtual G4VPhysicalVolume* Construct() override;
+  virtual void ConstructSDandField() override;
+
+
 
   void ConfigureECALAsAir(){ECALAsAir=true;}
   void ConfigureVisSensitiveOnly(){visSensitiveOnly=true;}
@@ -28,6 +31,7 @@ class YourDetectorConstructor : public G4VUserDetectorConstruction
       void MakeECALAsAir();
       void ReplaceMaterialInTree(G4VPhysicalVolume* rootPV, G4Material* newMat);
       void HighlightMaterial(const G4String& targetMaterialName, bool makeOtherInvisible, G4Colour & color);
+      void ConstructSDecal();
 };
 
 #endif

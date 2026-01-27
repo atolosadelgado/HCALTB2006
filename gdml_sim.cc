@@ -12,6 +12,8 @@
 #include "YourDetectorConstructor.hh"
 #include "YourActionInitialization.hh"
 
+#include "ECalSD.h"
+
 //________________________________________________________________________________
 #include <iostream>
 #include <string>
@@ -37,6 +39,9 @@ std::string get_basename(const std::string& filepath) {
 
 int main(int argc, char** argv)
 {
+    ECalSD * sd = new ECalSD("mySD");
+    return -2;
+
     YourInputArgParser parser(argc, argv);
 
     if (!parser.parse())
