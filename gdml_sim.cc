@@ -39,9 +39,6 @@ std::string get_basename(const std::string& filepath) {
 
 int main(int argc, char** argv)
 {
-    SimpleCaloSD * sd = new SimpleCaloSD("mySD");
-    return -2;
-
     YourInputArgParser parser(argc, argv);
 
     if (!parser.parse())

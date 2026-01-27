@@ -1,4 +1,5 @@
 #include "YourDetectorConstructor.hh"
+#include "SimpleCaloSD.h"
 
 #include <queue>
 #include <set>
@@ -16,8 +17,6 @@
 #include "G4GeometryManager.hh"
 #include "G4SDManager.hh"
 
-class EcalSD;
-
 YourDetectorConstructor::YourDetectorConstructor(std::string fname) :  G4VUserDetectorConstruction() {
     if (fname.empty())
         G4Exception("YourDetectorConstructor", "InvalidGDML",
@@ -34,10 +33,17 @@ G4VPhysicalVolume * YourDetectorConstructor::Construct(){
   Parser.Read(gdml_filename, false);
   worldPV = Parser.GetWorldVolume();
 
-  G4Material* scint = G4Material::GetMaterial("Scintillator");
+  G4Material* scint = G4Material::GetMaterial(hcal_sensmat_name);
   scint->GetIonisation()->SetBirksConstant(0.006*CLHEP::mm/CLHEP::MeV);
   G4LossTableManager::Instance()->EmSaturation()->InitialiseG4Saturation();
-// G4LossTableManager::Instance()->EmSaturation()->DumpBirksCoefficients();
+  // G4LossTableManager::Instance()->EmSaturation()->DumpBirksCoefficients();
+
+  // save pointer to PV of ECAL and HCAL
+  FindEcalPV();
+  FindHcalPV();
+
+  //__________________________________________________
+  // process input argument options
 
   if(ECALAsAir)
     this->MakeECALAsAir();
@@ -49,14 +55,10 @@ G4VPhysicalVolume * YourDetectorConstructor::Construct(){
     G4Colour red(1.0, 0.0, 0.0, 1.0);
     G4Colour blue(0.0, 0.0, 1.0, 0.5);
 
-    HighlightMaterial("E_PbWO4", true, green);
-    HighlightMaterial("Scintillator", false, blue);
+    HighlightMaterial(ecal_sensmat_name, true, green);
+    HighlightMaterial(hcal_sensmat_name, false, blue);
   }
 
-// G4VisAttributes* invisibleVis = new G4VisAttributes();
-// invisibleVis->SetVisibility(false);
-// worldPV->GetLogicalVolume()->SetVisAttributes(invisibleVis);
-//   // worldPV->GetLogicalVolume()->SetVisAttributes( G4VisAttributes::GetInvisible() );
   return worldPV;
 }
 
@@ -67,30 +69,20 @@ YourDetectorConstructor::~YourDetectorConstructor(){
 
 void YourDetectorConstructor::ConstructSDandField()
 {
-  this->ConstructSDecal();
+  SimpleCaloSD * ecalSD = new SimpleCaloSD("ecalSD");
+  G4SDManager::GetSDMpointer()->AddNewDetector(ecalSD);
+  AssignLVtoSD(ecalSD, ecalPV, ecal_sensmat_name);
+
+  SimpleCaloSD * hcalSD = new SimpleCaloSD("hcalSD");
+  G4SDManager::GetSDMpointer()->AddNewDetector(hcalSD);
+  AssignLVtoSD(hcalSD, hcalPV, hcal_sensmat_name);
 }
 
 void YourDetectorConstructor::MakeECALAsAir()
 {
+  // if PV not found before, look it up now
+  if(!ecalPV) FindEcalPV();
 
-  G4VPhysicalVolume* ecalPV = nullptr;
-
-  // World -> TBHCal -> Calo (+HcalTestBeamLine, walls, etc) ->
-  G4LogicalVolume* motherLV = G4LogicalVolumeStore::GetInstance()->GetVolume("Calo");
-
-  if(nullptr == motherLV) throw std::runtime_error("YourDetectorConstructor::SetupECALAsAir cannot find Calo LV");
-
-  for (int i = 0; i < motherLV->GetNoDaughters(); i++) {
-      G4VPhysicalVolume* daughter = motherLV->GetDaughter(i);
-      std::cout << "World daughter : " << daughter->GetName() << std::endl;
-      if (daughter->GetName() == "ECAL") { // nombre del physvol del ECAL
-          ecalPV = daughter;
-          break;
-      }
-  }
-
-  if(nullptr == ecalPV) throw std::runtime_error("YourDetectorConstructor::SetupECALAsAir cannot find ECAL physical volume");
-  else       G4cout << "Found ECAL physvol at position: " << ecalPV->GetTranslation() << G4endl;
   G4Material * air_mat = G4Material::GetMaterial("Air");
   if(nullptr == air_mat) throw std::runtime_error("YourDetectorConstructor::SetupECALAsAir cannot find Air material");
 
@@ -152,34 +144,66 @@ void YourDetectorConstructor::HighlightMaterial(const G4String& targetMaterialNa
     }
 }
 
-void YourDetectorConstructor::ConstructSDecal()
+G4VPhysicalVolume * YourDetectorConstructor::FindPV(std::string pvname)
 {
-  //   EcalSD * ecalSD; // = new EcalSD;
-  // G4SDManager::GetSDMpointer()->AddNewDetector(ecalSD);
-  //
-  // std::queue<G4VPhysicalVolume*> queue;
-  // std::set<G4LogicalVolume*> visited;
-  //
-  // queue.push(rootPV);
-  //
-  // while (!queue.empty())
-  // {
-  // auto pv = queue.front();
-  // queue.pop();
-  //
-  // auto lv = pv->GetLogicalVolume();
-  //
-  // if (visited.insert(lv).second)
-  // {
-  //   lv->SetMaterial(newMat);
-  // }
-  //
-  // for (int i = 0; i < lv->GetNoDaughters(); ++i)
-  // {
-  //   queue.push(lv->GetDaughter(i));
-  // }
-  // }
-  //
-  // logicEcal->SetSensitiveDetector(ecalSD);
+    G4VPhysicalVolume* findingPV = nullptr;
 
+  // World -> TBHCal -> Calo (+HcalTestBeamLine, walls, etc) ->
+  G4LogicalVolume* motherLV = G4LogicalVolumeStore::GetInstance()->GetVolume("Calo");
+
+  if(nullptr == motherLV) throw std::runtime_error("YourDetectorConstructor::FindPV cannot find <Calo> LV");
+
+  for (int i = 0; i < motherLV->GetNoDaughters(); i++) {
+      G4VPhysicalVolume* daughter = motherLV->GetDaughter(i);
+      std::cout << "World daughter : " << daughter->GetName() << std::endl;
+      if (daughter->GetName() == pvname) { // nombre del physvol del ECAL
+          findingPV = daughter;
+          break;
+      }
+  }
+
+  if(nullptr == findingPV) throw std::runtime_error("YourDetectorConstructor::FindPV cannot find <" + pvname +"> physical volume");
+  else       G4cout << "Found physvol at position: " << findingPV->GetTranslation() << G4endl;
+  return findingPV;
+}
+
+void YourDetectorConstructor::FindEcalPV()
+{
+  ecalPV = FindPV("ECAL");
+}
+
+void YourDetectorConstructor::FindHcalPV()
+{
+  hcalPV = FindPV("HCal");
+}
+
+
+void YourDetectorConstructor::AssignLVtoSD(G4VSensitiveDetector * sd, G4VPhysicalVolume * rootPV, std::string sensmat_name)
+{
+
+    G4Material* sensemat = G4Material::GetMaterial(sensmat_name);
+
+    std::queue<G4VPhysicalVolume*> queue;
+    std::set<G4LogicalVolume*> visited;
+
+    queue.push(rootPV);
+
+    while (!queue.empty())
+    {
+      auto pv = queue.front();
+      queue.pop();
+
+      auto lv = pv->GetLogicalVolume();
+
+      if (visited.insert(lv).second)
+      {
+        if(sensemat == lv->GetMaterial())
+          lv->SetSensitiveDetector(sd);
+      }
+
+      for (int i = 0; i < lv->GetNoDaughters(); ++i)
+      {
+        queue.push(lv->GetDaughter(i));
+      }
+    }
 }
