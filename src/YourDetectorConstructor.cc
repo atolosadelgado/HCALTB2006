@@ -1,5 +1,7 @@
 #include "YourDetectorConstructor.hh"
-#include "SimpleCaloSD.h"
+// #include "SimpleCaloSD.h"
+#include "ECalSD.h"
+#include "HCalSD.h"
 
 #include <queue>
 #include <set>
@@ -69,11 +71,11 @@ YourDetectorConstructor::~YourDetectorConstructor(){
 
 void YourDetectorConstructor::ConstructSDandField()
 {
-  SimpleCaloSD * ecalSD = new SimpleCaloSD("ecalSD");
+  ECalSD * ecalSD = new ECalSD("ecalSD");
   G4SDManager::GetSDMpointer()->AddNewDetector(ecalSD);
   AssignLVtoSD(ecalSD, ecalPV, ecal_sensmat_name);
 
-  SimpleCaloSD * hcalSD = new SimpleCaloSD("hcalSD");
+  HCalSD * hcalSD = new HCalSD("hcalSD");
   G4SDManager::GetSDMpointer()->AddNewDetector(hcalSD);
   AssignLVtoSD(hcalSD, hcalPV, hcal_sensmat_name);
 }

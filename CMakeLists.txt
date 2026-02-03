@@ -33,7 +33,9 @@ file(GLOB sources   ${PROJECT_SOURCE_DIR}/src/YourDetectorConstructor.cc
                     ${PROJECT_SOURCE_DIR}/src/YourRunAction.cc
                     ${PROJECT_SOURCE_DIR}/src/YourEventAction.cc
                     ${PROJECT_SOURCE_DIR}/src/YourInputArgsParser.cc
-                    ${PROJECT_SOURCE_DIR}/src/SimpleCaloSD.cc
+                    # ${PROJECT_SOURCE_DIR}/src/SimpleCaloSD.cc
+                    ${PROJECT_SOURCE_DIR}/src/ECalSD.cc
+                    ${PROJECT_SOURCE_DIR}/src/HCalSD.cc
                     )
 
 file(GLOB headers   ${PROJECT_SOURCE_DIR}/include/YourDetectorConstructor.hh
@@ -43,9 +45,10 @@ file(GLOB headers   ${PROJECT_SOURCE_DIR}/include/YourDetectorConstructor.hh
                     ${PROJECT_SOURCE_DIR}/include/YourEventAction.hh
                     ${PROJECT_SOURCE_DIR}/include/YourInputArgsParser.hh
                     ${PROJECT_SOURCE_DIR}/include/ECalSD.h
-                    ${PROJECT_SOURCE_DIR}/include/CaloSD.h
-                    ${PROJECT_SOURCE_DIR}/include/SensitiveCaloDetector.h
-                    ${PROJECT_SOURCE_DIR}/include/SensitiveDetector.h
+                    ${PROJECT_SOURCE_DIR}/include/HCalSD.h
+                    # ${PROJECT_SOURCE_DIR}/include/CaloSD.h
+                    # ${PROJECT_SOURCE_DIR}/include/SensitiveCaloDetector.h
+                    # ${PROJECT_SOURCE_DIR}/include/SensitiveDetector.h
                     )
 
 #----------------------------------------------------------------------------
