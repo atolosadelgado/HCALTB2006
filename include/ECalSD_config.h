@@ -63,7 +63,8 @@ public:
   Vec3 currentLocalPoint = {-0.650662, 9.12936, 83.5814};
 
   double crystalLength  = {230.0};
-  double crystalDepth   = {31.4186};
+  // calculated for each hit
+  // double crystalDepth   = {31.4186};
   int depth             = {0};
 
   bool ageingWithSlopeLY = {false};

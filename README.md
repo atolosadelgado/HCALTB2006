@@ -78,14 +78,14 @@ igprof-analyse -g -d igprof.pp > callgraph.txt
 # take the class::method substring from each line, remove the ones that start with G4, and look for unique strings
 grep -oP '\w+::\w+(?=\()' callgraph.txt | grep -v '^G4' | sort | uniq > mydebug_uniq_hcal.txt
 
-ECalSD::getBaseNumber
-ECalSD::getBirkL3
-ECalSD::getDepth
-ECalSD::getEnergyDeposit
-ECalSD::setDetUnitId
-EcalBarrelNumberingScheme::getUnitID
-EcalBaseNumber::addLevel
-EcalBaseNumber::getCopyNumber
+ECalSD::getBaseNumber --
+ECalSD::getBirkL3 --
+ECalSD::getDepth --
+ECalSD::getEnergyDeposit --
+ECalSD::setDetUnitId --
+EcalBarrelNumberingScheme::getUnitID xx
+EcalBaseNumber::addLevel  xx
+EcalBaseNumber::getCopyNumber  xx
 
 HCalSD::filterHit
 HCalSD::getEnergyDeposit
@@ -98,13 +98,13 @@ HCalSD::isItStraightBundle
 HCalSD::modifyDepth
 HCalSD::setDetUnitId
 
-CaloSD::ProcessHits
-CaloSD::checkHit
-CaloSD::cleanHitCollection
-CaloSD::createNewHit
-CaloSD::getTrackID
-CaloSD::hitExists
-CaloSD::saveHit
+CaloSD::ProcessHits --
+CaloSD::checkHit  --
+CaloSD::cleanHitCollection --
+CaloSD::createNewHit --
+CaloSD::getTrackID --
+CaloSD::hitExists --
+CaloSD::saveHit --
 CaloSD::update
 
 HcalDDDSimConstants::findDepth
