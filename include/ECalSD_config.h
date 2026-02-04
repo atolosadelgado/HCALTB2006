@@ -168,6 +168,43 @@ public:
     };
   EcalSimulationParameters EcalSim_parameters;
   CaloSD_config            CaloSD_parameters;
+
+  // LV attached to ECalSD (dumped from CMSSW)
+  std::vector<std::string> sensitive_lv = { "EBRY_01_refl",
+                                            "EBRY_01",
+                                            "EBRY_02",
+                                            "EBRY_02_refl",
+                                            "EBRY_03",
+                                            "EBRY_03_refl",
+                                            "EBRY_04",
+                                            "EBRY_04_refl",
+                                            "EBRY_05",
+                                            "EBRY_05_refl",
+                                            "EBRY_06",
+                                            "EBRY_06_refl",
+                                            "EBRY_07",
+                                            "EBRY_07_refl",
+                                            "EBRY_08",
+                                            "EBRY_08_refl",
+                                            "EBRY_09",
+                                            "EBRY_09_refl",
+                                            "EBRY_10",
+                                            "EBRY_10_refl",
+                                            "EBRY_11",
+                                            "EBRY_11_refl",
+                                            "EBRY_12",
+                                            "EBRY_12_refl",
+                                            "EBRY_13",
+                                            "EBRY_13_refl",
+                                            "EBRY_14",
+                                            "EBRY_14_refl",
+                                            "EBRY_15",
+                                            "EBRY_15_refl",
+                                            "EBRY_16",
+                                            "EBRY_16_refl",
+                                            "EBRY_17",
+                                            "EBRY_17_refl"
+                                        };
 };
 
 
