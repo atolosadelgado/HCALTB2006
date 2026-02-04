@@ -12,8 +12,6 @@
 #include "YourDetectorConstructor.hh"
 #include "YourActionInitialization.hh"
 
-#include "SimpleCaloSD.h"
-
 //________________________________________________________________________________
 #include <iostream>
 #include <string>
