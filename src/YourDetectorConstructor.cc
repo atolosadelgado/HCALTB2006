@@ -7,16 +7,15 @@
 #include <set>
 
 #include "G4Exception.hh"
-#include "G4LossTableManager.hh"
+#include "G4LossTableManager.hh" // EM saturation models
 #include "G4GDMLParser.hh"
 #include "G4LogicalVolumeStore.hh"
+#include "G4PhysicalVolumeStore.hh"
+
 #include "G4LogicalVolume.hh"
 #include "G4Material.hh"
 #include "G4VisAttributes.hh"
 #include "G4Colour.hh"
-#include "G4PhysicalVolumeStore.hh"
-#include "G4LogicalVolumeStore.hh"
-#include "G4GeometryManager.hh"
 #include "G4SDManager.hh"
 
 YourDetectorConstructor::YourDetectorConstructor(std::string fname) :  G4VUserDetectorConstruction() {
