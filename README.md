@@ -239,3 +239,5 @@ EBRY_17_refl
 
 Using export USER_CXXFLAGS="-Wno-error=missing-braces", to allow compiling with G4Analysis. Trick used 58 times in CMSSW to compile with debug messages as follows:
 scram b -j8 USER_CXXFLAGS="-DEDM_ML_DEBUG"
+
+When disabling EMPhysics and HadPhysics, only decay and transportation is allowed, effectively allowing material scan with stable particles
