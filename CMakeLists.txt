@@ -32,6 +32,7 @@ file(GLOB sources   ${PROJECT_SOURCE_DIR}/src/YourDetectorConstructor.cc
                     ${PROJECT_SOURCE_DIR}/src/YourPrimaryGenerator.cc
                     ${PROJECT_SOURCE_DIR}/src/YourRunAction.cc
                     ${PROJECT_SOURCE_DIR}/src/YourEventAction.cc
+                    ${PROJECT_SOURCE_DIR}/src/SteppingAction.cc
                     ${PROJECT_SOURCE_DIR}/src/YourInputArgsParser.cc
                     # ${PROJECT_SOURCE_DIR}/src/SimpleCaloSD.cc
                     ${PROJECT_SOURCE_DIR}/src/ECalSD.cc
@@ -43,6 +44,7 @@ file(GLOB headers   ${PROJECT_SOURCE_DIR}/include/YourDetectorConstructor.hh
                     ${PROJECT_SOURCE_DIR}/include/YourPrimaryGenerator.hh
                     ${PROJECT_SOURCE_DIR}/include/YourRunAction.hh
                     ${PROJECT_SOURCE_DIR}/include/YourEventAction.hh
+                    ${PROJECT_SOURCE_DIR}/include/SteppingAction.hh
                     ${PROJECT_SOURCE_DIR}/include/YourInputArgsParser.hh
                     ${PROJECT_SOURCE_DIR}/include/ECalSD.h
                     ${PROJECT_SOURCE_DIR}/include/HCalSD.h

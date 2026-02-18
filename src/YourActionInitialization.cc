@@ -3,6 +3,7 @@
 #include "YourInputArgs.hh"
 #include "YourRunAction.hh"
 #include "YourEventAction.hh"
+#include "SteppingAction.hh"
 
 // #include "G4MaterialScanner.hh"
 
@@ -36,4 +37,7 @@ void YourActionInitialization::Build() const {
   SetUserAction(run);
   SetUserAction(evt);
   SetUserAction(gen);
+
+  //   useful for matscan
+  // SetUserAction(new SteppingAction);
 }

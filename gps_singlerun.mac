@@ -26,65 +26,14 @@
 
 ###############################################
 # 3. Position of beam spot
-#    CMSSW: BeamMeanX = 0
-#           BeamMeanY = 0
-#           BeamPosition = -800 mm
-###############################################
-
-# Beam center
-/gps/pos/type Beam
-/gps/pos/shape Square
-
-# Size of the square equivalent to sigma
-# sigmaX = sigmaY = 1 μm = 0.001 mm
-# CMSSW: uniform distribution in [-0.5σ, +0.5σ]
-/gps/pos/halfx 0.0005 mm   # 0.5 μm
-/gps/pos/halfy 0.0005 mm   # 0.5 μm
-
-# original in CMS (unknown coordinate system)
-#/gps/pos/centre 0.0 0.0 -800.0 mm
-#/gps/pos/centre 0.0 0.0 2.0 m
-
-# used for calibration with electrons
-/gps/pos/centre 0.0 0.0 0.123 m
-
-# centre of beam pipe (from Geant4 Placed volume), P
-#/gps/pos/centre -3406.43620861921 -448.465834736858 -2048.1871866804 mm
-
-# Size of beam pipe box envelope: 2000, 2000, 8000 mm
-# |-> displacement along z to position GPS on surface dz = 4000 m
-# direction of its Z axis in global coordinates
-#   u = 0.8602 0.1132 0.4971
-# to position GPS on surface of beampipe enveolpe,
-#   calculate new centre: P + dz * u
-#/gps/pos/centre 34.363791 4.3341653 -59.787187 mm
+/gps/pos/type Point
+/gps/pos/centre  -7747.58 1019.99 -1713.07 mm
 
 
 
 ###############################################
 # 4. Beam direction
-# CMSSW: η = 0.5655 y φ = −0.1309 rad
-# direction = (Px, Py, Pz)
-###############################################
-
-# original direction CMS (unknown coordinate system)
-#/gps/direction 0.8602 -0.1132 0.4971
-
-# used for calibration with electrons
-/gps/direction 0.8602 -0.1132 0
-
-# from simulation output within cmssw
-#/gps/direction 0.96859183 0.12714848 0.21368933
-#/gps/direction 1 0 0
-
-# from Geant4 Placed volume, direction of the beampipe, u
-# /gps/direction 0.852 0.112 0.512
-
-# We take the direction of CMS, but changing sign of u_y
-#/gps/direction 0.8602 0.1132 0.4971
-
-# CMSSW: η = 0.21750000 y φ = −0.1309 rad
-/gps/direction 0.96845 -0.1275 0.21413
+/gps/direction 0.968448 -0.127499 0.214134
 
 
 ###############################################
