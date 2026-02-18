@@ -28,6 +28,8 @@ include_directories(${PROJECT_SOURCE_DIR}/include
                     )
 
 file(GLOB sources   ${PROJECT_SOURCE_DIR}/src/YourDetectorConstructor.cc
+                    ${PROJECT_SOURCE_DIR}/src/PhysicsList.cc
+                    ${PROJECT_SOURCE_DIR}/src/CMSHadronPhysicsFTFP_BERT.cc
                     ${PROJECT_SOURCE_DIR}/src/YourActionInitialization.cc
                     ${PROJECT_SOURCE_DIR}/src/YourPrimaryGenerator.cc
                     ${PROJECT_SOURCE_DIR}/src/YourRunAction.cc
@@ -40,6 +42,8 @@ file(GLOB sources   ${PROJECT_SOURCE_DIR}/src/YourDetectorConstructor.cc
                     )
 
 file(GLOB headers   ${PROJECT_SOURCE_DIR}/include/YourDetectorConstructor.hh
+                    ${PROJECT_SOURCE_DIR}/include/PhysicsList.hh
+                    ${PROJECT_SOURCE_DIR}/include/CMSHadronPhysicsFTFP_BERT.hh
                     ${PROJECT_SOURCE_DIR}/include/YourActionInitialization.hh
                     ${PROJECT_SOURCE_DIR}/include/YourPrimaryGenerator.hh
                     ${PROJECT_SOURCE_DIR}/include/YourRunAction.hh
