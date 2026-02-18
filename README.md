@@ -123,7 +123,9 @@ cmsrel CMSSW_15_0_10
 cd CMSSW_15_0_10/src/
 cmsenv
 export SITECONFIG_PATH=/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN
-
+export USER_CXXFLAGS="-Wno-error=missing-braces"
+scram build clean
+scram build -j 8
 
 Logical Volumes attached to HCal SD,
 HBScintillatorLayer0In1
@@ -234,3 +236,6 @@ EBRY_16
 EBRY_16_refl
 EBRY_17
 EBRY_17_refl
+
+Using export USER_CXXFLAGS="-Wno-error=missing-braces", to allow compiling with G4Analysis. Trick used 58 times in CMSSW to compile with debug messages as follows:
+scram b -j8 USER_CXXFLAGS="-DEDM_ML_DEBUG"
