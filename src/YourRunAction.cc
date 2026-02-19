@@ -32,9 +32,11 @@ void YourRunAction::BeginOfRunAction(const G4Run*)
 
 void YourRunAction::EndOfRunAction(const G4Run* ){
     this->EndOutputTree();
+#if HAVE_ROOT
     if (G4Threading::IsMasterThread()){
         fInputArgs->SaveToROOTfile( G4AnalysisManager::Instance()->GetFileName());
     }
+#endif
 
 }
 
@@ -69,10 +71,10 @@ void YourRunAction::BeginOutputTree()
         std::string basename  = ofilename.substr(0, dotPos);
         std::string extension = ofilename.substr(dotPos); // including '.'
 
-        ofilename = basename + "_" + phys + "_birk" + birk + "_airECAL" + airECAL + extension;
+        ofilename = basename + "_" + phys + "_birk" + birk + "_airECAL" + std::to_string(airECAL) + extension;
     } else {
         // if no extension
-        ofilename = ofilename + "_" + phys + "_birk" + birk + "_airECAL" + airECAL ;
+        ofilename = ofilename + "_" + phys + "_birk" + birk + "_airECAL" + std::to_string(airECAL) ;
     }
     analysisManager->SetFileName(ofilename);
     analysisManager->OpenFile(); // name set in macrofile

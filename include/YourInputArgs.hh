@@ -5,9 +5,13 @@
 #include <ostream>
 #include <iomanip> // std::fixed, std::setprecision
 
+#if HAVE_ROOT
+
 #include "TDirectory.h"
 #include "TParameter.h"
 #include "TFile.h"
+
+#endif
 
 #include "G4Version.hh"
 
@@ -34,7 +38,7 @@ struct YourInputArgs {
     bool visSensitiveOnly = false;
 
     int nthreads = 1;
-
+#if HAVE_ROOT
     void Write(TDirectory * d) const {
         if (!d) return;
 
@@ -79,7 +83,7 @@ struct YourInputArgs {
         this->Write(ofile);
         ofile->Close();
     }
-
+#endif
     // -------- Inline operator<< --------
     friend std::ostream& operator<<(std::ostream& os, const YourInputArgs& a) {
         os << "Configuration:\n";

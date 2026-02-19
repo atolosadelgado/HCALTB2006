@@ -61,11 +61,15 @@ file(GLOB headers   ${PROJECT_SOURCE_DIR}/include/YourDetectorConstructor.hh
 # include ROOT dependency for histograming
 #
 # Find ROOT package
-find_package(ROOT REQUIRED COMPONENTS Hist)
-# Include ROOT headers
-include_directories(${ROOT_INCLUDE_DIRS})
-# Enable ROOT-specific flags (e.g. RTTI, C++17 if needed)
-include(${ROOT_USE_FILE})
+find_package(ROOT)
+if(ROOT_FOUND)
+    add_definitions(-DHAVE_ROOT)
+    # # Include ROOT headers
+    include_directories(${ROOT_INCLUDE_DIRS})
+    # Enable ROOT-specific flags (e.g. RTTI, C++17 if needed)
+    include(${ROOT_USE_FILE})
+endif()
+
 
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
@@ -199,7 +203,7 @@ add_test(
             -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
             -pname pi-
             -penergy 50
-            -nevents 1000
+            -nevents 2000
             -saturation 0
             -nthreads 8
 )
