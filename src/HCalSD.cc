@@ -3,7 +3,7 @@
 #include <iostream>
 
 G4bool HCalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
-    double edep = getEnergyDeposit(aStep);
+    double edep = aStep->GetTotalEnergyDeposit();
     if (edep <= 0.) return false;
     event_energy += edep;
     if(1<verbosity)
