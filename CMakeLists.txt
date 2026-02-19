@@ -145,7 +145,7 @@ SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Excepti
 #----------------------
 # Run ECAL calibration
 
-SET( test_name "test_ECAL_calibration" )
+SET( test_name "run_ECAL_calibration" )
 add_test(
     NAME ${test_name}
     COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
@@ -154,8 +154,8 @@ add_test(
             -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
             -pname e-
             -penergy 50
-            -nevents 50
-            -saturation 2
+            -nevents 500
+            -saturation 0
             -nthreads 8
 )
 
@@ -167,7 +167,7 @@ SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Excepti
 #----------------------
 # Run HCAL calibration
 
-SET( test_name "test_HCAL_calibration" )
+SET( test_name "run_HCAL_calibration" )
 add_test(
     NAME ${test_name}
     COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
@@ -176,9 +176,9 @@ add_test(
             -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
             -pname e-
             -penergy 50
-            -nevents 50
-            -saturation 2
-            -nthreads 2
+            -nevents 500
+            -saturation 0
+            -nthreads 8
             -airECAL
 )
 
@@ -186,3 +186,26 @@ set_tests_properties(${test_name} PROPERTIES
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error")
+
+#----------------------
+# Run HCAL calibration
+
+SET( test_name "run_50GeV_pion" )
+add_test(
+    NAME ${test_name}
+    COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
+            -g ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
+            -pl FTFP_BERT
+            -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
+            -pname pi-
+            -penergy 50
+            -nevents 1000
+            -saturation 0
+            -nthreads 8
+)
+
+set_tests_properties(${test_name} PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error")
+
