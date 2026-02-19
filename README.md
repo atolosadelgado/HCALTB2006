@@ -241,3 +241,232 @@ Using export USER_CXXFLAGS="-Wno-error=missing-braces", to allow compiling with 
 scram b -j8 USER_CXXFLAGS="-DEDM_ML_DEBUG"
 
 When disabling EMPhysics and HadPhysics, only decay and transportation is allowed, effectively allowing material scan with stable particles
+
+
+=======================================================================
+======                 Electromagnetic Physics Parameters      ========
+=======================================================================
+LPM effect enabled                                 1
+Enable creation and use of sampling tables         0
+Apply cuts on all EM processes                     0
+Use combined TransportationWithMsc                 Disabled
+Use general process                                0
+Enable linear polarisation for gamma               0
+Enable photoeffect sampling below K-shell          1
+Enable sampling of quantum entanglement            0
+X-section factor for integral approach             0.8
+Min kinetic energy for tables                      100 eV
+Max kinetic energy for tables                      100 TeV
+Number of bins per decade of a table               7
+Verbose level                                      1
+Verbose level for worker thread                    0
+Bremsstrahlung energy threshold above which
+  primary e+- is added to the list of secondary    100 TeV
+Bremsstrahlung energy threshold above which primary
+  muon/hadron is added to the list of secondary    100 TeV
+Lowest triplet kinetic energy                      1 MeV
+Enable sampling of gamma linear polarisation       0
+5D gamma conversion model type                     0
+5D gamma conversion model on isolated ion          0
+Livermore data directory                           epics_2017
+=======================================================================
+======                 Ionisation Parameters                   ========
+=======================================================================
+Step function for e+-                              (0.2, 1 mm)
+Step function for muons/hadrons                    (0.2, 0.1 mm)
+Step function for light ions                       (0.2, 0.1 mm)
+Step function for general ions                     (0.2, 0.1 mm)
+Lowest e+e- kinetic energy                         1 keV
+Lowest muon/hadron kinetic energy                  1 keV
+Use ICRU90 data                                    0
+Fluctuations of dE/dx are enabled                  1
+Type of fluctuation model for leptons and hadrons  Universal
+Use built-in Birks satuaration                     0
+Build CSDA range enabled                           0
+Use cut as a final range enabled                   0
+Enable angular generator interface                 0
+Max kinetic energy for CSDA tables                 1 GeV
+Max kinetic energy for NIEL computation            0 eV
+Linear loss limit                                  0.01
+Read data from file for e+e- pair production by mu 0
+=======================================================================
+======                 Multiple Scattering Parameters          ========
+=======================================================================
+Type of msc step limit algorithm for e+-           1
+Type of msc step limit algorithm for muons/hadrons 0
+Msc lateral displacement for e+- enabled           1
+Msc lateral displacement for muons and hadrons     0
+Urban msc model lateral displacement alg96         1
+Range factor for msc step limit for e+-            0.04
+Range factor for msc step limit for muons/hadrons  0.2
+Geometry factor for msc step limitation of e+-     2.5
+Safety factor for msc step limit for e+-           0.6
+Skin parameter for msc step limitation of e+-      1
+Lambda limit for msc step limit for e+-            1 mm
+Use Mott correction for e- scattering              0
+Factor used for dynamic computation of angular
+  limit between single and multiple scattering     1
+Fixed angular limit between single
+  and multiple scattering                          3.1416 rad
+Upper energy limit for e+- multiple scattering     100 MeV
+Type of electron single scattering model           0
+Type of nuclear form-factor                        1
+Screening factor                                   1
+=======================================================================
+===== G4HadronicParameters =====
+MaxEnergy                         = 100000 GeV
+FTF-Cascade transition:
+  MinEnergy = 3 GeV
+  MaxEnergy = 6 GeV
+QGS-FTF transition:
+  MinEnergy = 12 GeV
+  MaxEnergy = 25 GeV
+INCLXX (pbar):
+  MinEnergy = 0 GeV
+  MaxEnergy = 10 GeV
+EnergyThresholdForHeavyHadrons     = 1.1 GeV
+--- Cross section factors ---
+XS Nucleon Inelastic               = 1
+XS Nucleon Elastic                 = 1
+XS Pion Inelastic                  = 1
+XS Pion Elastic                    = 1
+XS Hadron Inelastic                = 1
+XS Hadron Elastic                  = 1
+XS EM                              = 1
+--- Flags ---
+Enable BC particles                = 0
+Enable HyperNuclei                 = 0
+Apply XS factor                    = 0
+Enable CR coalescence              = 0
+Integral Inelastic XS              = 1
+Integral Elastic XS                = 1
+Diff. Dissociation (B>10)          = 0
+Neutron General Process            = 0
+Coherent Charge Exchange           = 0
+--- Verbosity / Debug ---
+VerboseLevel                       = 1
+EP Relative Level                  = 1.79769e+308
+EP Absolute Level                  = 1.79769e+308
+EP Report Level                    = 0
+Binary Debug                       = 0
+--- Environment ---
+PARTICLEXS dir                     = /cvmfs/cms.cern.ch/el9_amd64_gcc12/external/geant4-G4PARTICLEXS/4.1-dedb6cb57da888c9216c6c377a75bae6/data/G4PARTICLEXS4.1
+PhysList doc dir                   =
+PhysList name                      =
+--- Thresholds ---
+Neutron SVT threshold              = -1 MeV
+Radioactive decay time threshold   = -1e-09 s
+=========================================================================================================
+======                 Electromagnetic Physics Parameters      ========
+=======================================================================
+LPM effect enabled                                 1
+Enable creation and use of sampling tables         0
+Apply cuts on all EM processes                     0
+Use combined TransportationWithMsc                 Disabled
+Use general process                                0
+Enable linear polarisation for gamma               0
+Enable photoeffect sampling below K-shell          1
+Enable sampling of quantum entanglement            0
+X-section factor for integral approach             0.8
+Min kinetic energy for tables                      100 eV
+Max kinetic energy for tables                      100 TeV
+Number of bins per decade of a table               7
+Verbose level                                      1
+Verbose level for worker thread                    0
+Bremsstrahlung energy threshold above which
+  primary e+- is added to the list of secondary    100 TeV
+Bremsstrahlung energy threshold above which primary
+  muon/hadron is added to the list of secondary    100 TeV
+Lowest triplet kinetic energy                      1 MeV
+Enable sampling of gamma linear polarisation       0
+5D gamma conversion model type                     0
+5D gamma conversion model on isolated ion          0
+Livermore data directory                           epics_2017
+=======================================================================
+======                 Ionisation Parameters                   ========
+=======================================================================
+Step function for e+-                              (0.2, 1 mm)
+Step function for muons/hadrons                    (0.2, 0.1 mm)
+Step function for light ions                       (0.2, 0.1 mm)
+Step function for general ions                     (0.2, 0.1 mm)
+Lowest e+e- kinetic energy                         1 keV
+Lowest muon/hadron kinetic energy                  1 keV
+Use ICRU90 data                                    0
+Fluctuations of dE/dx are enabled                  1
+Type of fluctuation model for leptons and hadrons  Universal
+Use built-in Birks satuaration                     0
+Build CSDA range enabled                           0
+Use cut as a final range enabled                   0
+Enable angular generator interface                 0
+Max kinetic energy for CSDA tables                 1 GeV
+Max kinetic energy for NIEL computation            0 eV
+Linear loss limit                                  0.01
+Read data from file for e+e- pair production by mu 0
+=======================================================================
+======                 Multiple Scattering Parameters          ========
+=======================================================================
+Type of msc step limit algorithm for e+-           1
+Type of msc step limit algorithm for muons/hadrons 0
+Msc lateral displacement for e+- enabled           1
+Msc lateral displacement for muons and hadrons     0
+Urban msc model lateral displacement alg96         1
+Range factor for msc step limit for e+-            0.04
+Range factor for msc step limit for muons/hadrons  0.2
+Geometry factor for msc step limitation of e+-     2.5
+Safety factor for msc step limit for e+-           0.6
+Skin parameter for msc step limitation of e+-      1
+Lambda limit for msc step limit for e+-            1 mm
+Use Mott correction for e- scattering              0
+Factor used for dynamic computation of angular
+  limit between single and multiple scattering     1
+Fixed angular limit between single
+  and multiple scattering                          3.1416 rad
+Upper energy limit for e+- multiple scattering     100 MeV
+Type of electron single scattering model           0
+Type of nuclear form-factor                        1
+Screening factor                                   1
+=======================================================================
+===== G4HadronicParameters =====
+MaxEnergy                         = 100000 GeV
+FTF-Cascade transition:
+  MinEnergy = 3 GeV
+  MaxEnergy = 6 GeV
+QGS-FTF transition:
+  MinEnergy = 12 GeV
+  MaxEnergy = 25 GeV
+INCLXX (pbar):
+  MinEnergy = 0 GeV
+  MaxEnergy = 10 GeV
+EnergyThresholdForHeavyHadrons     = 1.1 GeV
+--- Cross section factors ---
+XS Nucleon Inelastic               = 1
+XS Nucleon Elastic                 = 1
+XS Pion Inelastic                  = 1
+XS Pion Elastic                    = 1
+XS Hadron Inelastic                = 1
+XS Hadron Elastic                  = 1
+XS EM                              = 1
+--- Flags ---
+Enable BC particles                = 0
+Enable HyperNuclei                 = 0
+Apply XS factor                    = 0
+Enable CR coalescence              = 0
+Integral Inelastic XS              = 1
+Integral Elastic XS                = 1
+Diff. Dissociation (B>10)          = 0
+Neutron General Process            = 0
+Coherent Charge Exchange           = 0
+--- Verbosity / Debug ---
+VerboseLevel                       = 1
+EP Relative Level                  = 1.79769e+308
+EP Absolute Level                  = 1.79769e+308
+EP Report Level                    = 0
+Binary Debug                       = 0
+--- Environment ---
+PARTICLEXS dir                     = /cvmfs/cms.cern.ch/el9_amd64_gcc12/external/geant4-G4PARTICLEXS/4.1-dedb6cb57da888c9216c6c377a75bae6/data/G4PARTICLEXS4.1
+PhysList doc dir                   =
+PhysList name                      =
+--- Thresholds ---
+Neutron SVT threshold              = -1 MeV
+Radioactive decay time threshold   = -1e-09 s
+==================================

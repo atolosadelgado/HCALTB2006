@@ -12,6 +12,7 @@
 #include "CMSHadronPhysicsFTFP_BERT.hh"
 
 #include "G4HadronicParameters.hh"
+#include "G4EmParameters.hh"
 
 PhysicsList::PhysicsList()
 {
@@ -115,6 +116,138 @@ PhysicsList::PhysicsList()
   // Radioactive decay time threshold   = -1e-09 s
   hadronic_parameters->SetNeutronKineticEnergyThresholdForSVT(-1*CLHEP::MeV);
   hadronic_parameters->SetTimeThresholdForRadioactiveDecay(-1e-6*CLHEP::s);
+
+  G4EmParameters * em_parameters = G4EmParameters::Instance();
+  // LPM effect enabled                                 1
+  // Enable creation and use of sampling tables         0
+  // Apply cuts on all EM processes                     0
+  // Use combined TransportationWithMsc                 Disabled
+  // Use general process                                0
+  // Enable linear polarisation for gamma               0
+  // Enable photoeffect sampling below K-shell          1
+  // Enable sampling of quantum entanglement            0
+  em_parameters->SetLPM(true);
+  em_parameters->SetEnableSamplingTable(false);
+  em_parameters->SetApplyCuts(false);
+  em_parameters->SetTransportationWithMsc(G4TransportationWithMscType::fDisabled);
+  em_parameters->SetGeneralProcessActive(false);
+  em_parameters->SetEnablePolarisation(false);
+  em_parameters->SetPhotoeffectBelowKShell(true);
+  em_parameters->SetQuantumEntanglement(false);
+  // X-section factor for integral approach             0.8 ->which method??
+  // Min kinetic energy for tables                      100 eV
+  // Max kinetic energy for tables                      100 TeV
+  // Number of bins per decade of a table               7
+  // Verbose level                                      1
+  // Verbose level for worker thread                    0
+  // Bremsstrahlung energy threshold above which
+  //   primary e+- is added to the list of secondary    100 TeV
+  // Bremsstrahlung energy threshold above which primary
+  //   muon/hadron is added to the list of secondary    100 TeV
+  em_parameters->SetMinEnergy(100*CLHEP::eV);
+  em_parameters->SetMaxEnergy(100*CLHEP::TeV);
+  em_parameters->SetNumberOfBinsPerDecade(7);
+  em_parameters->SetBremsstrahlungTh(100*CLHEP::TeV);
+  em_parameters->SetMuHadBremsstrahlungTh(100*CLHEP::TeV);
+  // Lowest triplet kinetic energy                      1 MeV
+  // Enable sampling of gamma linear polarisation       0
+  // 5D gamma conversion model type                     0
+  // 5D gamma conversion model on isolated ion          0
+  // Livermore data directory                           epics_2017
+  em_parameters->SetLowestTripletEnergy(1*CLHEP::MeV);
+  em_parameters->SetEnablePolarisation(false);
+  em_parameters->SetConversionType(0);
+  em_parameters->SetOnIsolated(false);
+  em_parameters->SetLivermoreDataDir("epics_2017");
+
+    // ============================================================
+    //                Ionisation Parameters
+    // ============================================================
+
+    // Step functions
+    using CLHEP::mm;
+    using CLHEP::keV;
+    em_parameters->SetStepFunction(0.2, 1.0*mm);              // e+/e-
+    em_parameters->SetStepFunctionMuHad(0.2, 0.1*mm);         // muons/hadrons
+    em_parameters->SetStepFunctionLightIons(0.2, 0.1*mm);     // light ions
+    em_parameters->SetStepFunctionIons(0.2, 0.1*mm);          // general ions
+
+    // Lowest kinetic energies
+    em_parameters->SetLowestElectronEnergy(1.0*keV);
+    em_parameters->SetLowestMuHadEnergy(1.0*keV);
+
+    // ICRU90
+    em_parameters->SetUseICRU90Data(false);
+
+    // dE/dx fluctuations
+    em_parameters->SetLossFluctuations(true);
+    em_parameters->SetFluctuationType(fUniversalFluctuation);
+
+    // Birks saturation
+    em_parameters->SetBirksActive(false);
+
+    // CSDA range
+    em_parameters->SetBuildCSDARange(false);
+    em_parameters->SetUseCutAsFinalRange(false);
+    em_parameters->SetMaxEnergyForCSDARange(1.0*GeV);
+
+    // NIEL
+    em_parameters->SetMaxNIELEnergy(0.0);
+
+    // Linear loss limit
+    em_parameters->SetLinearLossLimit(0.01);
+
+    // Mu pair production from file, false -> which method?
+
+
+    // Angular generator interface
+    em_parameters->ActivateAngularGeneratorForIonisation(false);
+
+    // ============================================================
+    //            Multiple Scattering Parameters
+    // ============================================================
+
+    // Step limit algorithms
+    em_parameters->SetMscStepLimitType(fUseSafetyPlus);       // e+-
+    em_parameters->SetMscMuHadStepLimitType(fMinimal);        // muons/hadrons
+
+    // Lateral displacement
+    em_parameters->SetLateralDisplacement(true);              // e+-
+    em_parameters->SetMuHadLateralDisplacement(false);       // mu/had
+
+    // Urban MSC options
+    // em_parameters->SetUrbanUseDistanceToBoundary(true);       // alg96 equivalent --> what method?
+
+    // Range factors
+    em_parameters->SetMscRangeFactor(0.04);                   // e+-
+    em_parameters->SetMscMuHadRangeFactor(0.2);               // mu/had
+
+    // Geometry & safety factors (e+-)
+    em_parameters->SetMscGeomFactor(2.5);
+    em_parameters->SetMscSafetyFactor(0.6);
+    em_parameters->SetMscSkin(1);
+    em_parameters->SetMscLambdaLimit(1.0*mm);
+
+    // Mott correction
+    em_parameters->SetUseMottCorrection(false);
+
+    // Single vs multiple scattering transition
+    em_parameters->SetFactorForAngleLimit(1.0);
+    em_parameters->SetMscThetaLimit(3.1416*CLHEP::rad);
+
+    // Upper energy limit for e+- MSC
+    em_parameters->SetMscEnergyLimit(100.0*CLHEP::MeV);
+
+    // Electron single scattering model
+    em_parameters->SetSingleScatteringType(fWVI); // fWVI = 0
+
+    // Nuclear form-factor
+    em_parameters->SetNuclearFormfactorType(fExponentialNF); // fExponentialNF = 1
+
+    // Screening factor
+    em_parameters->SetScreeningFactor(1.0);
+
+
 
 
 
