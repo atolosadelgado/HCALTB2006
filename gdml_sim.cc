@@ -34,7 +34,7 @@ std::string get_basename(const std::string& filepath) {
 //________________________________________________________________________________
 
 #include "YourInputArgsParser.hh"
-
+#include "PhysicsList.hh"
 int main(int argc, char** argv)
 {
     YourInputArgParser parser(argc, argv);
@@ -72,7 +72,7 @@ int main(int argc, char** argv)
     G4PhysListFactory pl_factory;
     auto physics_list = pl_factory.GetReferencePhysList( iargs.physics_list );
     if( ! physics_list ) throw std::runtime_error("No physics list named <"+ iargs.physics_list+"> found");
-    runManager->SetUserInitialization(physics_list);
+    runManager->SetUserInitialization(new PhysicsList);
 
     // create user actions
     runManager->SetUserInitialization(new YourActionInitialization(&iargs));
