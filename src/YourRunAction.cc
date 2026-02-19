@@ -58,6 +58,7 @@ void YourRunAction::BeginOutputTree()
     G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
     std::string ofilename = analysisManager->GetFileName();
     const std::string phys = fInputArgs->physics_list;
+    const bool airECAL     = fInputArgs->airECAL;
     const std::string birk = std::to_string(fInputArgs->saturation);
 
     // check position of '.'
@@ -68,10 +69,10 @@ void YourRunAction::BeginOutputTree()
         std::string basename  = ofilename.substr(0, dotPos);
         std::string extension = ofilename.substr(dotPos); // including '.'
 
-        ofilename = basename + "_" + phys + "_birk" + birk + extension;
+        ofilename = basename + "_" + phys + "_birk" + birk + "_airECAL" + airECAL + extension;
     } else {
         // if no extension
-        ofilename = ofilename + "_" + phys + "_birk" + birk;
+        ofilename = ofilename + "_" + phys + "_birk" + birk + "_airECAL" + airECAL ;
     }
     analysisManager->SetFileName(ofilename);
     analysisManager->OpenFile(); // name set in macrofile
