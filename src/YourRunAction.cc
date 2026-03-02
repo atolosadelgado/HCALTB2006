@@ -24,10 +24,24 @@ YourRunAction::~YourRunAction() {}
 
 #include "G4RunManager.hh"
 #include "G4VUserActionInitialization.hh"
+
+#include "YourPrimaryGenerator.hh"
+#include "ECalSD.h"
+#include "HCalSD.h"
+
+#include "G4SDManager.hh"
+#include "G4AnalysisManager.hh"
 void YourRunAction::BeginOfRunAction(const G4Run*)
 {
     this->ConstructOutputTree();
     this->BeginOutputTree();
+
+    auto* hcalSD =
+        static_cast<HCalSD*>(G4SDManager::GetSDMpointer()->FindSensitiveDetector("hcalSD"));
+    hcalSD->fPrimaryGenerator = fPrimaryGenerator;
+    auto* ecalSD =
+        static_cast<ECalSD*>(G4SDManager::GetSDMpointer()->FindSensitiveDetector("ecalSD"));
+    ecalSD->fPrimaryGenerator = fPrimaryGenerator;
 }
 
 void YourRunAction::EndOfRunAction(const G4Run* ){

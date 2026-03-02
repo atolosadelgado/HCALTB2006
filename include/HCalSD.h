@@ -5,6 +5,7 @@
 
 #include "G4VSensitiveDetector.hh"
 #include "HCalSD_config.h"
+#include "YourPrimaryGenerator.hh"
 
 class HCalSD : public G4VSensitiveDetector {
 public:
@@ -21,6 +22,7 @@ public:
     double event_energy_birk;
     double event_energy_0wt;
     int verbosity = {0};
+    YourPrimaryGenerator * fPrimaryGenerator;
     // HCalSD_config cms_config;
     // LV attached to HCalSD (dumped from CMSSW)
     std::vector<std::string> sensitive_lv = { "HBScintillatorLayer0In1",

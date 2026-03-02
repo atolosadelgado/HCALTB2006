@@ -7,6 +7,8 @@
 
 #include "G4VSensitiveDetector.hh"
 
+#include "YourPrimaryGenerator.hh"
+
 /* class ECalSD
  * reimplements CMSSW classes
  * EcalSD -> CaloSD -> SensitiveCaloDetector -> SensitiveDetector
@@ -51,6 +53,7 @@ public:
 
     // Methods from CaloSD, as in CMSSW,
     virtual G4bool ProcessHits(G4Step* aStep, G4TouchableHistory* ROhist) override;
+    YourPrimaryGenerator * fPrimaryGenerator;
 
     // virtual int getTrackID(const G4Track*);
     // function to deal with hits, not needed here
