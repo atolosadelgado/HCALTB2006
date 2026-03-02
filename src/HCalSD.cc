@@ -3,9 +3,21 @@
 
 #include <iostream>
 
+#include "YourRunAction.hh"
+#include "YourActionInitialization.hh"
+
 G4bool HCalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
     double edep = aStep->GetTotalEnergyDeposit();
     if (edep <= 0.) return false;
+
+    auto & prepos = aStep->GetPreStepPoint()->GetPosition();
+    auto & postpos = aStep->GetPostStepPoint()->GetPosition();
+    auto  avepos = 0.5*(prepos + postpos);
+    double distance_hit_shower_axis = SDutils::Calculate_hitpos_to_shower_axis_distance(avepos,fPrimaryGenerator->direction0, fPrimaryGenerator->position0);
+    if(25*CLHEP::cm < distance_hit_shower_axis)
+        return false;
+
+
         // # Values of Birks constants from NIM 80 (1970) 239-244:
         // # as implemented in Geant3 required correction due to
         // # biased computation of enery deposition
@@ -18,6 +30,7 @@ G4bool HCalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
     std::string lvname = aStep->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume()->GetName();
     double Wt0_correction = ("HBScintillatorLayer0In1" == lvname) || ("HBScintillatorLayer0In2" == lvname) ? 0.41 : 1.0;
     event_energy += (edep * birk_correction * Wt0_correction);
+    // event_energy += edep;
     event_energy_birk += (edep * birk_correction);
     event_energy_0wt += (edep * Wt0_correction);
     // G4cout << "\t+++ New step: " << edep << "\t" << birk_correction << "\t" << Wt0_correction << std::endl;

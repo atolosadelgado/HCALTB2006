@@ -9,11 +9,27 @@
 #include "G4TouchableHistory.hh"
 #include "G4ThreeVector.hh"
 
+#include "SDutils.hh"
+
 // Naive implementation
 G4bool ECalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
     double edep = aStep->GetTotalEnergyDeposit();
     if (edep <= 0.) return false;
-    event_energy += edep;
+
+    auto & prepos = aStep->GetPreStepPoint()->GetPosition();
+    auto & postpos = aStep->GetPostStepPoint()->GetPosition();
+    auto  avepos = 0.5*(prepos + postpos);
+    double distance_hit_shower_axis = SDutils::Calculate_hitpos_to_shower_axis_distance(avepos,fPrimaryGenerator->direction0, fPrimaryGenerator->position0);
+    if(8*CLHEP::cm < distance_hit_shower_axis)
+        return false;
+
+    constexpr double birk1      = {2.08029e+18};
+    constexpr double birkSlope  = {0.253694};
+    constexpr double birkCut    = {0.1};
+
+    double birk_correction = SDutils::getBirkL3(aStep, birk1, birkSlope, birkCut);
+
+    event_energy += edep*birk_correction;
     if(1<verbosity)
         std::cout << "\t[" + this->GetName() + "] " << edep/CLHEP::MeV << " MeV" << std::endl;
 
