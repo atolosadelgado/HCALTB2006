@@ -233,7 +233,9 @@ PhysicsList::PhysicsList()
 
     // Single vs multiple scattering transition
     em_parameters->SetFactorForAngleLimit(1.0);
-    em_parameters->SetMscThetaLimit(3.1416*CLHEP::rad);
+    // em_parameters->SetMscThetaLimit(3.1416*CLHEP::rad); // this triggers an exception
+    em_parameters->SetMscThetaLimit(CLHEP::pi*CLHEP::rad);
+
 
     // Upper energy limit for e+- MSC
     em_parameters->SetMscEnergyLimit(100.0*CLHEP::MeV);
