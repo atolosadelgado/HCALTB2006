@@ -68,11 +68,17 @@ int main(int argc, char** argv)
 
     runManager->SetUserInitialization(user_detector_constructor);
 
-    // create Physics factory
-    G4PhysListFactory pl_factory;
-    auto physics_list = pl_factory.GetReferencePhysList( iargs.physics_list );
-    if( ! physics_list ) throw std::runtime_error("No physics list named <"+ iargs.physics_list+"> found");
-    runManager->SetUserInitialization(new PhysicsList);
+    if("CMS" == iargs.physics_list)
+        runManager->SetUserInitialization(new PhysicsList);
+    else
+    {
+        // create Physics factory
+        G4PhysListFactory pl_factory;
+        auto physics_list = pl_factory.GetReferencePhysList( iargs.physics_list );
+        if( ! physics_list ) throw std::runtime_error("No physics list named <"+ iargs.physics_list+"> found");
+        runManager->SetUserInitialization(physics_list);
+    }
+
 
     // create user actions
     runManager->SetUserInitialization(new YourActionInitialization(&iargs));
