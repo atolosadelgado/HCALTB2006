@@ -23,6 +23,8 @@ public:
     G4double x0_mm{-999.};
     G4double y0_mm{-999.};
     G4double E0_MeV{-999.};
+    G4ThreeVector position0;
+    G4ThreeVector direction0;
 
     std::string primary_particle_name;
 
