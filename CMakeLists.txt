@@ -52,6 +52,7 @@ file(GLOB headers   ${PROJECT_SOURCE_DIR}/include/YourDetectorConstructor.hh
                     ${PROJECT_SOURCE_DIR}/include/YourInputArgsParser.hh
                     ${PROJECT_SOURCE_DIR}/include/ECalSD.h
                     ${PROJECT_SOURCE_DIR}/include/HCalSD.h
+                    ${PROJECT_SOURCE_DIR}/include/SDutils.hh
                     # ${PROJECT_SOURCE_DIR}/include/CaloSD.h
                     # ${PROJECT_SOURCE_DIR}/include/SensitiveCaloDetector.h
                     # ${PROJECT_SOURCE_DIR}/include/SensitiveDetector.h
