@@ -52,6 +52,8 @@ void YourRunAction::ConstructOutputTree()
   analysisManager->CreateNtuple("tree", "tree for HCAL 2006 TB experiment");
   analysisManager->CreateNtupleDColumn("ECAL_eresponse");
   analysisManager->CreateNtupleDColumn("HCAL_eresponse");
+  analysisManager->CreateNtupleDColumn("HCAL_eresponse_birk");
+  analysisManager->CreateNtupleDColumn("HCAL_eresponse_0wt");
   analysisManager->FinishNtuple();
 }
 

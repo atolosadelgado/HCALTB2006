@@ -16,14 +16,16 @@ void YourEventAction::EndOfEventAction(const G4Event*) {
         static_cast<HCalSD*>(sdManager->FindSensitiveDetector("hcalSD"));
 
     double ecal_energy_MeV = ecalSD->Get_event_energy() / CLHEP::MeV;
-    double ecal_eventEnergyResponse = ecal_energy_MeV / fPrimaryGenerator->E0_MeV;
+    // double ecal_eventEnergyResponse = ecal_energy_MeV / fPrimaryGenerator->E0_MeV;
 
     double hcal_energy_MeV = hcalSD->Get_event_energy() / CLHEP::MeV;
-    double hcal_eventEnergyResponse = hcal_energy_MeV / fPrimaryGenerator->E0_MeV;
+    // double hcal_eventEnergyResponse = hcal_energy_MeV / fPrimaryGenerator->E0_MeV;
 
     auto* ana = G4AnalysisManager::Instance();
-    ana->FillNtupleDColumn(0, ecal_eventEnergyResponse );
-    ana->FillNtupleDColumn(1, hcal_eventEnergyResponse);
+    ana->FillNtupleDColumn(0, ecal_energy_MeV );
+    ana->FillNtupleDColumn(1, hcalSD->event_energy);
+    ana->FillNtupleDColumn(2, hcalSD->event_energy_birk);
+    ana->FillNtupleDColumn(3, hcalSD->event_energy_0wt);
     ana->AddNtupleRow();
 }
 
