@@ -18,7 +18,9 @@ public:
     double Get_event_energy(){return event_energy;}
     // void   Reset_event_energy(){event_energy = 0;}
     double event_energy;
-    int verbosity;
+    double event_energy_birk;
+    double event_energy_0wt;
+    int verbosity = {0};
     // HCalSD_config cms_config;
     // LV attached to HCalSD (dumped from CMSSW)
     std::vector<std::string> sensitive_lv = { "HBScintillatorLayer0In1",
