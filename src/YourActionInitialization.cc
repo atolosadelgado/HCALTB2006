@@ -33,6 +33,7 @@ void YourActionInitialization::Build() const {
   YourEventAction * evt = new YourEventAction();
   YourRunAction * run = new YourRunAction(fInputArgs);
   evt->SetPrimaryGenerator(gen);
+  run->SetPrimaryGenerator(gen);
 
   SetUserAction(run);
   SetUserAction(evt);
