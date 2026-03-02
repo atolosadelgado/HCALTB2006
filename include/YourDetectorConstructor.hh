@@ -42,6 +42,8 @@ class YourDetectorConstructor : public G4VUserDetectorConstruction
       void FindHcalPV();
       G4VPhysicalVolume * FindPV(std::string pvname);
       void AssignLVtoSD(G4VSensitiveDetector * sd, G4VPhysicalVolume * rootPV, std::string sensmat_name);
+      enum class sensLVselection{ byMatType, asCMSSW, allDetector};
+      sensLVselection sensLVcurrentSelection = {sensLVselection::asCMSSW};
 };
 
 #endif

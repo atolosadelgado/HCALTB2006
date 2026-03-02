@@ -71,51 +71,76 @@ YourDetectorConstructor::~YourDetectorConstructor(){
 #include "G4LogicalVolumeStore.hh"
 void YourDetectorConstructor::ConstructSDandField()
 {
-  auto * lvstore = G4LogicalVolumeStore::GetInstance();
+
+  // register SD objects
   ECalSD * ecalSD = new ECalSD("ecalSD");
   G4SDManager::GetSDMpointer()->AddNewDetector(ecalSD);
-  // AssignLVtoSD(ecalSD, ecalPV, ecal_sensmat_name);
-  for(const auto & lvname : ecalSD->sensitive_lv )
-  {
-    // in case there are several lv with the same name
-    int lvcounter = 0;
-    for(auto lv : *lvstore)
-    {
-      if(lv->GetName() == lvname)
-      {
-        lv->SetSensitiveDetector(ecalSD);
-        ++lvcounter;
-        std::cout << "\tECAL SD volume <" << lvname << "> found assigned correctly" << std::endl;
-      }
-    }
-    // check if there was at least 1 volume with lvname
-    if( 0 == lvcounter )
-      std::cerr << "\tECAL SD volume <" << lvname << "> not found" << std::endl;
-
-  } // end loop over sensitive_lv
-
-
   HCalSD * hcalSD = new HCalSD("hcalSD");
   G4SDManager::GetSDMpointer()->AddNewDetector(hcalSD);
-  // AssignLVtoSD(hcalSD, hcalPV, hcal_sensmat_name);
-  for(const auto & lvname : hcalSD->sensitive_lv )
-  {
-    // in case there are several lv with the same name
-    int lvcounter = 0;
-    for(auto lv : *lvstore)
-    {
-      if(lv->GetName() == lvname)
-      {
-        lv->SetSensitiveDetector(hcalSD);
-        ++lvcounter;
-        std::cout << "\tHCAL SD volume <" << lvname << "> found assigned correctly" << std::endl;
-      }
-    }
-    // check if there was at least 1 volume with lvname
-    if( 0 == lvcounter )
-      std::cerr << "\tHCAL SD volume <" << lvname << "> not found" << std::endl;
 
-  } // end loop over sensitive_lv
+  // naive approach, based on material name
+  if( sensLVselection::byMatType == sensLVcurrentSelection )
+  {
+    AssignLVtoSD(ecalSD, ecalPV, ecal_sensmat_name);
+    AssignLVtoSD(hcalSD, hcalPV, hcal_sensmat_name);
+  }
+  // CMS approach
+  else if( sensLVselection::asCMSSW == sensLVcurrentSelection )
+  {
+    auto * lvstore = G4LogicalVolumeStore::GetInstance();
+    // assign LV to ECAL SD
+    {
+        for(const auto & lvname : ecalSD->sensitive_lv )
+        {
+          // in case there are several lv with the same name
+          int lvcounter = 0;
+          for(auto lv : *lvstore)
+          {
+            if(lv->GetName() == lvname)
+            {
+              lv->SetSensitiveDetector(ecalSD);
+              ++lvcounter;
+              std::cout << "\tECAL SD volume <" << lvname << "> found assigned correctly" << std::endl;
+            }
+          }
+          // check if there was at least 1 volume with lvname
+          if( 0 == lvcounter )
+            std::cerr << "\tECAL SD volume <" << lvname << "> not found" << std::endl;
+
+        } // end loop over sensitive_lv for ECAL
+
+    }
+    // assign LV to HCAL SD
+    {
+      for(const auto & lvname : hcalSD->sensitive_lv )
+      {
+        // in case there are several lv with the same name
+        int lvcounter = 0;
+        for(auto lv : *lvstore)
+        {
+          if(lv->GetName() == lvname)
+          {
+            lv->SetSensitiveDetector(hcalSD);
+            ++lvcounter;
+            std::cout << "\tHCAL SD volume <" << lvname << "> found assigned correctly" << std::endl;
+          }
+        }
+        // check if there was at least 1 volume with lvname
+        if( 0 == lvcounter )
+          std::cerr << "\tHCAL SD volume <" << lvname << "> not found" << std::endl;
+
+      } // end loop over sensitive_lv for HCAL
+    }
+
+  }
+  //   Debug: make all detector sensitive
+  else if( sensLVselection::allDetector == sensLVcurrentSelection )
+  {
+    AssignLVtoSD(ecalSD, ecalPV,"");
+    AssignLVtoSD(hcalSD, hcalPV, "");
+  }
+
+
 }
 
 void YourDetectorConstructor::MakeECALAsAir()
@@ -237,7 +262,7 @@ void YourDetectorConstructor::AssignLVtoSD(G4VSensitiveDetector * sd, G4VPhysica
 
       if (visited.insert(lv).second)
       {
-        if(sensemat == lv->GetMaterial())
+        if(0 == sensmat_name.size() || sensemat == lv->GetMaterial())
           lv->SetSensitiveDetector(sd);
       }
 
