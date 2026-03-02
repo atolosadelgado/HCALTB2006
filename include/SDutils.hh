@@ -57,26 +57,41 @@ namespace SDutils
     // from CMSSW, this function is a method of ECalSD,
     // https://github.com/cms-sw/cmssw/blob/2c3832ae6100c8b0c791afaa038a0de475cde39a/SimG4CMS/Calo/src/ECalSD.cc#L479
     inline double getBirkL3(const G4Step* aStep, double birk1, double birkSlope, double birkCut) {
-  double weight = 1.;
-  const G4StepPoint* preStepPoint = aStep->GetPreStepPoint();
-  double charge = preStepPoint->GetCharge();
+        double weight = 1.;
+        const G4StepPoint* preStepPoint = aStep->GetPreStepPoint();
+        double charge = preStepPoint->GetCharge();
 
-  if (charge != 0. && aStep->GetStepLength() > 0.) {
-    const G4Material* mat = preStepPoint->GetMaterial();
-    double density = mat->GetDensity();
-    double dedx = aStep->GetTotalEnergyDeposit() / aStep->GetStepLength();
-    double rkb = birk1 / density;
-    if (dedx > 0) {
-      weight = 1. - birkSlope * log(rkb * dedx);
-      if (weight < birkCut)
-        weight = birkCut;
-      else if (weight > 1.)
-        weight = 1.;
+        if (charge != 0. && aStep->GetStepLength() > 0.) {
+            const G4Material* mat = preStepPoint->GetMaterial();
+            double density = mat->GetDensity();
+            double dedx = aStep->GetTotalEnergyDeposit() / aStep->GetStepLength();
+            double rkb = birk1 / density;
+            if (dedx > 0) {
+            weight = 1. - birkSlope * log(rkb * dedx);
+            if (weight < birkCut)
+                weight = birkCut;
+            else if (weight > 1.)
+                weight = 1.;
+            }
+
+        }
+        return weight;
     }
+#include "G4ThreeVector.hh"
 
-  }
-  return weight;
+inline double Calculate_hitpos_to_shower_axis_distance(G4ThreeVector & hit_position, G4ThreeVector & primary_direction, G4ThreeVector & primary_vertex) {
+  // Solution distance from a point to a line given here:
+  // https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line#Vector_formulation
+  G4ThreeVector & n = primary_direction;
+  G4ThreeVector & a = primary_vertex;
+
+  G4ThreeVector a_minus_p  = a - hit_position;
+  double   a_minus_p_dot_n = a_minus_p.dot(n);
+  G4ThreeVector scaled_n   = a_minus_p_dot_n * n;
+  G4ThreeVector hit_to_axis_vector = a_minus_p - scaled_n;
+  return hit_to_axis_vector.mag();
 }
+
 
 };
 
