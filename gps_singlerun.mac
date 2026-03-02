@@ -10,7 +10,7 @@
 /run/verbose 1
 /event/verbose 0
 /tracking/verbose 0
-/gps/verbose 1
+/gps/verbose 0
 
 ###############################################
 # 1. Particle type
