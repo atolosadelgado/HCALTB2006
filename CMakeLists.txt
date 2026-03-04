@@ -193,7 +193,7 @@ set_tests_properties(${test_name} PROPERTIES
 SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error")
 
 #----------------------
-# Run HCAL calibration
+# Run HCAL pion
 
 SET( test_name "run_50GeV_pion" )
 add_test(
@@ -205,6 +205,74 @@ add_test(
             -pname pi-
             -penergy 50
             -nevents 2000
+            -saturation 0
+            -nthreads 8
+)
+
+set_tests_properties(${test_name} PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error")
+
+
+#----------------------
+# Run HCAL kaon
+
+SET( test_name "run_50GeV_kaon" )
+add_test(
+    NAME ${test_name}
+    COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
+            -g ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
+            -pl FTFP_BERT
+            -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
+            -pname kaon-
+            -penergy 50
+            -nevents 20
+            -saturation 0
+            -nthreads 8
+)
+
+set_tests_properties(${test_name} PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error")
+
+#----------------------
+# Run HCAL protonm
+
+SET( test_name "run_50GeV_antiproton" )
+add_test(
+    NAME ${test_name}
+    COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
+            -g ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
+            -pl FTFP_BERT
+            -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
+            -pname anti_proton
+            -penergy 50
+            -nevents 20
+            -saturation 0
+            -nthreads 8
+)
+
+set_tests_properties(${test_name} PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error")
+
+
+#----------------------
+# Run HCAL pion CMS
+
+SET( test_name "run_50GeV_pion_CMS" )
+add_test(
+    NAME ${test_name}
+    COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
+            -g ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
+            -pl CMS
+            -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
+            -pname pi-
+            -penergy 50
+            -nevents 20
             -saturation 0
             -nthreads 8
 )
