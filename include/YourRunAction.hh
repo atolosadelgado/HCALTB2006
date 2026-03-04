@@ -24,7 +24,6 @@ class YourRunAction : public G4UserRunAction {
 
     void SetPrimaryGenerator(YourPrimaryGenerator * p){fPrimaryGenerator = p;}
 
-    std::string _ofilename;
     const YourInputArgs * fInputArgs;
     YourPrimaryGenerator * fPrimaryGenerator;
 
