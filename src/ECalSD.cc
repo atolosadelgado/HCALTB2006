@@ -30,6 +30,8 @@ G4bool ECalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
     double birk_correction = SDutils::getBirkL3(aStep, birk1, birkSlope, birkCut);
 
     event_energy += edep*birk_correction;
+    G4LogicalVolume * lv = aStep->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume();
+    accum.map[lv] += edep * birk_correction;
     if(1<verbosity)
         std::cout << "\t[" + this->GetName() + "] " << edep/CLHEP::MeV << " MeV" << std::endl;
 
@@ -158,6 +160,7 @@ G4bool ECalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
 
 void ECalSD::Initialize(G4HCofThisEvent*) {
     event_energy = 0.0;
+    accum.Initialize(sensitive_lv);
 }
 
 void ECalSD::EndOfEvent(G4HCofThisEvent*) {

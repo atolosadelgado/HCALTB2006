@@ -7,6 +7,8 @@
 #include "HCalSD_config.h"
 #include "YourPrimaryGenerator.hh"
 
+#include "EventAccumulator.hh"
+
 class HCalSD : public G4VSensitiveDetector {
 public:
     HCalSD(std::string fname):G4VSensitiveDetector(fname){ std::cout << "New HCalSD named " << fname.c_str() << std::endl; }
@@ -22,6 +24,9 @@ public:
     double event_energy_birk;
     double event_energy_0wt;
     int verbosity = {0};
+
+    EventAccumulator accum;
+
     YourPrimaryGenerator * fPrimaryGenerator;
     // HCalSD_config cms_config;
     // LV attached to HCalSD (dumped from CMSSW)

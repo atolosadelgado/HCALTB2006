@@ -27,12 +27,14 @@ G4bool HCalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
     // double bunit = (CLHEP::g / (CLHEP::MeV * CLHEP::cm2));
     // 3.74491e+17 = 0.0060 * bunit
     double birk_correction = SDutils::getAttenuation(aStep, 3.74491e+17, 0.142, 1.75);
-    std::string lvname = aStep->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume()->GetName();
+    G4LogicalVolume * lv = aStep->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume();
+    std::string lvname = lv->GetName();
     double Wt0_correction = ("HBScintillatorLayer0In1" == lvname) || ("HBScintillatorLayer0In2" == lvname) ? 0.41 : 1.0;
     event_energy += (edep * birk_correction * Wt0_correction);
     // event_energy += edep;
     event_energy_birk += (edep * birk_correction);
     event_energy_0wt += (edep * Wt0_correction);
+    accum.map[lv] += edep * birk_correction * Wt0_correction;
     // G4cout << "\t+++ New step: " << edep << "\t" << birk_correction << "\t" << Wt0_correction << std::endl;
     if(1<verbosity)
         std::cout << "\t[" + this->GetName() + "] " << edep/CLHEP::MeV << " MeV" << std::endl;
@@ -48,6 +50,7 @@ void HCalSD::Initialize(G4HCofThisEvent*) {
     event_energy = 0.0;
     event_energy_birk = 0.0;
     event_energy_0wt = 0.0;
+    accum.Initialize(sensitive_lv);
 }
 
 void HCalSD::EndOfEvent(G4HCofThisEvent*) {

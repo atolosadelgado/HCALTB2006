@@ -1,13 +1,15 @@
 #ifndef ECalSD_h
 #define ECalSD_h
 
-#include "ECalSD_config.h"
+// #include "ECalSD_config.h"
 
 #include <string>
 
 #include "G4VSensitiveDetector.hh"
 
 #include "YourPrimaryGenerator.hh"
+
+#include "EventAccumulator.hh"
 
 /* class ECalSD
  * reimplements CMSSW classes
@@ -33,6 +35,8 @@ public:
     // void   Reset_event_energy(){event_energy = 0;}
     double event_energy = {0};
     int verbosity = {0};
+
+    EventAccumulator accum;
     // hardcoded members of ECalSD + CaloSD for ECal, as in CMSSW
     // ECalSD_config cms_config;
 
@@ -108,6 +112,7 @@ public:
                                             "EBRY_17",
                                             "EBRY_17_refl"
                                         }; // end sensitive_lv
+
 
 
 
