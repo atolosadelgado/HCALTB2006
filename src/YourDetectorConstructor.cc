@@ -34,9 +34,9 @@ G4VPhysicalVolume * YourDetectorConstructor::Construct(){
   Parser.Read(gdml_filename, false);
   worldPV = Parser.GetWorldVolume();
 
-  G4Material* scint = G4Material::GetMaterial(hcal_sensmat_name);
-  scint->GetIonisation()->SetBirksConstant(0.006*CLHEP::mm/CLHEP::MeV);
-  G4LossTableManager::Instance()->EmSaturation()->InitialiseG4Saturation();
+  // G4Material* scint = G4Material::GetMaterial(hcal_sensmat_name);
+  // scint->GetIonisation()->SetBirksConstant(0.006*CLHEP::mm/CLHEP::MeV);
+  // G4LossTableManager::Instance()->EmSaturation()->InitialiseG4Saturation();
   // G4LossTableManager::Instance()->EmSaturation()->DumpBirksCoefficients();
 
   // save pointer to PV of ECAL and HCAL

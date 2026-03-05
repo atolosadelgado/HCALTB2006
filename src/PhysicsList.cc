@@ -55,6 +55,21 @@ PhysicsList::PhysicsList()
     RegisterPhysics(new G4IonPhysics(ver));
   }
 
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void PhysicsList::SetCuts()
+{
+  SetCutValue(10 * CLHEP::mm, "proton");
+  SetCutValue(10 * CLHEP::mm, "e-");
+  SetCutValue(10 * CLHEP::mm, "e+");
+  SetCutValue(10 * CLHEP::mm, "gamma");
+}
+
+void PhysicsList::SetCMSParameters()
+{
+
   // // ===== G4HadronicParameters =====
   using CLHEP::GeV;
   G4HadronicParameters * hadronic_parameters = G4HadronicParameters::Instance();
@@ -93,7 +108,7 @@ PhysicsList::PhysicsList()
   hadronic_parameters->SetXSFactorHadronInelastic(1.);
   hadronic_parameters->SetXSFactorHadronElastic(1.);
   hadronic_parameters->SetXSFactorEM(1.);
-  // Enable BC particles                = 0
+  // Enable BC particles                = 1
   // Enable HyperNuclei                 = 0
   // Apply XS factor                    = 0
   // Enable CR coalescence              = 0
@@ -102,7 +117,7 @@ PhysicsList::PhysicsList()
   // Diff. Dissociation (B>10)          = 0
   // Neutron General Process            = 0
   // Coherent Charge Exchange           = 0
-  hadronic_parameters->SetEnableBCParticles(false);
+  hadronic_parameters->SetEnableBCParticles(true);
   hadronic_parameters->SetEnableHyperNuclei(false);
   hadronic_parameters->SetApplyFactorXS(false);
   hadronic_parameters->SetEnableCRCoalescence(false);
@@ -129,10 +144,10 @@ PhysicsList::PhysicsList()
   em_parameters->SetLPM(true);
   em_parameters->SetEnableSamplingTable(false);
   em_parameters->SetApplyCuts(false);
-  em_parameters->SetTransportationWithMsc(G4TransportationWithMscType::fDisabled);
-  em_parameters->SetGeneralProcessActive(false);
+  em_parameters->SetTransportationWithMsc(G4TransportationWithMscType::fMultipleSteps);
+  em_parameters->SetGeneralProcessActive(true);
   em_parameters->SetEnablePolarisation(false);
-  em_parameters->SetPhotoeffectBelowKShell(true);
+  em_parameters->SetPhotoeffectBelowKShell(false);
   em_parameters->SetQuantumEntanglement(false);
   // X-section factor for integral approach             0.8 ->which method??
   // Min kinetic energy for tables                      100 eV
@@ -141,14 +156,14 @@ PhysicsList::PhysicsList()
   // Verbose level                                      1
   // Verbose level for worker thread                    0
   // Bremsstrahlung energy threshold above which
-  //   primary e+- is added to the list of secondary    100 TeV
+  //   primary e+- is added to the list of secondary    500 MeV
   // Bremsstrahlung energy threshold above which primary
-  //   muon/hadron is added to the list of secondary    100 TeV
+  //   muon/hadron is added to the list of secondary    10 TeV
   em_parameters->SetMinEnergy(100*CLHEP::eV);
   em_parameters->SetMaxEnergy(100*CLHEP::TeV);
   em_parameters->SetNumberOfBinsPerDecade(7);
-  em_parameters->SetBremsstrahlungTh(100*CLHEP::TeV);
-  em_parameters->SetMuHadBremsstrahlungTh(100*CLHEP::TeV);
+  em_parameters->SetBremsstrahlungTh(500*CLHEP::MeV);
+  em_parameters->SetMuHadBremsstrahlungTh(10*CLHEP::TeV);
   // Lowest triplet kinetic energy                      1 MeV
   // Enable sampling of gamma linear polarisation       0
   // 5D gamma conversion model type                     0
@@ -181,7 +196,7 @@ PhysicsList::PhysicsList()
 
     // dE/dx fluctuations
     em_parameters->SetLossFluctuations(true);
-    em_parameters->SetFluctuationType(fUniversalFluctuation);
+    em_parameters->SetFluctuationType(fUrbanFluctuation);
 
     // Birks saturation
     em_parameters->SetBirksActive(false);
@@ -208,7 +223,7 @@ PhysicsList::PhysicsList()
     // ============================================================
 
     // Step limit algorithms
-    em_parameters->SetMscStepLimitType(fUseSafetyPlus);       // e+-
+    em_parameters->SetMscStepLimitType(fUseSafety);       // e+-
     em_parameters->SetMscMuHadStepLimitType(fMinimal);        // muons/hadrons
 
     // Lateral displacement
@@ -249,18 +264,4 @@ PhysicsList::PhysicsList()
     // Screening factor
     em_parameters->SetScreeningFactor(1.0);
 
-
-
-
-
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void PhysicsList::SetCuts()
-{
-  SetCutValue(0 * CLHEP::mm, "proton");
-  SetCutValue(1 * CLHEP::mm, "e-");
-  SetCutValue(1 * CLHEP::mm, "e+");
-  SetCutValue(1 * CLHEP::mm, "gamma");
 }

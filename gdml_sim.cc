@@ -69,7 +69,11 @@ int main(int argc, char** argv)
     runManager->SetUserInitialization(user_detector_constructor);
 
     if("CMS" == iargs.physics_list)
-        runManager->SetUserInitialization(new PhysicsList);
+    {
+        auto * pl = new PhysicsList;
+        runManager->SetUserInitialization(pl);
+        pl->SetCMSParameters();
+    }
     else
     {
         // create Physics factory

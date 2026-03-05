@@ -9,6 +9,7 @@ class PhysicsList : public G4VModularPhysicsList
   public:
     PhysicsList();
     ~PhysicsList() override = default;
+    static void SetCMSParameters();
 
   public:
     void SetCuts() override;
