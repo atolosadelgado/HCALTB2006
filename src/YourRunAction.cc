@@ -36,6 +36,8 @@ void YourRunAction::BeginOfRunAction(const G4Run*)
     this->ConstructOutputTree();
     this->BeginOutputTree();
 
+    this->PrintGeant4Configuration();
+
     auto* hcalSD =
         static_cast<HCalSD*>(G4SDManager::GetSDMpointer()->FindSensitiveDetector("hcalSD"));
     hcalSD->fPrimaryGenerator = fPrimaryGenerator;
@@ -102,4 +104,121 @@ void YourRunAction::EndOutputTree()
     analysisManager->Write();
     analysisManager->CloseFile();
 
+}
+
+#include "G4RunManager.hh"
+#include "G4ProductionCutsTable.hh"
+#include "G4RegionStore.hh"
+#include "G4LogicalVolumeStore.hh"
+#include "G4ParticleTable.hh"
+#include "G4ProcessManager.hh"
+#include "G4ProcessVector.hh"
+#include "G4UserLimits.hh"
+#include "G4ios.hh"
+
+#include <fstream>
+void YourRunAction::PrintGeant4Configuration()
+{
+    static std::ofstream dumpFile("geant4_dump.txt");
+    G4cout.rdbuf(dumpFile.rdbuf());
+
+    G4cout << "==============================" << G4endl;
+    G4cout << " GEANT4 CONFIGURATION DUMP " << G4endl;
+    G4cout << "==============================" << G4endl;
+
+
+    G4cout << "\n=== Production Cuts Table ===\n" << G4endl;
+
+    auto pct = G4ProductionCutsTable::GetProductionCutsTable();
+    pct->DumpCouples();
+
+
+    G4cout << "\n=== Regions and Production Cuts ===\n" << G4endl;
+
+    auto regionStore = G4RegionStore::GetInstance();
+
+    for (size_t i = 0; i < regionStore->size(); ++i)
+    {
+        auto region = (*regionStore)[i];
+        G4cout << "Region: " << region->GetName() << G4endl;
+
+        auto cuts = region->GetProductionCuts();
+        if (cuts)
+        {
+            G4cout << "  gamma cut: " << cuts->GetProductionCut("gamma") << G4endl;
+            G4cout << "  e- cut   : " << cuts->GetProductionCut("e-") << G4endl;
+            G4cout << "  e+ cut   : " << cuts->GetProductionCut("e+") << G4endl;
+            G4cout << "  proton cut: " << cuts->GetProductionCut("proton") << G4endl;
+        }
+        else
+        {
+            G4cout << "  No production cuts attached!" << G4endl;
+        }
+    }
+
+    G4cout << "\n=== User Limits per Logical Volume ===\n" << G4endl;
+    auto particleDef =
+        G4ParticleTable::GetParticleTable()->FindParticle("geantino");
+
+    G4DynamicParticle* dyn =
+        new G4DynamicParticle(particleDef, G4ThreeVector(0,0,1), 1.0*CLHEP::GeV);
+
+    G4Track dummyTrack(dyn, 0.0, G4ThreeVector());
+
+    auto lvStore = G4LogicalVolumeStore::GetInstance();
+
+    for (auto lv : *lvStore)
+    {
+        auto ul = lv->GetUserLimits();
+        if (ul)
+        {
+            // G4cout << "LogicalVolume: " << lv->GetName() << G4endl;
+            // G4cout << "  MaxAllowedStep: " << ul->GetMaxAllowedStep() << G4endl;
+            // G4cout << "  MaxTrackLength: " << ul->GetUserMaxTrackLength() << G4endl;
+            // G4cout << "  MaxTime      : " << ul->GetUserMaxTime() << G4endl;
+            // G4cout << "  MinEkine     : " << ul->GetUserMinEkine() << G4endl;
+            // G4cout << "  MinRange     : " << ul->GetUserMinRange() << G4endl;
+
+
+            G4cout << "LogicalVolume: " << lv->GetName() << G4endl;
+            G4cout << "  MaxAllowedStep: "
+                  << ul->GetMaxAllowedStep(dummyTrack) << G4endl;
+            G4cout << "  MaxTrackLength: "
+                  << ul->GetUserMaxTrackLength(dummyTrack) << G4endl;
+            G4cout << "  MaxTime: "
+                  << ul->GetUserMaxTime(dummyTrack) << G4endl;
+            G4cout << "  MinEkine: "
+                  << ul->GetUserMinEkine(dummyTrack) << G4endl;
+            G4cout << "  MinRange: "
+                  << ul->GetUserMinRange(dummyTrack) << G4endl;
+        }
+    }
+
+
+    G4cout << "\n=== Processes per Particle ===\n" << G4endl;
+
+    auto particleTable = G4ParticleTable::GetParticleTable();
+    auto it = particleTable->GetIterator();
+    it->reset();
+
+    while ((*it)())
+    {
+        auto particle = it->value();
+        auto pm = particle->GetProcessManager();
+
+        if (!pm) continue;
+
+        G4cout << "\nParticle: " << particle->GetParticleName() << G4endl;
+
+        auto pv = pm->GetProcessList();
+        for (int i = 0; i < pm->GetProcessListLength(); ++i)
+        {
+            G4cout << "  Process: "
+                   << (*pv)[i]->GetProcessName()
+                   << G4endl;
+        }
+    }
+    dumpFile.flush();
+    std::streambuf* coutbuf = std::cout.rdbuf();
+    G4cout.rdbuf(coutbuf);
 }

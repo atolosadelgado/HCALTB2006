@@ -29,6 +29,7 @@ class YourRunAction : public G4UserRunAction {
 
 private:
     int verbosity = 0;
+    void PrintGeant4Configuration();
 };
 
 #endif
