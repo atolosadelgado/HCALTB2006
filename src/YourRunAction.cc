@@ -115,6 +115,8 @@ void YourRunAction::EndOutputTree()
 #include "G4ProcessVector.hh"
 #include "G4UserLimits.hh"
 #include "G4ios.hh"
+#include "G4HadronicParameters.hh"
+#include "G4EmParameters.hh"
 
 #include <fstream>
 void YourRunAction::PrintGeant4Configuration()
@@ -218,7 +220,112 @@ void YourRunAction::PrintGeant4Configuration()
                    << G4endl;
         }
     }
+
+    G4cout << "===== G4HadronicParameters =====\n";
+    G4HadronicParameters* hadronic_params = G4HadronicParameters::Instance();
+    // Energy limits
+    G4cout << "MaxEnergy: " << hadronic_params->GetMaxEnergy() << "\n";
+
+    G4cout << "MinEnergyTransitionFTF_Cascade: "
+              << hadronic_params->GetMinEnergyTransitionFTF_Cascade() << "\n";
+    G4cout << "MaxEnergyTransitionFTF_Cascade: "
+              << hadronic_params->GetMaxEnergyTransitionFTF_Cascade() << "\n";
+
+    G4cout << "MinEnergyTransitionQGS_FTF: "
+              << hadronic_params->GetMinEnergyTransitionQGS_FTF() << "\n";
+    G4cout << "MaxEnergyTransitionQGS_FTF: "
+              << hadronic_params->GetMaxEnergyTransitionQGS_FTF() << "\n";
+
+    G4cout << "MinEnergyINCLXX_Pbar: "
+              << hadronic_params->GetMinEnergyINCLXX_Pbar() << "\n";
+    G4cout << "MaxEnergyINCLXX_Pbar: "
+              << hadronic_params->GetMaxEnergyINCLXX_Pbar() << "\n";
+
+    G4cout << "EnergyThresholdForHeavyHadrons: "
+              << hadronic_params->EnergyThresholdForHeavyHadrons() << "\n";
+
+    // Cross section factors
+    G4cout << "XSFactorNucleonInelastic: "
+              << hadronic_params->XSFactorNucleonInelastic() << "\n";
+    G4cout << "XSFactorNucleonElastic: "
+              << hadronic_params->XSFactorNucleonElastic() << "\n";
+
+    G4cout << "XSFactorPionInelastic: "
+              << hadronic_params->XSFactorPionInelastic() << "\n";
+    G4cout << "XSFactorPionElastic: "
+              << hadronic_params->XSFactorPionElastic() << "\n";
+
+    G4cout << "XSFactorHadronInelastic: "
+              << hadronic_params->XSFactorHadronInelastic() << "\n";
+    G4cout << "XSFactorHadronElastic: "
+              << hadronic_params->XSFactorHadronElastic() << "\n";
+
+    G4cout << "XSFactorEM: "
+              << hadronic_params->XSFactorEM() << "\n";
+
+    // Flags
+    G4cout << "EnableBCParticles: "
+              << hadronic_params->EnableBCParticles() << "\n";
+    G4cout << "EnableHyperNuclei: "
+              << hadronic_params->EnableHyperNuclei() << "\n";
+    G4cout << "ApplyFactorXS: "
+              << hadronic_params->ApplyFactorXS() << "\n";
+
+    G4cout << "EnableCRCoalescence: "
+              << hadronic_params->EnableCRCoalescence() << "\n";
+
+    G4cout << "EnableIntegralInelasticXS: "
+              << hadronic_params->EnableIntegralInelasticXS() << "\n";
+    G4cout << "EnableIntegralElasticXS: "
+              << hadronic_params->EnableIntegralElasticXS() << "\n";
+
+    G4cout << "EnableDiffDissociationForBGreater10: "
+              << hadronic_params->EnableDiffDissociationForBGreater10() << "\n";
+
+    G4cout << "EnableCoherentChargeExchange: "
+              << hadronic_params->EnableCoherentChargeExchange() << "\n";
+
+    G4cout << "EnableNeutronGeneralProcess: "
+              << hadronic_params->EnableNeutronGeneralProcess() << "\n";
+
+    // Verbosity
+    G4cout << "VerboseLevel: "
+              << hadronic_params->GetVerboseLevel() << "\n";
+
+    // Energy-momentum conservation parameters
+    G4cout << "EPRelativeLevel: "
+              << hadronic_params->GetEPRelativeLevel() << "\n";
+    G4cout << "EPAbsoluteLevel: "
+              << hadronic_params->GetEPAbsoluteLevel() << "\n";
+    G4cout << "EPReportLevel: "
+              << hadronic_params->GetEPReportLevel() << "\n";
+
+    G4cout << "BinaryDebug: "
+              << hadronic_params->GetBinaryDebug() << "\n";
+
+    // Environment variables
+    G4cout << "DirPARTICLEXS: "
+              << hadronic_params->GetDirPARTICLEXS() << "\n";
+    G4cout << "PhysListDocDir: "
+              << hadronic_params->GetPhysListDocDir() << "\n";
+    G4cout << "PhysListName: "
+              << hadronic_params->GetPhysListName() << "\n";
+
+    // Thresholds
+    G4cout << "NeutronKineticEnergyThresholdForSVT: "
+              << hadronic_params->GetNeutronKineticEnergyThresholdForSVT() << "\n";
+
+    G4cout << "TimeThresholdForRadioactiveDecay: "
+              << hadronic_params->GetTimeThresholdForRadioactiveDecay() << "\n";
+
+    G4cout << "================================\n";
+
+    G4cout << "===== G4EmParameters =====\n";
+    G4EmParameters::Instance()->StreamInfo(G4cout);
+    G4EmParameters::Instance()->Dump();
+    G4cout << "================================\n";
+
     dumpFile.flush();
-    std::streambuf* coutbuf = std::cout.rdbuf();
+    std::streambuf* coutbuf = G4cout.rdbuf();
     G4cout.rdbuf(coutbuf);
 }
