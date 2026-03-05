@@ -105,6 +105,34 @@ set_tests_properties(${test_name} PROPERTIES
 )
 SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error" TIMEOUT 600)
 
+#----------------------------------------------------------------------------
+# Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
+#
+install(TARGETS gdml_sim DESTINATION bin)
+
+enable_testing()
+#----------------------
+# Test using alias within the macro file
+
+SET( test_name "test_CMS_physics" )
+add_test(
+    NAME ${test_name}
+    COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
+            -g ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
+            -pl CMS
+            -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
+            -pname pi-
+            -penergy 50
+            -nevents 5
+            -saturation 2
+)
+
+set_tests_properties(${test_name} PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error" TIMEOUT 600)
+
+
 #----------------------
 # Test using alias within the macro file + MT
 

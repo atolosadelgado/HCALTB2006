@@ -23,6 +23,19 @@ public:
     double event_energy;
     double event_energy_birk;
     double event_energy_0wt;
+    double event_energy_raw;
+    double event_energy_raw_gamma;
+    double event_energy_raw_electron;
+    double event_energy_raw_neutron;
+    double event_energy_raw_proton;
+    double event_energy_raw_pion;
+    int event_nparticles;
+    int event_nparticles_gamma;
+    int event_nparticles_electron;
+    int event_nparticles_neutron;
+    int event_nparticles_proton;
+    int event_nparticles_pion;
+
     int verbosity = {0};
 
     EventAccumulator accum;

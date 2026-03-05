@@ -24,8 +24,28 @@ void YourEventAction::EndOfEventAction(const G4Event*) {
     auto* ana = G4AnalysisManager::Instance();
     ana->FillNtupleDColumn(0, ecal_energy_MeV );
     ana->FillNtupleDColumn(1, hcalSD->event_energy);
-    ana->FillNtupleDColumn(2, hcalSD->event_energy_birk);
-    ana->FillNtupleDColumn(3, hcalSD->event_energy_0wt);
+    // ana->FillNtupleDColumn(2, hcalSD->event_energy_birk);
+    // ana->FillNtupleDColumn(3, hcalSD->event_energy_0wt);
+    ana->FillNtupleDColumn(2, hcalSD->event_energy_raw);
+    ana->FillNtupleDColumn(3, hcalSD->event_energy_raw_gamma);
+    ana->FillNtupleDColumn(4, hcalSD->event_energy_raw_electron);
+    ana->FillNtupleDColumn(5, hcalSD->event_energy_raw_neutron);
+    ana->FillNtupleDColumn(6, hcalSD->event_energy_raw_proton);
+    ana->FillNtupleDColumn(7, hcalSD->event_energy_raw_pion);
+    ana->FillNtupleDColumn(8, hcalSD->event_nparticles);
+    ana->FillNtupleDColumn(9, hcalSD->event_nparticles_gamma);
+    ana->FillNtupleDColumn(10, hcalSD->event_nparticles_electron);
+    ana->FillNtupleDColumn(11, hcalSD->event_nparticles_neutron);
+    ana->FillNtupleDColumn(12, hcalSD->event_nparticles_proton);
+    ana->FillNtupleDColumn(13, hcalSD->event_nparticles_pion);
+    ana->FillNtupleDColumn(14, GetEventTime() );
+
+
     ana->AddNtupleRow();
 }
 
+void YourEventAction::UpdateTime(double t)
+{
+    this->time_first_hit = std::min(this->time_first_hit, t);
+    this->time_last_hit  = std::max(this->time_last_hit, t);
+}

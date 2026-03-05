@@ -6,16 +6,62 @@
 #include "YourRunAction.hh"
 #include "YourActionInitialization.hh"
 
+#include "G4EventManager.hh"
+#include "YourEventAction.hh"
+#include "G4Gamma.hh"
+#include "G4Electron.hh"
+#include "G4Neutron.hh"
+#include "G4PionMinus.hh"
+#include "G4PionPlus.hh"
+#include "G4Proton.hh"
+
 G4bool HCalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
     double edep = aStep->GetTotalEnergyDeposit();
     if (edep <= 0.) return false;
 
-    auto & prepos = aStep->GetPreStepPoint()->GetPosition();
-    auto & postpos = aStep->GetPostStepPoint()->GetPosition();
-    auto  avepos = 0.5*(prepos + postpos);
-    double distance_hit_shower_axis = SDutils::Calculate_hitpos_to_shower_axis_distance(avepos,fPrimaryGenerator->direction0, fPrimaryGenerator->position0);
-    if(25*CLHEP::cm < distance_hit_shower_axis)
-        return false;
+
+    double time = aStep->GetTrack()->GetGlobalTime();
+    G4EventManager * evtmgr = G4EventManager::GetEventManager();
+    YourEventAction * evt =static_cast<YourEventAction*>(evtmgr->GetUserEventAction());
+    evt->UpdateTime(time);
+
+    // debug...
+    {
+        event_energy_raw += edep;
+        event_nparticles++;
+        if(G4Gamma::Gamma() == aStep->GetTrack()->GetParticleDefinition() )
+        {
+            event_nparticles_gamma++;
+            event_energy_raw_gamma+= edep;
+        }
+        else if(G4Electron::Electron() == aStep->GetTrack()->GetParticleDefinition() )
+        {
+            event_nparticles_electron++;
+            event_energy_raw_electron+= edep;
+        }
+        else if(G4Neutron::Neutron() == aStep->GetTrack()->GetParticleDefinition() )
+        {
+            event_nparticles_neutron++;
+            event_energy_raw_neutron+= edep;
+        }
+        else if(G4PionMinus::PionMinus() == aStep->GetTrack()->GetParticleDefinition() ||  G4PionPlus::PionPlus() == aStep->GetTrack()->GetParticleDefinition())
+        {
+            event_nparticles_pion++;
+            event_energy_raw_pion+= edep;
+        }
+        else if(G4Proton::Proton() == aStep->GetTrack()->GetParticleDefinition() )
+        {
+            event_nparticles_proton++;
+            event_energy_raw_proton+= edep;
+        }
+    }
+
+    // auto & prepos = aStep->GetPreStepPoint()->GetPosition();
+    // auto & postpos = aStep->GetPostStepPoint()->GetPosition();
+    // auto  avepos = 0.5*(prepos + postpos);
+    // double distance_hit_shower_axis = SDutils::Calculate_hitpos_to_shower_axis_distance(avepos,fPrimaryGenerator->direction0, fPrimaryGenerator->position0);
+    // if(25*CLHEP::cm < distance_hit_shower_axis)
+        // return false;
 
 
         // # Values of Birks constants from NIM 80 (1970) 239-244:
@@ -51,6 +97,18 @@ void HCalSD::Initialize(G4HCofThisEvent*) {
     event_energy_birk = 0.0;
     event_energy_0wt = 0.0;
     accum.Initialize(sensitive_lv);
+    event_energy_raw = 0;
+    event_energy_raw_gamma = 0;
+    event_energy_raw_electron = 0;
+    event_energy_raw_neutron = 0;
+    event_energy_raw_pion = 0;
+    event_energy_raw_proton = 0;
+    event_nparticles = 0;
+    event_nparticles_gamma = 0;
+    event_nparticles_electron = 0;
+    event_nparticles_neutron = 0;
+    event_nparticles_proton = 0;
+    event_nparticles_pion = 0;
 }
 
 void HCalSD::EndOfEvent(G4HCofThisEvent*) {

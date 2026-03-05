@@ -68,8 +68,20 @@ void YourRunAction::ConstructOutputTree()
   analysisManager->CreateNtuple("tree", "tree for HCAL 2006 TB experiment");
   analysisManager->CreateNtupleDColumn("ECAL_eresponse");
   analysisManager->CreateNtupleDColumn("HCAL_eresponse");
-  analysisManager->CreateNtupleDColumn("HCAL_eresponse_birk");
-  analysisManager->CreateNtupleDColumn("HCAL_eresponse_0wt");
+  analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw");
+  analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw_gamma");
+  analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw_electron");
+  analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw_neutron");
+  analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw_proton");
+  analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw_pion");
+  analysisManager->CreateNtupleDColumn("HCAL_nparticles_raw");
+  analysisManager->CreateNtupleDColumn("HCAL_nparticles_gamma");
+  analysisManager->CreateNtupleDColumn("HCAL_nparticles_electron");
+  analysisManager->CreateNtupleDColumn("HCAL_nparticles_neutron");
+  analysisManager->CreateNtupleDColumn("HCAL_nparticles_proton");
+  analysisManager->CreateNtupleDColumn("HCAL_nparticles_pion");
+  analysisManager->CreateNtupleDColumn("time");
+
   analysisManager->FinishNtuple();
 }
 

@@ -8,7 +8,9 @@
 #include "G4Step.hh"
 #include "G4TouchableHistory.hh"
 #include "G4ThreeVector.hh"
-
+#include "G4EventManager.hh"
+#include "G4EventManager.hh"
+#include "YourEventAction.hh"
 #include "SDutils.hh"
 
 // Naive implementation
@@ -16,12 +18,17 @@ G4bool ECalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
     double edep = aStep->GetTotalEnergyDeposit();
     if (edep <= 0.) return false;
 
-    auto & prepos = aStep->GetPreStepPoint()->GetPosition();
-    auto & postpos = aStep->GetPostStepPoint()->GetPosition();
-    auto  avepos = 0.5*(prepos + postpos);
-    double distance_hit_shower_axis = SDutils::Calculate_hitpos_to_shower_axis_distance(avepos,fPrimaryGenerator->direction0, fPrimaryGenerator->position0);
-    if(8*CLHEP::cm < distance_hit_shower_axis)
-        return false;
+    double time = aStep->GetTrack()->GetGlobalTime();
+    G4EventManager * evtmgr = G4EventManager::GetEventManager();
+    YourEventAction * evt =static_cast<YourEventAction*>(evtmgr->GetUserEventAction());
+    evt->UpdateTime(time);
+
+    // auto & prepos = aStep->GetPreStepPoint()->GetPosition();
+    // auto & postpos = aStep->GetPostStepPoint()->GetPosition();
+    // auto  avepos = 0.5*(prepos + postpos);
+    // double distance_hit_shower_axis = SDutils::Calculate_hitpos_to_shower_axis_distance(avepos,fPrimaryGenerator->direction0, fPrimaryGenerator->position0);
+    // if(8*CLHEP::cm < distance_hit_shower_axis)
+    //     return false;
 
     constexpr double birk1      = {2.08029e+18};
     constexpr double birkSlope  = {0.253694};
