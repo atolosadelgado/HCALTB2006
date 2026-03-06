@@ -2,6 +2,7 @@
 #define HCalSD_h
 
 #include <string>
+#include <vector>
 
 #include "G4VSensitiveDetector.hh"
 #include "HCalSD_config.h"
@@ -35,7 +36,8 @@ public:
     int event_nparticles_neutron;
     int event_nparticles_proton;
     int event_nparticles_pion;
-
+    std::vector<G4int> fPDG;
+    std::vector<G4int> fModelIndex;
     int verbosity = {0};
 
     EventAccumulator accum;

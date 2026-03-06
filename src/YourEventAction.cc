@@ -24,8 +24,6 @@ void YourEventAction::EndOfEventAction(const G4Event*) {
     auto* ana = G4AnalysisManager::Instance();
     ana->FillNtupleDColumn(0, ecal_energy_MeV );
     ana->FillNtupleDColumn(1, hcalSD->event_energy);
-    // ana->FillNtupleDColumn(2, hcalSD->event_energy_birk);
-    // ana->FillNtupleDColumn(3, hcalSD->event_energy_0wt);
     ana->FillNtupleDColumn(2, hcalSD->event_energy_raw);
     ana->FillNtupleDColumn(3, hcalSD->event_energy_raw_gamma);
     ana->FillNtupleDColumn(4, hcalSD->event_energy_raw_electron);

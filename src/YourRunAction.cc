@@ -36,7 +36,8 @@ void YourRunAction::BeginOfRunAction(const G4Run*)
     this->ConstructOutputTree();
     this->BeginOutputTree();
 
-    this->PrintGeant4Configuration();
+    if(0<verbosity && G4Threading::IsMasterThread())
+        this->PrintGeant4Configuration();
 
     auto* hcalSD =
         static_cast<HCalSD*>(G4SDManager::GetSDMpointer()->FindSensitiveDetector("hcalSD"));
@@ -81,6 +82,11 @@ void YourRunAction::ConstructOutputTree()
   analysisManager->CreateNtupleDColumn("HCAL_nparticles_proton");
   analysisManager->CreateNtupleDColumn("HCAL_nparticles_pion");
   analysisManager->CreateNtupleDColumn("time");
+
+    auto* hcalSD =
+        static_cast<HCalSD*>(G4SDManager::GetSDMpointer()->FindSensitiveDetector("hcalSD"));
+  analysisManager->CreateNtupleIColumn("pdg", hcalSD->fPDG );
+  analysisManager->CreateNtupleIColumn("model", hcalSD->fModelIndex );
 
   analysisManager->FinishNtuple();
 }

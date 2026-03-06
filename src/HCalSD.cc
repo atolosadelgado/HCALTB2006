@@ -20,7 +20,8 @@ G4bool HCalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
     if (edep <= 0.) return false;
 
 
-    double time = aStep->GetTrack()->GetGlobalTime();
+    G4Track * thisTrack = aStep->GetTrack();
+    double time = thisTrack->GetGlobalTime();
     G4EventManager * evtmgr = G4EventManager::GetEventManager();
     YourEventAction * evt =static_cast<YourEventAction*>(evtmgr->GetUserEventAction());
     evt->UpdateTime(time);
@@ -29,31 +30,34 @@ G4bool HCalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
     {
         event_energy_raw += edep;
         event_nparticles++;
-        if(G4Gamma::Gamma() == aStep->GetTrack()->GetParticleDefinition() )
+        const G4ParticleDefinition * thisPartDefinition = thisTrack->GetParticleDefinition();
+        if(G4Gamma::Gamma() == thisPartDefinition )
         {
             event_nparticles_gamma++;
             event_energy_raw_gamma+= edep;
         }
-        else if(G4Electron::Electron() == aStep->GetTrack()->GetParticleDefinition() )
+        else if(G4Electron::Electron() == thisPartDefinition )
         {
             event_nparticles_electron++;
             event_energy_raw_electron+= edep;
         }
-        else if(G4Neutron::Neutron() == aStep->GetTrack()->GetParticleDefinition() )
+        else if(G4Neutron::Neutron() == thisPartDefinition )
         {
             event_nparticles_neutron++;
             event_energy_raw_neutron+= edep;
         }
-        else if(G4PionMinus::PionMinus() == aStep->GetTrack()->GetParticleDefinition() ||  G4PionPlus::PionPlus() == aStep->GetTrack()->GetParticleDefinition())
+        else if(G4PionMinus::PionMinus() == thisPartDefinition ||  G4PionPlus::PionPlus() == thisPartDefinition)
         {
             event_nparticles_pion++;
             event_energy_raw_pion+= edep;
         }
-        else if(G4Proton::Proton() == aStep->GetTrack()->GetParticleDefinition() )
+        else if(G4Proton::Proton() == thisPartDefinition )
         {
             event_nparticles_proton++;
             event_energy_raw_proton+= edep;
         }
+        fPDG.push_back(thisPartDefinition->GetPDGEncoding());
+        fModelIndex.push_back(thisTrack->GetCreatorModelIndex());
     }
 
     // auto & prepos = aStep->GetPreStepPoint()->GetPosition();
@@ -109,6 +113,8 @@ void HCalSD::Initialize(G4HCofThisEvent*) {
     event_nparticles_neutron = 0;
     event_nparticles_proton = 0;
     event_nparticles_pion = 0;
+    fPDG.clear();
+    fModelIndex.clear();
 }
 
 void HCalSD::EndOfEvent(G4HCofThisEvent*) {
