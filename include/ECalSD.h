@@ -34,6 +34,20 @@ public:
     double Get_event_energy(){return event_energy;}
     // void   Reset_event_energy(){event_energy = 0;}
     double event_energy = {0};
+    double event_energy_raw;
+    double event_energy_raw_gamma;
+    double event_energy_raw_electron;
+    double event_energy_raw_neutron;
+    double event_energy_raw_proton;
+    double event_energy_raw_pion;
+    int event_nparticles;
+    int event_nparticles_gamma;
+    int event_nparticles_electron;
+    int event_nparticles_neutron;
+    int event_nparticles_proton;
+    int event_nparticles_pion;
+    std::vector<G4int> fPDG;
+    std::vector<G4int> fModelIndex;
     int verbosity = {0};
 
     EventAccumulator accum;

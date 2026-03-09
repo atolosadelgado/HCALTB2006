@@ -13,15 +13,59 @@
 #include "YourEventAction.hh"
 #include "SDutils.hh"
 
+#include "G4EventManager.hh"
+#include "YourEventAction.hh"
+#include "G4Gamma.hh"
+#include "G4Electron.hh"
+#include "G4Neutron.hh"
+#include "G4PionMinus.hh"
+#include "G4PionPlus.hh"
+#include "G4Proton.hh"
+
 // Naive implementation
 G4bool ECalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
     double edep = aStep->GetTotalEnergyDeposit();
     if (edep <= 0.) return false;
 
-    double time = aStep->GetTrack()->GetGlobalTime();
-    G4EventManager * evtmgr = G4EventManager::GetEventManager();
-    YourEventAction * evt =static_cast<YourEventAction*>(evtmgr->GetUserEventAction());
-    evt->UpdateTime(time);
+    const G4Track * thisTrack = aStep->GetTrack();
+    // debug...
+    {
+        event_energy_raw += edep;
+        event_nparticles++;
+        const G4ParticleDefinition * thisPartDefinition = thisTrack->GetParticleDefinition();
+        if(G4Gamma::Gamma() == thisPartDefinition )
+        {
+            event_nparticles_gamma++;
+            event_energy_raw_gamma+= edep;
+        }
+        else if(G4Electron::Electron() == thisPartDefinition )
+        {
+            event_nparticles_electron++;
+            event_energy_raw_electron+= edep;
+        }
+        else if(G4Neutron::Neutron() == thisPartDefinition )
+        {
+            event_nparticles_neutron++;
+            event_energy_raw_neutron+= edep;
+        }
+        else if(G4PionMinus::PionMinus() == thisPartDefinition ||  G4PionPlus::PionPlus() == thisPartDefinition)
+        {
+            event_nparticles_pion++;
+            event_energy_raw_pion+= edep;
+        }
+        else if(G4Proton::Proton() == thisPartDefinition )
+        {
+            event_nparticles_proton++;
+            event_energy_raw_proton+= edep;
+        }
+        fPDG.push_back(thisPartDefinition->GetPDGEncoding());
+        fModelIndex.push_back(thisTrack->GetCreatorModelIndex());
+    }
+
+    // double time = aStep->GetTrack()->GetGlobalTime();
+    // G4EventManager * evtmgr = G4EventManager::GetEventManager();
+    // YourEventAction * evt =static_cast<YourEventAction*>(evtmgr->GetUserEventAction());
+    // evt->UpdateTime(time);
 
     // auto & prepos = aStep->GetPreStepPoint()->GetPosition();
     // auto & postpos = aStep->GetPostStepPoint()->GetPosition();
@@ -168,6 +212,20 @@ G4bool ECalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
 void ECalSD::Initialize(G4HCofThisEvent*) {
     event_energy = 0.0;
     accum.Initialize(sensitive_lv);
+    event_energy_raw = 0;
+    event_energy_raw_gamma = 0;
+    event_energy_raw_electron = 0;
+    event_energy_raw_neutron = 0;
+    event_energy_raw_pion = 0;
+    event_energy_raw_proton = 0;
+    event_nparticles = 0;
+    event_nparticles_gamma = 0;
+    event_nparticles_electron = 0;
+    event_nparticles_neutron = 0;
+    event_nparticles_proton = 0;
+    event_nparticles_pion = 0;
+    fPDG.clear();
+    fModelIndex.clear();
 }
 
 void ECalSD::EndOfEvent(G4HCofThisEvent*) {

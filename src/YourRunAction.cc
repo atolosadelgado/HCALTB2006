@@ -88,6 +88,20 @@ void YourRunAction::ConstructOutputTree()
   analysisManager->CreateNtupleIColumn("pdg", hcalSD->fPDG );
   analysisManager->CreateNtupleIColumn("model", hcalSD->fModelIndex );
 
+
+  analysisManager->CreateNtupleDColumn("ECAL_eresponse_raw");
+  analysisManager->CreateNtupleDColumn("ECAL_eresponse_raw_gamma");
+  analysisManager->CreateNtupleDColumn("ECAL_eresponse_raw_electron");
+  analysisManager->CreateNtupleDColumn("ECAL_eresponse_raw_neutron");
+  analysisManager->CreateNtupleDColumn("ECAL_eresponse_raw_proton");
+  analysisManager->CreateNtupleDColumn("ECAL_eresponse_raw_pion");
+  analysisManager->CreateNtupleDColumn("ECAL_nparticles_raw");
+  analysisManager->CreateNtupleDColumn("ECAL_nparticles_gamma");
+  analysisManager->CreateNtupleDColumn("ECAL_nparticles_electron");
+  analysisManager->CreateNtupleDColumn("ECAL_nparticles_neutron");
+  analysisManager->CreateNtupleDColumn("ECAL_nparticles_proton");
+  analysisManager->CreateNtupleDColumn("ECAL_nparticles_pion");
+
   analysisManager->FinishNtuple();
 }
 
