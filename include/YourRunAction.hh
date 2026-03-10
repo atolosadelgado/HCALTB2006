@@ -28,7 +28,7 @@ class YourRunAction : public G4UserRunAction {
     YourPrimaryGenerator * fPrimaryGenerator;
 
 private:
-    int verbosity = 0;
+    int verbosity = 1;
     void PrintGeant4Configuration();
 };
 
