@@ -102,7 +102,12 @@ void YourRunAction::ConstructOutputTree()
   analysisManager->CreateNtupleDColumn("ECAL_nsteps_proton");
   analysisManager->CreateNtupleDColumn("ECAL_nsteps_pion");
   analysisManager->CreateNtupleDColumn("ECAL_nelectrons");
+  analysisManager->CreateNtupleDColumn("HCAL_nelectrons");
   analysisManager->CreateNtupleDColumn("primary_energy");
+
+  analysisManager->CreateNtupleDColumn("primary_px");
+  analysisManager->CreateNtupleDColumn("primary_py");
+  analysisManager->CreateNtupleDColumn("primary_pz");
 
   analysisManager->FinishNtuple();
 }
@@ -151,7 +156,7 @@ void YourRunAction::EndOutputTree()
 #include "G4ios.hh"
 #include "G4HadronicParameters.hh"
 #include "G4EmParameters.hh"
-
+#include "G4HadronicProcessStore.hh"
 #include <fstream>
 void YourRunAction::PrintGeant4Configuration()
 {
@@ -358,6 +363,9 @@ void YourRunAction::PrintGeant4Configuration()
     G4EmParameters::Instance()->StreamInfo(G4cout);
     G4EmParameters::Instance()->Dump();
     G4cout << "================================\n";
+
+    G4cout << "===== G4HadronicProcessStore =====\n";
+    G4HadronicProcessStore::Instance()->Dump(1);
 
     dumpFile.flush();
     std::streambuf* coutbuf = G4cout.rdbuf();

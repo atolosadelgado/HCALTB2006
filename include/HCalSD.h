@@ -39,6 +39,7 @@ public:
     std::vector<G4int> fPDG;
     std::vector<G4int> fModelIndex;
     int verbosity = {0};
+    int fElectronCount;
 
     EventAccumulator accum;
 
