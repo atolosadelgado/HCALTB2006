@@ -54,6 +54,7 @@ PhysicsList::PhysicsList()
     // Ion Physics
     RegisterPhysics(new G4IonPhysics(ver));
   }
+  SetCMSParameters();
 
 }
 
