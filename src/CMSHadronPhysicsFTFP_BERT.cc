@@ -35,6 +35,29 @@ void CMSHadronPhysicsFTFP_BERT::ConstructProcess() {
     DumpBanner();
   }
   CreateModels();
+  {
+    using CLHEP::GeV;
+    std::ofstream out("physics_config_CMSHadronPhysicsFTFP_BERT.txt");
+
+    out << "===== Hadronic physics parameters =====\n";
+
+    out << "minFTFP_pion   = " << minFTFP_pion/GeV << " GeV\n";
+    out << "maxBERT_pion   = " << maxBERT_pion/GeV << " GeV\n";
+
+    out << "minFTFP_kaon   = " << minFTFP_kaon/GeV << " GeV\n";
+    out << "maxBERT_kaon   = " << maxBERT_kaon/GeV << " GeV\n";
+
+    out << "minFTFP_proton = " << minFTFP_proton/GeV << " GeV\n";
+    out << "maxBERT_proton = " << maxBERT_proton/GeV << " GeV\n";
+
+    out << "minFTFP_neutron= " << minFTFP_neutron/GeV << " GeV\n";
+    out << "maxBERT_neutron= " << maxBERT_neutron/GeV << " GeV\n";
+
+    out << "minBERT_proton = " << minBERT_proton/GeV << " GeV\n";
+    out << "minBERT_neutron= " << minBERT_neutron/GeV << " GeV\n";
+
+    out << "QuasiElastic   = " << QuasiElastic << "\n";
+  }
 }
 
 void CMSHadronPhysicsFTFP_BERT::Neutron() {
