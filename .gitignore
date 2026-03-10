@@ -1,3 +1,6 @@
+output
+comparison*
+cmssw*
 build*
 *.sif
 *.root
