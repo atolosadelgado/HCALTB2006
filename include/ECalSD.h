@@ -48,8 +48,12 @@ public:
     int event_nparticles_pion;
     std::vector<G4int> fPDG;
     std::vector<G4int> fModelIndex;
+    int fElectronCount;
     int verbosity = {0};
-
+    void UpdatePrimaryEnergy(double e){primary_energy = std::max(e,primary_energy);}
+    double GetPrimaryEnergy(){return primary_energy;}
+    void ResetPrimaryEnergy(){primary_energy={-std::numeric_limits<double>::max()};}
+    double primary_energy = {-std::numeric_limits<double>::max()};
     EventAccumulator accum;
     // hardcoded members of ECalSD + CaloSD for ECal, as in CMSSW
     // ECalSD_config cms_config;

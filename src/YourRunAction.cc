@@ -75,12 +75,12 @@ void YourRunAction::ConstructOutputTree()
   analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw_neutron");
   analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw_proton");
   analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw_pion");
-  analysisManager->CreateNtupleDColumn("HCAL_nparticles_raw");
-  analysisManager->CreateNtupleDColumn("HCAL_nparticles_gamma");
-  analysisManager->CreateNtupleDColumn("HCAL_nparticles_electron");
-  analysisManager->CreateNtupleDColumn("HCAL_nparticles_neutron");
-  analysisManager->CreateNtupleDColumn("HCAL_nparticles_proton");
-  analysisManager->CreateNtupleDColumn("HCAL_nparticles_pion");
+  analysisManager->CreateNtupleDColumn("HCAL_nsteps_raw");
+  analysisManager->CreateNtupleDColumn("HCAL_nsteps_gamma");
+  analysisManager->CreateNtupleDColumn("HCAL_nsteps_electron");
+  analysisManager->CreateNtupleDColumn("HCAL_nsteps_neutron");
+  analysisManager->CreateNtupleDColumn("HCAL_nsteps_proton");
+  analysisManager->CreateNtupleDColumn("HCAL_nsteps_pion");
   analysisManager->CreateNtupleDColumn("time");
 
     auto* hcalSD =
@@ -95,12 +95,14 @@ void YourRunAction::ConstructOutputTree()
   analysisManager->CreateNtupleDColumn("ECAL_eresponse_raw_neutron");
   analysisManager->CreateNtupleDColumn("ECAL_eresponse_raw_proton");
   analysisManager->CreateNtupleDColumn("ECAL_eresponse_raw_pion");
-  analysisManager->CreateNtupleDColumn("ECAL_nparticles_raw");
-  analysisManager->CreateNtupleDColumn("ECAL_nparticles_gamma");
-  analysisManager->CreateNtupleDColumn("ECAL_nparticles_electron");
-  analysisManager->CreateNtupleDColumn("ECAL_nparticles_neutron");
-  analysisManager->CreateNtupleDColumn("ECAL_nparticles_proton");
-  analysisManager->CreateNtupleDColumn("ECAL_nparticles_pion");
+  analysisManager->CreateNtupleDColumn("ECAL_nsteps_raw");
+  analysisManager->CreateNtupleDColumn("ECAL_nsteps_gamma");
+  analysisManager->CreateNtupleDColumn("ECAL_nsteps_electron");
+  analysisManager->CreateNtupleDColumn("ECAL_nsteps_neutron");
+  analysisManager->CreateNtupleDColumn("ECAL_nsteps_proton");
+  analysisManager->CreateNtupleDColumn("ECAL_nsteps_pion");
+  analysisManager->CreateNtupleDColumn("ECAL_nelectrons");
+  analysisManager->CreateNtupleDColumn("primary_energy");
 
   analysisManager->FinishNtuple();
 }

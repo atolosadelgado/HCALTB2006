@@ -50,7 +50,12 @@ void YourEventAction::EndOfEventAction(const G4Event*) {
     ana->FillNtupleDColumn(26, ecalSD->event_nparticles_neutron);
     ana->FillNtupleDColumn(27, ecalSD->event_nparticles_proton);
     ana->FillNtupleDColumn(28, ecalSD->event_nparticles_pion);
+    ana->FillNtupleDColumn(29, ecalSD->fElectronCount);
+    ana->FillNtupleDColumn(30, ecalSD->GetPrimaryEnergy());
+
     ana->AddNtupleRow();
+    ResetEventTime();
+    ecalSD->ResetPrimaryEnergy();
 }
 
 void YourEventAction::UpdateTime(double t)

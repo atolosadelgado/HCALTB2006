@@ -28,6 +28,8 @@ G4bool ECalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
     if (edep <= 0.) return false;
 
     const G4Track * thisTrack = aStep->GetTrack();
+    if (thisTrack->GetParentID() == 0) UpdatePrimaryEnergy(thisTrack->GetKineticEnergy());
+
     // debug...
     {
         event_energy_raw += edep;
@@ -60,6 +62,18 @@ G4bool ECalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
         }
         fPDG.push_back(thisPartDefinition->GetPDGEncoding());
         fModelIndex.push_back(thisTrack->GetCreatorModelIndex());
+
+        const std::vector<const G4Track*>* secondaries =
+            aStep->GetSecondaryInCurrentStep();
+
+        for(auto sec : *secondaries)
+        {
+            if(sec->GetDefinition() == G4Electron::Electron())
+            {
+                fElectronCount++;
+            }
+        }
+
     }
 
     // double time = aStep->GetTrack()->GetGlobalTime();
@@ -226,6 +240,7 @@ void ECalSD::Initialize(G4HCofThisEvent*) {
     event_nparticles_pion = 0;
     fPDG.clear();
     fModelIndex.clear();
+    fElectronCount = 0;
 }
 
 void ECalSD::EndOfEvent(G4HCofThisEvent*) {
