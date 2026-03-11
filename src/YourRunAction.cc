@@ -108,6 +108,11 @@ void YourRunAction::ConstructOutputTree()
   analysisManager->CreateNtupleDColumn("primary_px");
   analysisManager->CreateNtupleDColumn("primary_py");
   analysisManager->CreateNtupleDColumn("primary_pz");
+    auto* ecalSD =
+        static_cast<ECalSD*>(G4SDManager::GetSDMpointer()->FindSensitiveDetector("ecalSD"));
+  analysisManager->CreateNtupleDColumn("ECAL_electronE0", ecalSD->fElectronE0);
+  analysisManager->CreateNtupleDColumn("HCAL_electronE0", hcalSD->fElectronE0);
+  analysisManager->CreateNtupleIColumn("ECAL_electronModel", ecalSD->fModelIndex_electron);
 
   analysisManager->FinishNtuple();
 }

@@ -48,8 +48,15 @@ public:
     int event_nparticles_pion;
     std::vector<G4int> fPDG;
     std::vector<G4int> fModelIndex;
+    std::vector<G4int> fModelIndex_electron;
     int fElectronCount;
+    std::vector<double> fElectronE0;
+
     int verbosity = {0};
+    // void UpdatePrimaryEnergy(double e){ /*primary_energy = std::max(e,primary_energy);*/ if(0>primary_energy)primary_energy=e;}
+    // double GetPrimaryEnergy(){return primary_energy;}
+    // void ResetPrimaryEnergy(){primary_energy=-999;}
+    // double primary_energy = {-999.};
     void UpdatePrimaryEnergy(double e){primary_energy = std::max(e,primary_energy);}
     double GetPrimaryEnergy(){return primary_energy;}
     void ResetPrimaryEnergy(){primary_energy={-std::numeric_limits<double>::max()};}

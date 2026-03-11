@@ -66,6 +66,7 @@ G4bool HCalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
             if(sec->GetDefinition() == G4Electron::Electron())
             {
                 fElectronCount++;
+                fElectronE0.push_back(sec->GetKineticEnergy());
             }
         }
     }
@@ -126,6 +127,7 @@ void HCalSD::Initialize(G4HCofThisEvent*) {
     fPDG.clear();
     fModelIndex.clear();
     fElectronCount = 0;
+    fElectronE0.clear();
 }
 
 void HCalSD::EndOfEvent(G4HCofThisEvent*) {

@@ -28,7 +28,7 @@ G4bool ECalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
     if (edep <= 0.) return false;
 
     const G4Track * thisTrack = aStep->GetTrack();
-    if (thisTrack->GetParentID() == 0) UpdatePrimaryEnergy(thisTrack->GetKineticEnergy());
+    if (thisTrack->GetParentID() == 0) UpdatePrimaryEnergy(aStep->GetPreStepPoint()->GetKineticEnergy() /*thisTrack->GetVertexKineticEnergy()*/);
 
     // debug...
     {
@@ -60,8 +60,8 @@ G4bool ECalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
             event_nparticles_proton++;
             event_energy_raw_proton+= edep;
         }
-        fPDG.push_back(thisPartDefinition->GetPDGEncoding());
-        fModelIndex.push_back(thisTrack->GetCreatorModelIndex());
+        // fPDG.push_back(thisPartDefinition->GetPDGEncoding());
+        // fModelIndex.push_back(thisTrack->GetCreatorModelIndex());
 
         const std::vector<const G4Track*>* secondaries =
             aStep->GetSecondaryInCurrentStep();
@@ -71,6 +71,8 @@ G4bool ECalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
             if(sec->GetDefinition() == G4Electron::Electron())
             {
                 fElectronCount++;
+                fElectronE0.push_back(sec->GetKineticEnergy());
+                fModelIndex_electron.push_back(sec->GetCreatorModelIndex());
             }
         }
 
@@ -241,11 +243,21 @@ void ECalSD::Initialize(G4HCofThisEvent*) {
     fPDG.clear();
     fModelIndex.clear();
     fElectronCount = 0;
+    fElectronE0.clear();
+    ResetPrimaryEnergy();
+    fModelIndex_electron.clear();
+
 }
 
 void ECalSD::EndOfEvent(G4HCofThisEvent*) {
-    if(0<verbosity)
+    // if(0<verbosity)
+        // std::cout << "Total energy [" + this->GetName() + "] " << event_energy/CLHEP::MeV << " MeV" << std::endl;
+    if(0>primary_energy)
+    {
         std::cout << "Total energy [" + this->GetName() + "] " << event_energy/CLHEP::MeV << " MeV" << std::endl;
+        // throw std::runtime_error("kk de la vaka");
+    }
+
 }
 
 

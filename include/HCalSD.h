@@ -40,6 +40,7 @@ public:
     std::vector<G4int> fModelIndex;
     int verbosity = {0};
     int fElectronCount;
+    std::vector<double> fElectronE0;
 
     EventAccumulator accum;
 
