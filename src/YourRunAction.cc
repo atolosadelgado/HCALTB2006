@@ -163,6 +163,7 @@ void YourRunAction::EndOutputTree()
 #include "G4EmParameters.hh"
 #include "G4HadronicProcessStore.hh"
 #include <fstream>
+#include "G4PhysicsModelCatalog.hh"
 void YourRunAction::PrintGeant4Configuration()
 {
     static std::ofstream dumpFile("geant4_dump.txt");
@@ -372,6 +373,8 @@ void YourRunAction::PrintGeant4Configuration()
     G4cout << "===== G4HadronicProcessStore =====\n";
     G4HadronicProcessStore::Instance()->Dump(1);
 
+    G4cout << "================================\n";
+    G4PhysicsModelCatalog::PrintAllInformation();
     dumpFile.flush();
     std::streambuf* coutbuf = G4cout.rdbuf();
     G4cout.rdbuf(coutbuf);
