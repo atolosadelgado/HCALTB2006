@@ -58,6 +58,8 @@ void YourEventAction::EndOfEventAction(const G4Event*) {
     ana->AddNtupleRow();
     ResetEventTime();
     ecalSD->ResetPrimaryEnergy();
+    this->fGammaE0_ecal.clear();
+    this->fGammaModelIndex_ecal.clear();
 }
 
 void YourEventAction::UpdateTime(double t)

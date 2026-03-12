@@ -51,6 +51,10 @@ public:
     std::vector<G4int> fModelIndex_electron;
     int fElectronCount;
     std::vector<double> fElectronE0;
+    std::vector<double> fGammaPhotoE0;
+    std::vector<G4int> fModelIndex_gammaPhoto;
+    std::vector<double> fGammaE0;
+    std::vector<G4int> fModelIndex_gamma;
 
     int verbosity = {0};
     // void UpdatePrimaryEnergy(double e){ /*primary_energy = std::max(e,primary_energy);*/ if(0>primary_energy)primary_energy=e;}

@@ -72,7 +72,19 @@ G4bool ECalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
             {
                 fElectronCount++;
                 fElectronE0.push_back(sec->GetKineticEnergy());
-                fModelIndex_electron.push_back(sec->GetCreatorModelIndex());
+                G4int this_modelIndex_electron = sec->GetCreatorModelIndex();
+                fModelIndex_electron.push_back(this_modelIndex_electron);
+                // G4cout << " New ECAL electron, model : " << this_modelIndex_electron << std::endl;
+
+                // if photo
+                if(G4int(3) == this_modelIndex_electron)
+                {
+                    fGammaPhotoE0.push_back( aStep->GetTrack()->GetVertexKineticEnergy());
+                    fModelIndex_gammaPhoto.push_back(aStep->GetTrack()->GetCreatorModelIndex());
+                    // G4cout << " \t\t : " << aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding() << std::endl;
+                    // G4cout << " \t\t : " << aStep->GetTrack()->GetVertexKineticEnergy() << std::endl;
+                    // G4cout << " \t\t : " << aStep->GetTrack()->GetCreatorModelIndex() << std::endl;
+                }
             }
         }
 
@@ -246,17 +258,19 @@ void ECalSD::Initialize(G4HCofThisEvent*) {
     fElectronE0.clear();
     ResetPrimaryEnergy();
     fModelIndex_electron.clear();
+    fGammaPhotoE0.clear();
+    fModelIndex_gammaPhoto.clear();
 
 }
 
 void ECalSD::EndOfEvent(G4HCofThisEvent*) {
     // if(0<verbosity)
         // std::cout << "Total energy [" + this->GetName() + "] " << event_energy/CLHEP::MeV << " MeV" << std::endl;
-    if(0>primary_energy)
-    {
-        std::cout << "Total energy [" + this->GetName() + "] " << event_energy/CLHEP::MeV << " MeV" << std::endl;
-        // throw std::runtime_error("kk de la vaka");
-    }
+    // if(0>primary_energy)
+    // {
+    //     std::cout << "Total energy [" + this->GetName() + "] " << event_energy/CLHEP::MeV << " MeV" << std::endl;
+    //     // throw std::runtime_error("kk de la vaka");
+    // }
 
 }
 
@@ -435,3 +449,4 @@ void ECalSD::EndOfEvent(G4HCofThisEvent*) {
 //   // std::cout << "\n New ECalSD correction: " << weight << std::endl;
 //   return weight;
 // }
+

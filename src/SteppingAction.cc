@@ -1,6 +1,10 @@
 #include "SteppingAction.hh"
 #include "G4Step.hh"
 #include "G4AnalysisManager.hh"
+#include "G4Gamma.hh"
+#include "G4VSensitiveDetector.hh"
+#include "G4EventManager.hh"
+#include "YourEventAction.hh"
 void SteppingAction::UserSteppingAction(const G4Step * step)
 {
 // auto ff_matscan = [](const G4Step * step)
@@ -86,6 +90,30 @@ auto ff = [](const G4Step* step){    const G4Track* track = step->GetTrack();
 
 
 };
-ff(step);
+// ff(step);
 
-}
+auto ff_score_gammas_ecal = [](const G4Step * step){
+    G4Track* track = step->GetTrack();
+
+    if (track->GetCurrentStepNumber() > 1) return;
+
+    if (track->GetParticleDefinition() != G4Gamma::GammaDefinition()) return;
+
+    const G4LogicalVolume* vertexLV = track->GetLogicalVolumeAtVertex();
+    if (!vertexLV) return;
+
+    G4VSensitiveDetector* sd = vertexLV->GetSensitiveDetector();
+    if (!sd) return;
+
+    if (sd->GetName() == "ecalSD") {
+        YourEventAction * evt = static_cast<YourEventAction*>( G4EventManager::GetEventManager()->GetUserEventAction() );
+        G4double energyVertex = track->GetVertexKineticEnergy();
+        G4int modelindex = track->GetCreatorModelIndex();
+        evt->fGammaE0_ecal.push_back(energyVertex);
+        evt->fGammaModelIndex_ecal.push_back(modelindex);
+    }
+};
+ff_score_gammas_ecal(step);
+
+
+};

@@ -113,7 +113,12 @@ void YourRunAction::ConstructOutputTree()
   analysisManager->CreateNtupleDColumn("ECAL_electronE0", ecalSD->fElectronE0);
   analysisManager->CreateNtupleDColumn("HCAL_electronE0", hcalSD->fElectronE0);
   analysisManager->CreateNtupleIColumn("ECAL_electronModel", ecalSD->fModelIndex_electron);
+  analysisManager->CreateNtupleDColumn("ECAL_gammaPhotoE0", ecalSD->fGammaPhotoE0);
+  analysisManager->CreateNtupleIColumn("ECAL_gammaPhotoModel", ecalSD->fModelIndex_gammaPhoto);
+  YourEventAction * evt = static_cast<YourEventAction*>( G4EventManager::GetEventManager()->GetUserEventAction() );
 
+  analysisManager->CreateNtupleDColumn("ECAL_gammaE0", evt->fGammaE0_ecal);
+  analysisManager->CreateNtupleIColumn("ECAL_gammaModel", evt->fGammaModelIndex_ecal);
   analysisManager->FinishNtuple();
 }
 
@@ -164,10 +169,16 @@ void YourRunAction::EndOutputTree()
 #include "G4HadronicProcessStore.hh"
 #include <fstream>
 #include "G4PhysicsModelCatalog.hh"
+#include "G4DeexPrecoParameters.hh"
 void YourRunAction::PrintGeant4Configuration()
 {
     static std::ofstream dumpFile("geant4_dump.txt");
+    //save buffer to restore it later
+    auto cout_buf = G4cout.rdbuf();
+    auto cerr_buf = G4cerr.rdbuf();
+    // redirect G4cout
     G4cout.rdbuf(dumpFile.rdbuf());
+    G4cerr.rdbuf(dumpFile.rdbuf());
 
     G4cout << "==============================" << G4endl;
     G4cout << " GEANT4 CONFIGURATION DUMP " << G4endl;
@@ -376,6 +387,6 @@ void YourRunAction::PrintGeant4Configuration()
     G4cout << "================================\n";
     G4PhysicsModelCatalog::PrintAllInformation();
     dumpFile.flush();
-    std::streambuf* coutbuf = G4cout.rdbuf();
-    G4cout.rdbuf(coutbuf);
+    G4cout.rdbuf(cout_buf);
+    G4cerr.rdbuf(cerr_buf);
 }
