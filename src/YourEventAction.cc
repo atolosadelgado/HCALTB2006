@@ -5,6 +5,20 @@
 
 #include "G4SDManager.hh"
 #include "G4AnalysisManager.hh"
+#include "Randomize.hh"
+
+void YourEventAction::BeginOfEventAction(const G4Event*)
+{
+      // std::ofstream ofile("myevent_info.txt");
+  // ofile << "Random engine: "
+              // << CLHEP::HepRandom::getTheEngine()->name()
+              // << std::endl;
+  // long seed = 123456789123456789;
+
+  // G4Random::setTheSeed(seed);
+  // ofile << "G4Random seed : " << seed << std::endl;
+  // ofile << "particle | Ekin | stepLength | Edep | volume | process | Nsecondaries" << std::endl;
+}
 
 void YourEventAction::EndOfEventAction(const G4Event*) {
         auto* sdManager = G4SDManager::GetSDMpointer();
@@ -60,6 +74,8 @@ void YourEventAction::EndOfEventAction(const G4Event*) {
     ecalSD->ResetPrimaryEnergy();
     this->fGammaE0_ecal.clear();
     this->fGammaModelIndex_ecal.clear();
+    this->fNeutronEfinal.clear();
+    this->fNeutronTfinal.clear();
 }
 
 void YourEventAction::UpdateTime(double t)

@@ -4,6 +4,7 @@
 #include "YourRunAction.hh"
 #include "YourEventAction.hh"
 #include "SteppingAction.hh"
+#include "TrackingAction.hh"
 
 // #include "G4MaterialScanner.hh"
 
@@ -41,4 +42,5 @@ void YourActionInitialization::Build() const {
 
   //   useful for matscan
   SetUserAction(new SteppingAction);
+  SetUserAction(new TrackingAction);
 }

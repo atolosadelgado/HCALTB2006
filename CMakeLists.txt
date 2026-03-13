@@ -39,6 +39,7 @@ file(GLOB sources   ${PROJECT_SOURCE_DIR}/src/YourDetectorConstructor.cc
                     ${PROJECT_SOURCE_DIR}/src/ECalSD.cc
                     ${PROJECT_SOURCE_DIR}/src/HCalSD.cc
                     ${PROJECT_SOURCE_DIR}/src/EventAccumulator.cc
+                    ${PROJECT_SOURCE_DIR}/src/TrackingAction.cc
                     )
 
 file(GLOB headers   ${PROJECT_SOURCE_DIR}/include/YourDetectorConstructor.hh
@@ -55,6 +56,7 @@ file(GLOB headers   ${PROJECT_SOURCE_DIR}/include/YourDetectorConstructor.hh
                     ${PROJECT_SOURCE_DIR}/include/SDutils.hh
                     ${PROJECT_SOURCE_DIR}/include/WelfordAccumulator.hh
                     ${PROJECT_SOURCE_DIR}/include/EventAccumulator.hh
+                    ${PROJECT_SOURCE_DIR}/include/TrackingAction.hh
                     )
 
 #----------------------------------------------------------------------------
@@ -297,11 +299,11 @@ add_test(
             -g ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
             -pl CMS
             -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
-            -pname pi-
-            -penergy 50
-            -nevents 20
+            -pname pi+
+            -penergy 0.1234
+            -nevents 2
             -saturation 0
-            -nthreads 8
+            -nthreads 1
 )
 
 set_tests_properties(${test_name} PROPERTIES

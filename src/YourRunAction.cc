@@ -117,8 +117,11 @@ void YourRunAction::ConstructOutputTree()
   analysisManager->CreateNtupleIColumn("ECAL_gammaPhotoModel", ecalSD->fModelIndex_gammaPhoto);
   YourEventAction * evt = static_cast<YourEventAction*>( G4EventManager::GetEventManager()->GetUserEventAction() );
 
-  analysisManager->CreateNtupleDColumn("ECAL_gammaE0", evt->fGammaE0_ecal);
-  analysisManager->CreateNtupleIColumn("ECAL_gammaModel", evt->fGammaModelIndex_ecal);
+  analysisManager->CreateNtupleDColumn("gammaE0", evt->fGammaE0_ecal);
+  analysisManager->CreateNtupleIColumn("gammaModel", evt->fGammaModelIndex_ecal);
+    analysisManager->CreateNtupleDColumn("neutronEfinal", evt->fNeutronEfinal);
+    analysisManager->CreateNtupleDColumn("neutronTfinal", evt->fNeutronTfinal);
+
   analysisManager->FinishNtuple();
 }
 

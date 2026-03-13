@@ -68,18 +68,18 @@ auto ff = [](const G4Step* step){    const G4Track* track = step->GetTrack();
         << std::endl;
 
  std::cout << "Vertex position (global) [mm]: "
-        << vtx.x()/CLHEP::mm << " "
-        << vtx.y()/CLHEP::mm << " "
+        << vtx.x()/CLHEP::mm << "\t"
+        << vtx.y()/CLHEP::mm << "\t"
         << vtx.z()/CLHEP::mm << std::endl;
 
  std::cout << "Direction (unit vector): "
-        << dir.x() << " "
-        << dir.y() << " "
+        << dir.x() << "\t"
+        << dir.y() << "\t"
         << dir.z() << std::endl;
 
  std::cout << "Momentum [GeV]: "
-        << mom.x()/CLHEP::GeV << " "
-        << mom.y()/CLHEP::GeV << " "
+        << mom.x()/CLHEP::GeV << "\t"
+        << mom.y()/CLHEP::GeV << "\t"
         << mom.z()/CLHEP::GeV << std::endl;
 
  std::cout << "========================" << std::endl;
@@ -114,6 +114,45 @@ auto ff_score_gammas_ecal = [](const G4Step * step){
     }
 };
 ff_score_gammas_ecal(step);
+
+// auto ff_print_step = [](const G4Step * step){
+//               const G4Track* track = step->GetTrack();
+//
+//         G4String particleName = track->GetParticleDefinition()->GetParticleName();
+//
+//         G4double kineticEnergy = track->GetKineticEnergy();
+//
+//         G4double stepLength = step->GetStepLength();
+//
+//         G4double edep = step->GetTotalEnergyDeposit();
+//
+//         G4double weight= track->GetWeight();
+//
+//         const G4StepPoint* preStep = step->GetPreStepPoint();
+//         G4String volumeName = "None";
+//         if(preStep->GetPhysicalVolume())
+//             volumeName = preStep->GetPhysicalVolume()->GetName();
+//
+//         G4String processName = "None";
+//         const G4VProcess* process = preStep->GetProcessDefinedStep();
+//         if(process)
+//             processName = process->GetProcessName();
+//
+//         G4int nSecondaries = step->GetSecondaryInCurrentStep()->size();
+//
+//         std::ofstream("myevent_info.txt", std::ios::app)
+//             << particleName << "\t"
+//             << kineticEnergy << "\t"
+//             << stepLength << "\t"
+//             << edep << "\t"
+//             << weight << "\t"
+//             << volumeName << "\t"
+//             << processName << "\t"
+//             << nSecondaries
+//             << G4endl;
+//     };
+//
+// ff_print_step(step);
 
 
 };
