@@ -20,14 +20,14 @@ G4bool HCalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
     if (edep <= 0.) return false;
 
 
-    G4Track * thisTrack = aStep->GetTrack();
-    double time = thisTrack->GetGlobalTime();
-    G4EventManager * evtmgr = G4EventManager::GetEventManager();
-    YourEventAction * evt =static_cast<YourEventAction*>(evtmgr->GetUserEventAction());
-    evt->UpdateTime(time);
 
+    auto * user_evt_action = G4EventManager::GetEventManager()->GetUserEventAction();
     // debug...
+    if(user_evt_action)
     {
+        YourEventAction * evt = dynamic_cast<YourEventAction*>(user_evt_action);
+        G4Track * thisTrack = aStep->GetTrack();
+        evt->UpdateTime(thisTrack->GetGlobalTime());
         event_energy_raw += edep;
         event_nparticles++;
         const G4ParticleDefinition * thisPartDefinition = thisTrack->GetParticleDefinition();

@@ -18,11 +18,13 @@ void TrackingAction::PostUserTrackingAction(const G4Track* aTrack)
     if(aTrack->GetDefinition() == G4Neutron::Neutron())
     {
         YourEventAction* evt =
-            static_cast<YourEventAction*>(
+            dynamic_cast<YourEventAction*>(
                 G4EventManager::GetEventManager()->GetUserEventAction()
             );
-
-        evt->fNeutronEfinal.push_back(aTrack->GetKineticEnergy());
-        evt->fNeutronTfinal.push_back(aTrack->GetLocalTime());
+        if(evt)
+        {
+            evt->fNeutronEfinal.push_back(aTrack->GetKineticEnergy());
+            evt->fNeutronTfinal.push_back(aTrack->GetLocalTime());
+        }
     }
 }
