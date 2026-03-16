@@ -31,6 +31,9 @@ YourRunAction::~YourRunAction() {}
 
 #include "G4SDManager.hh"
 #include "G4AnalysisManager.hh"
+#include "G4NuclearLevelData.hh"
+#include "G4NeutronCaptureProcess.hh"
+#include "G4NeutronRadCapture.hh"
 void YourRunAction::BeginOfRunAction(const G4Run*)
 {
     this->ConstructOutputTree();
@@ -216,42 +219,56 @@ void YourRunAction::PrintGeant4Configuration()
             G4cout << "  No production cuts attached!" << G4endl;
         }
     }
-
-    G4cout << "\n=== User Limits per Logical Volume ===\n" << G4endl;
-    auto particleDef =
-        G4ParticleTable::GetParticleTable()->FindParticle("geantino");
-
-    G4DynamicParticle* dyn =
-        new G4DynamicParticle(particleDef, G4ThreeVector(0,0,1), 1.0*CLHEP::GeV);
-
-    G4Track dummyTrack(dyn, 0.0, G4ThreeVector());
-
-    auto lvStore = G4LogicalVolumeStore::GetInstance();
-
-    for (auto lv : *lvStore)
     {
-        auto ul = lv->GetUserLimits();
-        if (ul)
+        G4cout << "\n=== User Limits per Logical Volume ===\n" << G4endl;
+
+        auto particleTable = G4ParticleTable::GetParticleTable();
+        auto particleIterator = particleTable->GetIterator();
+
+        auto lvStore = G4LogicalVolumeStore::GetInstance();
+
+        particleIterator->reset();
+
+        while ((*particleIterator)())
         {
-            // G4cout << "LogicalVolume: " << lv->GetName() << G4endl;
-            // G4cout << "  MaxAllowedStep: " << ul->GetMaxAllowedStep() << G4endl;
-            // G4cout << "  MaxTrackLength: " << ul->GetUserMaxTrackLength() << G4endl;
-            // G4cout << "  MaxTime      : " << ul->GetUserMaxTime() << G4endl;
-            // G4cout << "  MinEkine     : " << ul->GetUserMinEkine() << G4endl;
-            // G4cout << "  MinRange     : " << ul->GetUserMinRange() << G4endl;
+            G4ParticleDefinition* particleDef = particleIterator->value();
+
+            G4String pname = particleDef->GetParticleName();
 
 
-            G4cout << "LogicalVolume: " << lv->GetName() << G4endl;
-            G4cout << "  MaxAllowedStep: "
-                  << ul->GetMaxAllowedStep(dummyTrack) << G4endl;
-            G4cout << "  MaxTrackLength: "
-                  << ul->GetUserMaxTrackLength(dummyTrack) << G4endl;
-            G4cout << "  MaxTime: "
-                  << ul->GetUserMaxTime(dummyTrack) << G4endl;
-            G4cout << "  MinEkine: "
-                  << ul->GetUserMinEkine(dummyTrack) << G4endl;
-            G4cout << "  MinRange: "
-                  << ul->GetUserMinRange(dummyTrack) << G4endl;
+
+            G4DynamicParticle* dyn =
+                new G4DynamicParticle(particleDef, G4ThreeVector(0,0,1), 1.0*CLHEP::GeV);
+
+            G4Track dummyTrack(dyn, 0.0, G4ThreeVector());
+
+            for (auto lv : *lvStore)
+            {
+                auto ul = lv->GetUserLimits();
+
+                if (ul)
+                {
+                    G4cout << "\n--- Particle: " << pname << " ---\n" << G4endl;
+                    G4cout << "LogicalVolume: " << lv->GetName() << G4endl;
+
+                    G4cout << "  MaxAllowedStep: "
+                        << ul->GetMaxAllowedStep(dummyTrack) << G4endl;
+
+                    G4cout << "  MaxTrackLength: "
+                        << ul->GetUserMaxTrackLength(dummyTrack) << G4endl;
+
+                    G4cout << "  MaxTime: "
+                        << ul->GetUserMaxTime(dummyTrack) << G4endl;
+
+                    G4cout << "  MinEkine: "
+                        << ul->GetUserMinEkine(dummyTrack) << G4endl;
+
+                    G4cout << "  MinRange: "
+                        << ul->GetUserMinRange(dummyTrack) << G4endl;
+                }
+            }
+
+            delete dyn;
         }
     }
 
@@ -277,6 +294,25 @@ void YourRunAction::PrintGeant4Configuration()
             G4cout << "  Process: "
                    << (*pv)[i]->GetProcessName()
                    << G4endl;
+            if("nCapture" == (*pv)[i]->GetProcessName()){
+                (*pv)[i]->DumpInfo();
+                G4NeutronCaptureProcess * ncapture = static_cast<G4NeutronCaptureProcess*>((*pv)[i]);
+                ncapture->ProcessDescription(G4cout);
+                ncapture->DumpPhysicsTable(*particle);
+                for(auto & interaction : ncapture->GetHadronicInteractionList() )
+                {
+                    G4cout << "Model: "
+                        << interaction->GetModelName()
+                        << "  Emin=" << interaction->GetMinEnergy()/CLHEP::MeV
+                        << " MeV"
+                        << "  Emax=" << interaction->GetMaxEnergy()/CLHEP::MeV
+                        << " MeV"
+                        << G4endl;
+                    if("nRadCapture" == interaction->GetModelName()){
+                        interaction->ModelDescription(G4cout);
+                    }
+            }
+            }
         }
     }
 
@@ -389,6 +425,14 @@ void YourRunAction::PrintGeant4Configuration()
 
     G4cout << "================================\n";
     G4PhysicsModelCatalog::PrintAllInformation();
+
+
+    G4cout << "================================\n";
+    G4DeexPrecoParameters* deex = G4NuclearLevelData::GetInstance()->GetParameters();
+    deex->StreamInfo(G4cout);
+
+    G4cout << "================================\n";
+
     dumpFile.flush();
     G4cout.rdbuf(cout_buf);
     G4cerr.rdbuf(cerr_buf);
