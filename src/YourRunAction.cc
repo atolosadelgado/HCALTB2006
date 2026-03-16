@@ -222,53 +222,32 @@ void YourRunAction::PrintGeant4Configuration()
     {
         G4cout << "\n=== User Limits per Logical Volume ===\n" << G4endl;
 
-        auto particleTable = G4ParticleTable::GetParticleTable();
-        auto particleIterator = particleTable->GetIterator();
-
         auto lvStore = G4LogicalVolumeStore::GetInstance();
 
-        particleIterator->reset();
-
-        while ((*particleIterator)())
+        G4Track dummyTrack;
+        for (auto lv : *lvStore)
         {
-            G4ParticleDefinition* particleDef = particleIterator->value();
+            auto ul = lv->GetUserLimits();
 
-            G4String pname = particleDef->GetParticleName();
-
-
-
-            G4DynamicParticle* dyn =
-                new G4DynamicParticle(particleDef, G4ThreeVector(0,0,1), 1.0*CLHEP::GeV);
-
-            G4Track dummyTrack(dyn, 0.0, G4ThreeVector());
-
-            for (auto lv : *lvStore)
+            if (ul)
             {
-                auto ul = lv->GetUserLimits();
+                G4cout << "LogicalVolume: " << lv->GetName() << G4endl;
 
-                if (ul)
-                {
-                    G4cout << "\n--- Particle: " << pname << " ---\n" << G4endl;
-                    G4cout << "LogicalVolume: " << lv->GetName() << G4endl;
+                G4cout << "  MaxAllowedStep: "
+                    << ul->GetMaxAllowedStep(dummyTrack) << G4endl;
 
-                    G4cout << "  MaxAllowedStep: "
-                        << ul->GetMaxAllowedStep(dummyTrack) << G4endl;
+                G4cout << "  MaxTrackLength: "
+                    << ul->GetUserMaxTrackLength(dummyTrack) << G4endl;
 
-                    G4cout << "  MaxTrackLength: "
-                        << ul->GetUserMaxTrackLength(dummyTrack) << G4endl;
+                G4cout << "  MaxTime: "
+                    << ul->GetUserMaxTime(dummyTrack) << G4endl;
 
-                    G4cout << "  MaxTime: "
-                        << ul->GetUserMaxTime(dummyTrack) << G4endl;
+                G4cout << "  MinEkine: "
+                    << ul->GetUserMinEkine(dummyTrack) << G4endl;
 
-                    G4cout << "  MinEkine: "
-                        << ul->GetUserMinEkine(dummyTrack) << G4endl;
-
-                    G4cout << "  MinRange: "
-                        << ul->GetUserMinRange(dummyTrack) << G4endl;
-                }
+                G4cout << "  MinRange: "
+                    << ul->GetUserMinRange(dummyTrack) << G4endl;
             }
-
-            delete dyn;
         }
     }
 
