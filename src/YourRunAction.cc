@@ -197,6 +197,7 @@ void YourRunAction::PrintGeant4Configuration()
     pct->DumpCouples();
 
 
+    G4cout << "================================\n";
     G4cout << "\n=== Regions and Production Cuts ===\n" << G4endl;
 
     auto regionStore = G4RegionStore::GetInstance();
@@ -216,10 +217,35 @@ void YourRunAction::PrintGeant4Configuration()
         }
         else
         {
-            G4cout << "  No production cuts attached!" << G4endl;
+            G4cout << "  No production cuts attached" << G4endl;
+        }
+        auto * ul = region->GetUserLimits();
+        if (ul)
+        {
+            G4Track dummyTrack;
+            G4cout << "  MaxAllowedStep: "
+                << ul->GetMaxAllowedStep(dummyTrack) << G4endl;
+
+            G4cout << "  MaxTrackLength: "
+                << ul->GetUserMaxTrackLength(dummyTrack) << G4endl;
+
+            G4cout << "  MaxTime: "
+                << ul->GetUserMaxTime(dummyTrack) << G4endl;
+
+            G4cout << "  MinEkine: "
+                << ul->GetUserMinEkine(dummyTrack) << G4endl;
+
+            G4cout << "  MinRange: "
+                << ul->GetUserMinRange(dummyTrack) << G4endl;
+        }
+        else
+        {
+            G4cout << "  No user limits attached" << G4endl;
         }
     }
     {
+
+        G4cout << "================================\n";
         G4cout << "\n=== User Limits per Logical Volume ===\n" << G4endl;
 
         auto lvStore = G4LogicalVolumeStore::GetInstance();
@@ -228,7 +254,6 @@ void YourRunAction::PrintGeant4Configuration()
         for (auto lv : *lvStore)
         {
             auto ul = lv->GetUserLimits();
-
             if (ul)
             {
                 G4cout << "LogicalVolume: " << lv->GetName() << G4endl;
@@ -252,6 +277,7 @@ void YourRunAction::PrintGeant4Configuration()
     }
 
 
+    G4cout << "================================\n";
     G4cout << "\n=== Processes per Particle ===\n" << G4endl;
 
     auto particleTable = G4ParticleTable::GetParticleTable();
@@ -295,6 +321,12 @@ void YourRunAction::PrintGeant4Configuration()
         }
     }
 
+
+    G4cout << "===== G4EmParameters =====\n";
+    G4EmParameters::Instance()->StreamInfo(G4cout);
+    G4EmParameters::Instance()->Dump();
+
+    G4cout << "================================\n";
     G4cout << "===== G4HadronicParameters =====\n";
     G4HadronicParameters* hadronic_params = G4HadronicParameters::Instance();
     // Energy limits
@@ -393,24 +425,16 @@ void YourRunAction::PrintGeant4Configuration()
               << hadronic_params->GetTimeThresholdForRadioactiveDecay() << "\n";
 
     G4cout << "================================\n";
+    G4DeexPrecoParameters* deex = G4NuclearLevelData::GetInstance()->GetParameters();
+    deex->StreamInfo(G4cout);
 
-    G4cout << "===== G4EmParameters =====\n";
-    G4EmParameters::Instance()->StreamInfo(G4cout);
-    G4EmParameters::Instance()->Dump();
     G4cout << "================================\n";
-
     G4cout << "===== G4HadronicProcessStore =====\n";
     G4HadronicProcessStore::Instance()->Dump(1);
 
     G4cout << "================================\n";
     G4PhysicsModelCatalog::PrintAllInformation();
 
-
-    G4cout << "================================\n";
-    G4DeexPrecoParameters* deex = G4NuclearLevelData::GetInstance()->GetParameters();
-    deex->StreamInfo(G4cout);
-
-    G4cout << "================================\n";
 
     dumpFile.flush();
     G4cout.rdbuf(cout_buf);
