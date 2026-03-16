@@ -100,7 +100,8 @@ void YourDetectorConstructor::ConstructSDandField()
             {
               lv->SetSensitiveDetector(ecalSD);
               ++lvcounter;
-              std::cout << "\tECAL SD volume <" << lvname << "> found assigned correctly" << std::endl;
+              if(0<verbosity)
+                std::cout << "\tECAL SD volume <" << lvname << "> found assigned correctly" << std::endl;
             }
           }
           // check if there was at least 1 volume with lvname
@@ -122,7 +123,8 @@ void YourDetectorConstructor::ConstructSDandField()
           {
             lv->SetSensitiveDetector(hcalSD);
             ++lvcounter;
-            std::cout << "\tHCAL SD volume <" << lvname << "> found assigned correctly" << std::endl;
+            if(0<verbosity)
+              std::cout << "\tHCAL SD volume <" << lvname << "> found assigned correctly" << std::endl;
           }
         }
         // check if there was at least 1 volume with lvname
@@ -199,7 +201,8 @@ void YourDetectorConstructor::HighlightMaterial(const G4String& targetMaterialNa
             visAtt->SetVisibility(true);
             visAtt->SetForceSolid(true);
             lv->SetVisAttributes(visAtt);
-            std::cout << " New crystal for visualization: " << lv->GetName() << std::endl;
+            if(0<verbosity)
+              std::cout << " New crystal for visualization: " << lv->GetName() << std::endl;
         } else if(makeOtherInvisible){
             // Todos los demás: invisibles
             lv->SetVisAttributes( G4VisAttributes::GetInvisible() );
@@ -220,7 +223,8 @@ G4VPhysicalVolume * YourDetectorConstructor::FindPV(std::string pvname)
 
   for (int i = 0; i < motherLV->GetNoDaughters(); i++) {
       G4VPhysicalVolume* daughter = motherLV->GetDaughter(i);
-      std::cout << "World daughter : " << daughter->GetName() << std::endl;
+      if(0<verbosity)
+        std::cout << "World daughter : " << daughter->GetName() << std::endl;
       if (daughter->GetName() == pvname) { // nombre del physvol del ECAL
           findingPV = daughter;
           break;

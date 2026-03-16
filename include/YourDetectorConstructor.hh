@@ -26,6 +26,7 @@ class YourDetectorConstructor : public G4VUserDetectorConstruction
 
 
   private:
+      int verbosity = 0;
       std::string gdml_filename;
       G4VPhysicalVolume * worldPV;
       G4VPhysicalVolume* ecalPV;
