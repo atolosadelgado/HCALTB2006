@@ -18,9 +18,12 @@ public:
 
     void BuildForMaster() const override;
 
+    void SetEnableDetailedScoring(bool enableDetailedScoring){fEnableDetailedScoring=enableDetailedScoring;}
+
   private:
     const YourInputArgs * fInputArgs;
     G4MaterialScanner * ms;
+    bool fEnableDetailedScoring = false;
 };
 
 #endif

@@ -85,7 +85,9 @@ int main(int argc, char** argv)
 
 
     // create user actions
-    runManager->SetUserInitialization(new YourActionInitialization(&iargs));
+    YourActionInitialization * yourActions = new YourActionInitialization(&iargs);
+    yourActions->SetEnableDetailedScoring(iargs.enableDetailedScoring);
+    runManager->SetUserInitialization(yourActions);
 
     // initialize detector and physics
     runManager->Initialize();
