@@ -99,7 +99,6 @@ add_test(
             -pname pi-
             -penergy 50
             -nevents 5
-            -saturation 2
 )
 
 set_tests_properties(${test_name} PROPERTIES
@@ -114,82 +113,36 @@ install(TARGETS gdml_sim DESTINATION bin)
 
 enable_testing()
 #----------------------
-# Test using alias within the macro file
+# Test material scan when replacing ECAL materials with air
+#SET( test_name "test_RunGPS_matscan_airECAL" )
 
-SET( test_name "test_CMS_physics" )
+#add_test(
+    #NAME ${test_name}
+    #COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
+            #-g ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
+            #-pl FTFP_BERT
+            #-m ${CMAKE_SOURCE_DIR}/g4matscan.mac
+            #-airECAL
+#)
+
+#set_tests_properties(${test_name} PROPERTIES
+    #WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+#)
+#SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error" TIMEOUT 600)
+
+#----------------------
+# Run ECAL calibration
+
+SET( test_name "run_ECAL_calibration_CMS" )
 add_test(
     NAME ${test_name}
     COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
             -g ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
             -pl CMS
             -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
-            -pname pi-
-            -penergy 50
-            -nevents 5
-            -saturation 2
-)
-
-set_tests_properties(${test_name} PROPERTIES
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
-SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error" TIMEOUT 600)
-
-
-#----------------------
-# Test using alias within the macro file + MT
-
-SET( test_name "test_RunGPS_templateMac_MT" )
-add_test(
-    NAME ${test_name}
-    COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
-            -g ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
-            -pl FTFP_BERT
-            -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
-            -pname pi-
-            -penergy 50
-            -nevents 50
-            -saturation 2
-            -nthreads 4
-)
-
-set_tests_properties(${test_name} PROPERTIES
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
-SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error" TIMEOUT 600)
-
-
-#----------------------
-# Test material scan when replacing ECAL materials with air
-SET( test_name "test_RunGPS_matscan" )
-
-add_test(
-    NAME ${test_name}
-    COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
-            -g ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
-            -pl FTFP_BERT
-            -m ${CMAKE_SOURCE_DIR}/g4matscan.mac
-            -airECAL
-)
-
-set_tests_properties(${test_name} PROPERTIES
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
-SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error" TIMEOUT 600)
-
-#----------------------
-# Run ECAL calibration
-
-SET( test_name "run_ECAL_calibration" )
-add_test(
-    NAME ${test_name}
-    COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
-            -g ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
-            -pl FTFP_BERT
-            -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
             -pname e-
             -penergy 50
             -nevents 500
-            -saturation 0
             -nthreads 8
 )
 
@@ -201,17 +154,16 @@ SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Excepti
 #----------------------
 # Run HCAL calibration
 
-SET( test_name "run_HCAL_calibration" )
+SET( test_name "run_HCAL_calibration_CMS" )
 add_test(
     NAME ${test_name}
     COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
             -g ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
-            -pl FTFP_BERT
+            -pl CMS
             -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
             -pname e-
             -penergy 50
             -nevents 500
-            -saturation 0
             -nthreads 8
             -airECAL
 )
@@ -222,32 +174,9 @@ set_tests_properties(${test_name} PROPERTIES
 SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error")
 
 #----------------------
-# Run HCAL pion
+# Run 50 GeV kaon with CMS physics (MT runmanager)
 
-SET( test_name "run_50GeV_pion" )
-add_test(
-    NAME ${test_name}
-    COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
-            -g ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
-            -pl FTFP_BERT
-            -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
-            -pname pi-
-            -penergy 50
-            -nevents 2000
-            -saturation 0
-            -nthreads 8
-)
-
-set_tests_properties(${test_name} PROPERTIES
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
-SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error")
-
-
-#----------------------
-# Run HCAL kaon
-
-SET( test_name "run_50GeV_kaon" )
+SET( test_name "run_50GeV_kaon_CMS" )
 add_test(
     NAME ${test_name}
     COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
@@ -257,7 +186,6 @@ add_test(
             -pname kaon-
             -penergy 50
             -nevents 20
-            -saturation 0
             -nthreads 8
 )
 
@@ -267,19 +195,18 @@ set_tests_properties(${test_name} PROPERTIES
 SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error")
 
 #----------------------
-# Run HCAL protonm
+# Run 50 GeV pion with CMS physics (MT runmanager)
 
-SET( test_name "run_50GeV_antiproton" )
+SET( test_name "run_50GeV_antiproton_CMS" )
 add_test(
     NAME ${test_name}
     COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
             -g ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
-            -pl FTFP_BERT
+            -pl CMS
             -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
             -pname anti_proton
             -penergy 50
             -nevents 20
-            -saturation 0
             -nthreads 8
 )
 
@@ -290,7 +217,7 @@ SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Excepti
 
 
 #----------------------
-# Run HCAL pion CMS
+# Run 50 GeV pion with CMS physics (sequential runmanager)
 
 SET( test_name "run_50GeV_pion_CMS" )
 add_test(
@@ -301,8 +228,7 @@ add_test(
             -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
             -pname pi-
             -penergy 50
-            -nevents 2
-            -saturation 0
+            -nevents 20
             -nthreads 1
 )
 
@@ -311,3 +237,24 @@ set_tests_properties(${test_name} PROPERTIES
 )
 SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error")
 
+
+#----------------------
+# Run 50 GeV pion with CMS physics (MT runmanager)
+
+SET( test_name "runMT_50GeV_pion_CMS" )
+add_test(
+    NAME ${test_name}
+    COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
+            -g ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
+            -pl CMS
+            -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
+            -pname pi-
+            -penergy 50
+            -nevents 20
+            -nthreads 2
+)
+
+set_tests_properties(${test_name} PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error")
