@@ -299,8 +299,8 @@ add_test(
             -g ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
             -pl CMS
             -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
-            -pname pi+
-            -penergy 0.1234
+            -pname pi-
+            -penergy 50
             -nevents 2
             -saturation 0
             -nthreads 1
