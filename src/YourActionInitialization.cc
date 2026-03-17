@@ -41,6 +41,6 @@ void YourActionInitialization::Build() const {
   SetUserAction(gen);
 
   //   useful for matscan
-  SetUserAction(new SteppingAction);
-  SetUserAction(new TrackingAction);
+  // SetUserAction(new SteppingAction);
+  // SetUserAction(new TrackingAction);
 }
