@@ -14,7 +14,6 @@ class YourPrimaryGenerator;
  * EcalSD -> CaloSD -> SensitiveCaloDetector -> SensitiveDetector
  * in one single class. Birk correction placed in SDutils namespace
  */
-
 class ECalSD : public G4VSensitiveDetector {
 public:
     ECalSD(std::string fname):G4VSensitiveDetector(fname){ std::cout << "New EcalSD named " << fname.c_str() << std::endl; }

@@ -9,6 +9,11 @@
 #include "YourPrimaryGenerator.hh"
 #include "EnergyAccumulatorPerLV.hh"
 
+/* class HCalSD
+ * reimplements CMSSW classes
+ * HcalSD -> CaloSD -> SensitiveCaloDetector -> SensitiveDetector
+ * in one single class. Birk correction placed in SDutils namespace
+ */
 class HCalSD : public G4VSensitiveDetector {
 public:
     HCalSD(std::string fname):G4VSensitiveDetector(fname){ std::cout << "New HCalSD named " << fname.c_str() << std::endl; }
