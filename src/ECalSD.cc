@@ -1,21 +1,16 @@
 #include "ECalSD.h"
-#include "YourPrimaryGenerator.hh"
 #include "SDutils.hh"
+#include "EnergyAccumulatorPerLV.hh"
+#include "YourPrimaryGenerator.hh"
+#include "YourEventAction.hh"
 
 #include <iostream>
 
 #include "G4Step.hh"
 #include "G4Track.hh"
 #include "G4Step.hh"
-#include "G4TouchableHistory.hh"
 #include "G4ThreeVector.hh"
 #include "G4EventManager.hh"
-#include "G4EventManager.hh"
-#include "YourEventAction.hh"
-#include "SDutils.hh"
-
-#include "G4EventManager.hh"
-#include "YourEventAction.hh"
 #include "G4Gamma.hh"
 #include "G4Electron.hh"
 #include "G4Neutron.hh"
@@ -104,8 +99,12 @@ G4bool ECalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
 
     double energy_corrected = edep*birk_correction;
     event_energy += energy_corrected;
-    G4LogicalVolume * lv = aStep->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume();
-    energy_accumulator.AddHitInfo(lv, {energy_corrected, distance_hit_shower_axis});
+    event_energy_raw += edep;
+
+    if(ScoreProfile){
+        G4LogicalVolume * lv = aStep->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume();
+        energy_accumulator->AddHitInfo(lv, {energy_corrected, distance_hit_shower_axis});
+    }
     if(1<verbosity)
         std::cout << "\t[" + this->GetName() + "] " << edep/CLHEP::MeV << " MeV" << std::endl;
 
@@ -114,7 +113,10 @@ G4bool ECalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
 
 void ECalSD::Initialize(G4HCofThisEvent*) {
     event_energy = 0.0;
-    energy_accumulator.Initialize(sensitive_lv);
+    if(ScoreProfile){
+        energy_accumulator = new EnergyAccumulatorPerLV();
+        energy_accumulator->Initialize(sensitive_lv);
+    }
 }
 
 void ECalSD::EndOfEvent(G4HCofThisEvent*) {

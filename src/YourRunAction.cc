@@ -72,19 +72,20 @@ void YourRunAction::ConstructOutputTree()
   analysisManager->CreateNtuple("tree", "tree for HCAL 2006 TB experiment");
   analysisManager->CreateNtupleDColumn("ECAL_eresponse");
   analysisManager->CreateNtupleDColumn("HCAL_eresponse");
+  analysisManager->CreateNtupleDColumn("ECAL_eresponse_raw");
   analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw");
-  analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw_gamma");
-  analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw_electron");
-  analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw_neutron");
-  analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw_proton");
-  analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw_pion");
-  analysisManager->CreateNtupleDColumn("HCAL_nsteps_raw");
-  analysisManager->CreateNtupleDColumn("HCAL_nsteps_gamma");
-  analysisManager->CreateNtupleDColumn("HCAL_nsteps_electron");
-  analysisManager->CreateNtupleDColumn("HCAL_nsteps_neutron");
-  analysisManager->CreateNtupleDColumn("HCAL_nsteps_proton");
-  analysisManager->CreateNtupleDColumn("HCAL_nsteps_pion");
-  analysisManager->CreateNtupleDColumn("time");
+  // analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw_gamma");
+  // analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw_electron");
+  // analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw_neutron");
+  // analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw_proton");
+  // analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw_pion");
+  // analysisManager->CreateNtupleDColumn("HCAL_nsteps_raw");
+  // analysisManager->CreateNtupleDColumn("HCAL_nsteps_gamma");
+  // analysisManager->CreateNtupleDColumn("HCAL_nsteps_electron");
+  // analysisManager->CreateNtupleDColumn("HCAL_nsteps_neutron");
+  // analysisManager->CreateNtupleDColumn("HCAL_nsteps_proton");
+  // analysisManager->CreateNtupleDColumn("HCAL_nsteps_pion");
+  // analysisManager->CreateNtupleDColumn("time");
 
 //     auto* hcalSD =
 //         static_cast<HCalSD*>(G4SDManager::GetSDMpointer()->FindSensitiveDetector("hcalSD"));
@@ -118,12 +119,12 @@ void YourRunAction::ConstructOutputTree()
 //   analysisManager->CreateNtupleIColumn("ECAL_electronModel", ecalSD->fModelIndex_electron);
 //   analysisManager->CreateNtupleDColumn("ECAL_gammaPhotoE0", ecalSD->fGammaPhotoE0);
 //   analysisManager->CreateNtupleIColumn("ECAL_gammaPhotoModel", ecalSD->fModelIndex_gammaPhoto);
-  YourEventAction * evt = static_cast<YourEventAction*>( G4EventManager::GetEventManager()->GetUserEventAction() );
-
-  analysisManager->CreateNtupleDColumn("gammaE0", evt->fGammaE0_ecal);
-  analysisManager->CreateNtupleIColumn("gammaModel", evt->fGammaModelIndex_ecal);
-    analysisManager->CreateNtupleDColumn("neutronEfinal", evt->fNeutronEfinal);
-    analysisManager->CreateNtupleDColumn("neutronTfinal", evt->fNeutronTfinal);
+  // YourEventAction * evt = static_cast<YourEventAction*>( G4EventManager::GetEventManager()->GetUserEventAction() );
+  //
+  // analysisManager->CreateNtupleDColumn("gammaE0", evt->fGammaE0_ecal);
+  // analysisManager->CreateNtupleIColumn("gammaModel", evt->fGammaModelIndex_ecal);
+  //   analysisManager->CreateNtupleDColumn("neutronEfinal", evt->fNeutronEfinal);
+  //   analysisManager->CreateNtupleDColumn("neutronTfinal", evt->fNeutronTfinal);
 
   analysisManager->FinishNtuple();
 }

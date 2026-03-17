@@ -1,10 +1,11 @@
 #include "HCalSD.h"
 #include "SDutils.hh"
-
-#include <iostream>
-
+#include "EnergyAccumulatorPerLV.hh"
+#include "YourPrimaryGenerator.hh"
 #include "YourRunAction.hh"
 #include "YourActionInitialization.hh"
+
+#include <iostream>
 
 #include "G4EventManager.hh"
 #include "YourEventAction.hh"
@@ -91,7 +92,12 @@ G4bool HCalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
     double Wt0_correction = ("HBScintillatorLayer0In1" == lvname) || ("HBScintillatorLayer0In2" == lvname) ? 0.41 : 1.0;
     double energy_corrected = edep * birk_correction * Wt0_correction;
     event_energy += energy_corrected;
-    energy_accumulator.AddHitInfo(lv, {energy_corrected, distance_hit_shower_axis});
+    event_energy_raw+=edep;
+
+    if(ScoreProfile){
+        energy_accumulator->AddHitInfo(lv, {energy_corrected, distance_hit_shower_axis});
+    }
+
     if(1<verbosity)
         std::cout << "\t[" + this->GetName() + "] " << edep/CLHEP::MeV << " MeV" << std::endl;
 
@@ -104,7 +110,10 @@ double HCalSD::getEnergyDeposit(G4Step* aStep) {
 
 void HCalSD::Initialize(G4HCofThisEvent*) {
     event_energy = 0.0;
-    energy_accumulator.Initialize(sensitive_lv);
+    if(ScoreProfile){
+        energy_accumulator = new EnergyAccumulatorPerLV();
+        energy_accumulator->Initialize(sensitive_lv);
+    }
 }
 
 void HCalSD::EndOfEvent(G4HCofThisEvent*) {

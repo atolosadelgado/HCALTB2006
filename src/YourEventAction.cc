@@ -36,8 +36,12 @@ void YourEventAction::EndOfEventAction(const G4Event*) {
     // double hcal_eventEnergyResponse = hcal_energy_MeV / fPrimaryGenerator->E0_MeV;
 
     auto* ana = G4AnalysisManager::Instance();
-    ana->FillNtupleDColumn(0, ecalSD->energy_accumulator.GetTotalEnergy() );
-    ana->FillNtupleDColumn(1, hcalSD->energy_accumulator.GetTotalEnergy() );
+    ana->FillNtupleDColumn(0, ecalSD->Get_event_energy(false) );
+    ana->FillNtupleDColumn(1, hcalSD->Get_event_energy(false) );
+    ana->FillNtupleDColumn(2, ecalSD->Get_event_energy() );
+    ana->FillNtupleDColumn(3, hcalSD->Get_event_energy() );
+
+
 //     ana->FillNtupleDColumn(1, hcalSD->event_energy);
 //     ana->FillNtupleDColumn(2, hcalSD->event_energy_raw);
 //     ana->FillNtupleDColumn(3, hcalSD->event_energy_raw_gamma);
@@ -51,7 +55,7 @@ void YourEventAction::EndOfEventAction(const G4Event*) {
 //     ana->FillNtupleDColumn(11, hcalSD->event_nparticles_neutron);
 //     ana->FillNtupleDColumn(12, hcalSD->event_nparticles_proton);
 //     ana->FillNtupleDColumn(13, hcalSD->event_nparticles_pion);
-    ana->FillNtupleDColumn(14, GetEventTime() );
+    // ana->FillNtupleDColumn(14, GetEventTime() );
 
 //     ana->FillNtupleDColumn(17, ecalSD->event_energy_raw);
 //     ana->FillNtupleDColumn(18, ecalSD->event_energy_raw_gamma);
@@ -71,15 +75,15 @@ void YourEventAction::EndOfEventAction(const G4Event*) {
     // ana->FillNtupleDColumn(32-34, primary pxpypz);
 
     ana->AddNtupleRow();
-    ResetEventTime();
-    this->fGammaE0_ecal.clear();
-    this->fGammaModelIndex_ecal.clear();
-    this->fNeutronEfinal.clear();
-    this->fNeutronTfinal.clear();
+    // ResetEventTime();
+    // this->fGammaE0_ecal.clear();
+    // this->fGammaModelIndex_ecal.clear();
+    // this->fNeutronEfinal.clear();
+    // this->fNeutronTfinal.clear();
 }
 
-void YourEventAction::UpdateTime(double t)
-{
-    this->time_first_hit = std::min(this->time_first_hit, t);
-    this->time_last_hit  = std::max(this->time_last_hit, t);
-}
+// void YourEventAction::UpdateTime(double t)
+// {
+//     this->time_first_hit = std::min(this->time_first_hit, t);
+//     this->time_last_hit  = std::max(this->time_last_hit, t);
+// }

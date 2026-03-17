@@ -5,8 +5,7 @@
 
 #include "G4VSensitiveDetector.hh"
 
-#include "EnergyAccumulatorPerLV.hh"
-
+class EnergyAccumulatorPerLV;
 class YourPrimaryGenerator;
 
 /* class ECalSD
@@ -22,13 +21,15 @@ public:
     void Initialize(G4HCofThisEvent * ) override;
     void EndOfEvent(G4HCofThisEvent * ) override;
     void clearHits();
-    double Get_event_energy(){return event_energy;}
-    void   Reset_event_energy(){event_energy = 0;}
+    double Get_event_energy(bool raw=true){return (raw?event_energy_raw:event_energy);}
+    void   Reset_event_energy(){event_energy = 0;event_energy_raw=0;}
     double event_energy = {0};
+    double event_energy_raw = {0};
 
     int verbosity = {0};
 
-    EnergyAccumulatorPerLV energy_accumulator;
+    EnergyAccumulatorPerLV * energy_accumulator;
+    bool ScoreProfile = false;
 
     // Methods from CaloSD, as in CMSSW,
     virtual G4bool ProcessHits(G4Step* aStep, G4TouchableHistory* ROhist) override;
