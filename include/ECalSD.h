@@ -24,36 +24,11 @@ public:
     void EndOfEvent(G4HCofThisEvent * ) override;
     void clearHits();
     double Get_event_energy(){return event_energy;}
-    // void   Reset_event_energy(){event_energy = 0;}
+    void   Reset_event_energy(){event_energy = 0;}
     double event_energy = {0};
-    double event_energy_raw;
-    double event_energy_raw_gamma;
-    double event_energy_raw_electron;
-    double event_energy_raw_neutron;
-    double event_energy_raw_proton;
-    double event_energy_raw_pion;
-    int event_nparticles;
-    int event_nparticles_gamma;
-    int event_nparticles_electron;
-    int event_nparticles_neutron;
-    int event_nparticles_proton;
-    int event_nparticles_pion;
-    std::vector<G4int> fPDG;
-    std::vector<G4int> fModelIndex;
-    std::vector<G4int> fModelIndex_electron;
-    int fElectronCount;
-    std::vector<double> fElectronE0;
-    std::vector<double> fGammaPhotoE0;
-    std::vector<G4int> fModelIndex_gammaPhoto;
-    std::vector<double> fGammaE0;
-    std::vector<G4int> fModelIndex_gamma;
 
     int verbosity = {0};
 
-    void UpdatePrimaryEnergy(double e){primary_energy = std::max(e,primary_energy);}
-    double GetPrimaryEnergy(){return primary_energy;}
-    void ResetPrimaryEnergy(){primary_energy={-std::numeric_limits<double>::max()};}
-    double primary_energy = {-std::numeric_limits<double>::max()};
     EnergyAccumulatorPerLV energy_accumulator;
 
     // Methods from CaloSD, as in CMSSW,
@@ -99,3 +74,4 @@ public:
 
 };
 #endif
+

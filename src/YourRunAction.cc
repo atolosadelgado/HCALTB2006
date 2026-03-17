@@ -86,38 +86,38 @@ void YourRunAction::ConstructOutputTree()
   analysisManager->CreateNtupleDColumn("HCAL_nsteps_pion");
   analysisManager->CreateNtupleDColumn("time");
 
-    auto* hcalSD =
-        static_cast<HCalSD*>(G4SDManager::GetSDMpointer()->FindSensitiveDetector("hcalSD"));
-  analysisManager->CreateNtupleIColumn("pdg", hcalSD->fPDG );
-  analysisManager->CreateNtupleIColumn("model", hcalSD->fModelIndex );
-
-
-  analysisManager->CreateNtupleDColumn("ECAL_eresponse_raw");
-  analysisManager->CreateNtupleDColumn("ECAL_eresponse_raw_gamma");
-  analysisManager->CreateNtupleDColumn("ECAL_eresponse_raw_electron");
-  analysisManager->CreateNtupleDColumn("ECAL_eresponse_raw_neutron");
-  analysisManager->CreateNtupleDColumn("ECAL_eresponse_raw_proton");
-  analysisManager->CreateNtupleDColumn("ECAL_eresponse_raw_pion");
-  analysisManager->CreateNtupleDColumn("ECAL_nsteps_raw");
-  analysisManager->CreateNtupleDColumn("ECAL_nsteps_gamma");
-  analysisManager->CreateNtupleDColumn("ECAL_nsteps_electron");
-  analysisManager->CreateNtupleDColumn("ECAL_nsteps_neutron");
-  analysisManager->CreateNtupleDColumn("ECAL_nsteps_proton");
-  analysisManager->CreateNtupleDColumn("ECAL_nsteps_pion");
-  analysisManager->CreateNtupleDColumn("ECAL_nelectrons");
-  analysisManager->CreateNtupleDColumn("HCAL_nelectrons");
-  analysisManager->CreateNtupleDColumn("primary_energy");
-
-  analysisManager->CreateNtupleDColumn("primary_px");
-  analysisManager->CreateNtupleDColumn("primary_py");
-  analysisManager->CreateNtupleDColumn("primary_pz");
-    auto* ecalSD =
-        static_cast<ECalSD*>(G4SDManager::GetSDMpointer()->FindSensitiveDetector("ecalSD"));
-  analysisManager->CreateNtupleDColumn("ECAL_electronE0", ecalSD->fElectronE0);
-  analysisManager->CreateNtupleDColumn("HCAL_electronE0", hcalSD->fElectronE0);
-  analysisManager->CreateNtupleIColumn("ECAL_electronModel", ecalSD->fModelIndex_electron);
-  analysisManager->CreateNtupleDColumn("ECAL_gammaPhotoE0", ecalSD->fGammaPhotoE0);
-  analysisManager->CreateNtupleIColumn("ECAL_gammaPhotoModel", ecalSD->fModelIndex_gammaPhoto);
+//     auto* hcalSD =
+//         static_cast<HCalSD*>(G4SDManager::GetSDMpointer()->FindSensitiveDetector("hcalSD"));
+//   analysisManager->CreateNtupleIColumn("pdg", hcalSD->fPDG );
+//   analysisManager->CreateNtupleIColumn("model", hcalSD->fModelIndex );
+//
+//
+//   analysisManager->CreateNtupleDColumn("ECAL_eresponse_raw");
+//   analysisManager->CreateNtupleDColumn("ECAL_eresponse_raw_gamma");
+//   analysisManager->CreateNtupleDColumn("ECAL_eresponse_raw_electron");
+//   analysisManager->CreateNtupleDColumn("ECAL_eresponse_raw_neutron");
+//   analysisManager->CreateNtupleDColumn("ECAL_eresponse_raw_proton");
+//   analysisManager->CreateNtupleDColumn("ECAL_eresponse_raw_pion");
+//   analysisManager->CreateNtupleDColumn("ECAL_nsteps_raw");
+//   analysisManager->CreateNtupleDColumn("ECAL_nsteps_gamma");
+//   analysisManager->CreateNtupleDColumn("ECAL_nsteps_electron");
+//   analysisManager->CreateNtupleDColumn("ECAL_nsteps_neutron");
+//   analysisManager->CreateNtupleDColumn("ECAL_nsteps_proton");
+//   analysisManager->CreateNtupleDColumn("ECAL_nsteps_pion");
+//   analysisManager->CreateNtupleDColumn("ECAL_nelectrons");
+//   analysisManager->CreateNtupleDColumn("HCAL_nelectrons");
+//   analysisManager->CreateNtupleDColumn("primary_energy");
+//
+//   analysisManager->CreateNtupleDColumn("primary_px");
+//   analysisManager->CreateNtupleDColumn("primary_py");
+//   analysisManager->CreateNtupleDColumn("primary_pz");
+//     auto* ecalSD =
+//         static_cast<ECalSD*>(G4SDManager::GetSDMpointer()->FindSensitiveDetector("ecalSD"));
+//   analysisManager->CreateNtupleDColumn("ECAL_electronE0", ecalSD->fElectronE0);
+//   analysisManager->CreateNtupleDColumn("HCAL_electronE0", hcalSD->fElectronE0);
+//   analysisManager->CreateNtupleIColumn("ECAL_electronModel", ecalSD->fModelIndex_electron);
+//   analysisManager->CreateNtupleDColumn("ECAL_gammaPhotoE0", ecalSD->fGammaPhotoE0);
+//   analysisManager->CreateNtupleIColumn("ECAL_gammaPhotoModel", ecalSD->fModelIndex_gammaPhoto);
   YourEventAction * evt = static_cast<YourEventAction*>( G4EventManager::GetEventManager()->GetUserEventAction() );
 
   analysisManager->CreateNtupleDColumn("gammaE0", evt->fGammaE0_ecal);
