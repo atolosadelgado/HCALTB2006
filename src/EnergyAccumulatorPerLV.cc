@@ -18,7 +18,7 @@ void EnergyAccumulatorPerLV::FillMap(std::vector<std::string>& sensitive_lv)
         for(auto & lv : *lvstore)
         {
             if( lvname == lv->GetName() ){
-                 map.emplace(lv, 0.0);
+                 map[lv] = {};
                  counter++;
             }
         }
@@ -35,8 +35,8 @@ void EnergyAccumulatorPerLV::FillMap(std::vector<std::string>& sensitive_lv)
 void EnergyAccumulatorPerLV::Reset()
 {
     if(0<verbosity) std::cout << __PRETTY_FUNCTION__ << std::endl;
-    for(auto & layer_energy : map){
-        if(0<verbosity)  std::cout << "layer " << layer_energy.first << "\tenergy " << layer_energy.second << std::endl;
-        layer_energy.second = 0;
+    for(auto & lvinfo : map){
+        if(0<verbosity)  std::cout << "layer " << lvinfo.first << "\tnumber of hits " << lvinfo.second.size() << std::endl;
+        lvinfo.second.clear();
     }
 }

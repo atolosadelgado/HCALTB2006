@@ -69,10 +69,10 @@ G4bool HCalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
 //         }
 //     }
 
-    // auto & prepos = aStep->GetPreStepPoint()->GetPosition();
-    // auto & postpos = aStep->GetPostStepPoint()->GetPosition();
-    // auto  avepos = 0.5*(prepos + postpos);
-    // double distance_hit_shower_axis = SDutils::Calculate_hitpos_to_shower_axis_distance(avepos,fPrimaryGenerator->direction0, fPrimaryGenerator->position0);
+    auto & prepos = aStep->GetPreStepPoint()->GetPosition();
+    auto & postpos = aStep->GetPostStepPoint()->GetPosition();
+    auto  avepos = 0.5*(prepos + postpos);
+    double distance_hit_shower_axis = SDutils::Calculate_hitpos_to_shower_axis_distance(avepos,fPrimaryGenerator->direction0, fPrimaryGenerator->position0);
     // if(25*CLHEP::cm < distance_hit_shower_axis)
         // return false;
 
@@ -91,7 +91,7 @@ G4bool HCalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
     double Wt0_correction = ("HBScintillatorLayer0In1" == lvname) || ("HBScintillatorLayer0In2" == lvname) ? 0.41 : 1.0;
     double energy_corrected = edep * birk_correction * Wt0_correction;
     event_energy += energy_corrected;
-    energy_accumulator.map[lv] += energy_corrected;
+    energy_accumulator.AddHitInfo(lv, {energy_corrected, distance_hit_shower_axis});
     if(1<verbosity)
         std::cout << "\t[" + this->GetName() + "] " << edep/CLHEP::MeV << " MeV" << std::endl;
 

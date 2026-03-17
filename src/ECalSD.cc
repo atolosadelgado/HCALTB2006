@@ -89,10 +89,10 @@ G4bool ECalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
     // YourEventAction * evt =static_cast<YourEventAction*>(evtmgr->GetUserEventAction());
     // evt->UpdateTime(time);
 
-    // auto & prepos = aStep->GetPreStepPoint()->GetPosition();
-    // auto & postpos = aStep->GetPostStepPoint()->GetPosition();
-    // auto  avepos = 0.5*(prepos + postpos);
-    // double distance_hit_shower_axis = SDutils::Calculate_hitpos_to_shower_axis_distance(avepos,fPrimaryGenerator->direction0, fPrimaryGenerator->position0);
+    auto & prepos = aStep->GetPreStepPoint()->GetPosition();
+    auto & postpos = aStep->GetPostStepPoint()->GetPosition();
+    auto  avepos = 0.5*(prepos + postpos);
+    double distance_hit_shower_axis = SDutils::Calculate_hitpos_to_shower_axis_distance(avepos,fPrimaryGenerator->direction0, fPrimaryGenerator->position0);
     // if(8*CLHEP::cm < distance_hit_shower_axis)
     //     return false;
 
@@ -105,7 +105,7 @@ G4bool ECalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
     double energy_corrected = edep*birk_correction;
     event_energy += energy_corrected;
     G4LogicalVolume * lv = aStep->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume();
-    energy_accumulator.map[lv] += energy_corrected;
+    energy_accumulator.AddHitInfo(lv, {energy_corrected, distance_hit_shower_axis});
     if(1<verbosity)
         std::cout << "\t[" + this->GetName() + "] " << edep/CLHEP::MeV << " MeV" << std::endl;
 

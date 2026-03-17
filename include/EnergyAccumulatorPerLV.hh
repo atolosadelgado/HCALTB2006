@@ -10,7 +10,13 @@ class G4LogicalVolume;
 class EnergyAccumulatorPerLV
 {
 public:
-    std::unordered_map<G4LogicalVolume*, double> map;
+    struct HitInfo
+    {
+        double energy;
+        double radius;
+    };
+    std::unordered_map<G4LogicalVolume*, std::vector<HitInfo>> map;
+    void AddHitInfo(G4LogicalVolume* lv,HitInfo h){map[lv].push_back(h);}
     void Initialize(std::vector<std::string> & sensitive_lv);
 private:
     void FillMap(std::vector<std::string> & sensitive_lv);
