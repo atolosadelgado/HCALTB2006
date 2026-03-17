@@ -17,6 +17,7 @@ public:
     };
     std::unordered_map<G4LogicalVolume*, std::vector<HitInfo>> map;
     void AddHitInfo(G4LogicalVolume* lv,HitInfo h){map[lv].push_back(h);}
+    double GetTotalEnergy();
     void Initialize(std::vector<std::string> & sensitive_lv);
 private:
     void FillMap(std::vector<std::string> & sensitive_lv);

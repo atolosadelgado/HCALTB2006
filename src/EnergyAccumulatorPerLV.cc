@@ -1,5 +1,8 @@
 #include "EnergyAccumulatorPerLV.hh"
 #include "G4Exception.hh"
+#include "G4LogicalVolumeStore.hh"
+
+#include <iostream>
 
 void EnergyAccumulatorPerLV::Initialize(std::vector<std::string> & sensitive_lv)
 {
@@ -8,7 +11,6 @@ void EnergyAccumulatorPerLV::Initialize(std::vector<std::string> & sensitive_lv)
 }
 
 
-#include "G4LogicalVolumeStore.hh"
 void EnergyAccumulatorPerLV::FillMap(std::vector<std::string>& sensitive_lv)
 {
     for(const auto & lvname : sensitive_lv)
@@ -31,7 +33,6 @@ void EnergyAccumulatorPerLV::FillMap(std::vector<std::string>& sensitive_lv)
     }
 }
 
-#include <iostream>
 void EnergyAccumulatorPerLV::Reset()
 {
     if(0<verbosity) std::cout << __PRETTY_FUNCTION__ << std::endl;
@@ -39,4 +40,13 @@ void EnergyAccumulatorPerLV::Reset()
         if(0<verbosity)  std::cout << "layer " << lvinfo.first << "\tnumber of hits " << lvinfo.second.size() << std::endl;
         lvinfo.second.clear();
     }
+}
+
+double EnergyAccumulatorPerLV::GetTotalEnergy()
+{
+    double energy_total = 0;
+    for( auto & [layer, hitcollection] : map )
+        for(auto & hit : hitcollection)
+        energy_total+=hit.energy;
+    return energy_total;
 }
