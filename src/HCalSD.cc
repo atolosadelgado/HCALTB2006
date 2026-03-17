@@ -19,57 +19,55 @@ G4bool HCalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
     double edep = aStep->GetTotalEnergyDeposit();
     if (edep <= 0.) return false;
 
-
-
-    auto * user_evt_action = G4EventManager::GetEventManager()->GetUserEventAction();
-    // debug...
-    if(user_evt_action)
-    {
-        YourEventAction * evt = dynamic_cast<YourEventAction*>(user_evt_action);
-        G4Track * thisTrack = aStep->GetTrack();
-        evt->UpdateTime(thisTrack->GetGlobalTime());
-        event_energy_raw += edep;
-        event_nparticles++;
-        const G4ParticleDefinition * thisPartDefinition = thisTrack->GetParticleDefinition();
-        if(G4Gamma::Gamma() == thisPartDefinition )
-        {
-            event_nparticles_gamma++;
-            event_energy_raw_gamma+= edep;
-        }
-        else if(G4Electron::Electron() == thisPartDefinition )
-        {
-            event_nparticles_electron++;
-            event_energy_raw_electron+= edep;
-        }
-        else if(G4Neutron::Neutron() == thisPartDefinition )
-        {
-            event_nparticles_neutron++;
-            event_energy_raw_neutron+= edep;
-        }
-        else if(G4PionMinus::PionMinus() == thisPartDefinition ||  G4PionPlus::PionPlus() == thisPartDefinition)
-        {
-            event_nparticles_pion++;
-            event_energy_raw_pion+= edep;
-        }
-        else if(G4Proton::Proton() == thisPartDefinition )
-        {
-            event_nparticles_proton++;
-            event_energy_raw_proton+= edep;
-        }
-        fPDG.push_back(thisPartDefinition->GetPDGEncoding());
-        fModelIndex.push_back(thisTrack->GetCreatorModelIndex());
-        const std::vector<const G4Track*>* secondaries =
-            aStep->GetSecondaryInCurrentStep();
-
-        for(auto sec : *secondaries)
-        {
-            if(sec->GetDefinition() == G4Electron::Electron())
-            {
-                fElectronCount++;
-                fElectronE0.push_back(sec->GetKineticEnergy());
-            }
-        }
-    }
+//     auto * user_evt_action = G4EventManager::GetEventManager()->GetUserEventAction();
+//     // debug...
+//     if(user_evt_action)
+//     {
+//         YourEventAction * evt = dynamic_cast<YourEventAction*>(user_evt_action);
+//         G4Track * thisTrack = aStep->GetTrack();
+//         evt->UpdateTime(thisTrack->GetGlobalTime());
+//         event_energy_raw += edep;
+//         event_nparticles++;
+//         const G4ParticleDefinition * thisPartDefinition = thisTrack->GetParticleDefinition();
+//         if(G4Gamma::Gamma() == thisPartDefinition )
+//         {
+//             event_nparticles_gamma++;
+//             event_energy_raw_gamma+= edep;
+//         }
+//         else if(G4Electron::Electron() == thisPartDefinition )
+//         {
+//             event_nparticles_electron++;
+//             event_energy_raw_electron+= edep;
+//         }
+//         else if(G4Neutron::Neutron() == thisPartDefinition )
+//         {
+//             event_nparticles_neutron++;
+//             event_energy_raw_neutron+= edep;
+//         }
+//         else if(G4PionMinus::PionMinus() == thisPartDefinition ||  G4PionPlus::PionPlus() == thisPartDefinition)
+//         {
+//             event_nparticles_pion++;
+//             event_energy_raw_pion+= edep;
+//         }
+//         else if(G4Proton::Proton() == thisPartDefinition )
+//         {
+//             event_nparticles_proton++;
+//             event_energy_raw_proton+= edep;
+//         }
+//         fPDG.push_back(thisPartDefinition->GetPDGEncoding());
+//         fModelIndex.push_back(thisTrack->GetCreatorModelIndex());
+//         const std::vector<const G4Track*>* secondaries =
+//             aStep->GetSecondaryInCurrentStep();
+//
+//         for(auto sec : *secondaries)
+//         {
+//             if(sec->GetDefinition() == G4Electron::Electron())
+//             {
+//                 fElectronCount++;
+//                 fElectronE0.push_back(sec->GetKineticEnergy());
+//             }
+//         }
+//     }
 
     // auto & prepos = aStep->GetPreStepPoint()->GetPosition();
     // auto & postpos = aStep->GetPostStepPoint()->GetPosition();
@@ -91,12 +89,9 @@ G4bool HCalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
     G4LogicalVolume * lv = aStep->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume();
     std::string lvname = lv->GetName();
     double Wt0_correction = ("HBScintillatorLayer0In1" == lvname) || ("HBScintillatorLayer0In2" == lvname) ? 0.41 : 1.0;
-    event_energy += (edep * birk_correction * Wt0_correction);
-    // event_energy += edep;
-    event_energy_birk += (edep * birk_correction);
-    event_energy_0wt += (edep * Wt0_correction);
-    energy_accumulator.map[lv] += edep * birk_correction * Wt0_correction;
-    // G4cout << "\t+++ New step: " << edep << "\t" << birk_correction << "\t" << Wt0_correction << std::endl;
+    double energy_corrected = edep * birk_correction * Wt0_correction;
+    event_energy += energy_corrected;
+    energy_accumulator.map[lv] += energy_corrected;
     if(1<verbosity)
         std::cout << "\t[" + this->GetName() + "] " << edep/CLHEP::MeV << " MeV" << std::endl;
 
@@ -109,25 +104,7 @@ double HCalSD::getEnergyDeposit(G4Step* aStep) {
 
 void HCalSD::Initialize(G4HCofThisEvent*) {
     event_energy = 0.0;
-    event_energy_birk = 0.0;
-    event_energy_0wt = 0.0;
     energy_accumulator.Initialize(sensitive_lv);
-    event_energy_raw = 0;
-    event_energy_raw_gamma = 0;
-    event_energy_raw_electron = 0;
-    event_energy_raw_neutron = 0;
-    event_energy_raw_pion = 0;
-    event_energy_raw_proton = 0;
-    event_nparticles = 0;
-    event_nparticles_gamma = 0;
-    event_nparticles_electron = 0;
-    event_nparticles_neutron = 0;
-    event_nparticles_proton = 0;
-    event_nparticles_pion = 0;
-    fPDG.clear();
-    fModelIndex.clear();
-    fElectronCount = 0;
-    fElectronE0.clear();
 }
 
 void HCalSD::EndOfEvent(G4HCofThisEvent*) {
