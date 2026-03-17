@@ -1,17 +1,17 @@
-#include "EnergyAccumulatorPerLV.hh"
+#include "LongitudinalProfileBuilder.hh"
 #include "G4Exception.hh"
 #include "G4LogicalVolumeStore.hh"
 
 #include <iostream>
 
-void EnergyAccumulatorPerLV::Initialize(std::vector<std::string> & sensitive_lv)
+void LongitudinalProfileBuilder::Initialize(std::vector<std::string> & sensitive_lv)
 {
     if( 0 == map.size() ) FillMap(sensitive_lv);
     else                  Reset();
 }
 
 
-void EnergyAccumulatorPerLV::FillMap(std::vector<std::string>& sensitive_lv)
+void LongitudinalProfileBuilder::FillMap(std::vector<std::string>& sensitive_lv)
 {
     for(const auto & lvname : sensitive_lv)
     {
@@ -27,13 +27,13 @@ void EnergyAccumulatorPerLV::FillMap(std::vector<std::string>& sensitive_lv)
         if(0 == counter)
         {
             std::string message = "LV <" + lvname + "> not found";
-            G4Exception("EnergyAccumulatorPerLV::FillMap()", "EnergyAccumulatorPerLV1", JustWarning, message.c_str() );
+            G4Exception("LongitudinalProfileBuilder::FillMap()", "LongitudinalProfileBuilder1", JustWarning, message.c_str() );
             continue;
         }
     }
 }
 
-void EnergyAccumulatorPerLV::Reset()
+void LongitudinalProfileBuilder::Reset()
 {
     if(0<verbosity) std::cout << __PRETTY_FUNCTION__ << std::endl;
     for(auto & lvinfo : map){
@@ -42,7 +42,7 @@ void EnergyAccumulatorPerLV::Reset()
     }
 }
 
-double EnergyAccumulatorPerLV::GetTotalEnergy()
+double LongitudinalProfileBuilder::GetTotalEnergy()
 {
     double energy_total = 0;
     for( auto & [layer, hitcollection] : map )
