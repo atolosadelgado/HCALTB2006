@@ -8,7 +8,7 @@
 #include "HCalSD_config.h"
 #include "YourPrimaryGenerator.hh"
 
-#include "EventAccumulator.hh"
+#include "EnergyAccumulatorPerLV.hh"
 
 class HCalSD : public G4VSensitiveDetector {
 public:
@@ -42,7 +42,7 @@ public:
     int fElectronCount;
     std::vector<double> fElectronE0;
 
-    EventAccumulator accum;
+    EnergyAccumulatorPerLV energy_accumulator;
 
     YourPrimaryGenerator * fPrimaryGenerator;
     // HCalSD_config cms_config;

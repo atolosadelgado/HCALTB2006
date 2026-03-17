@@ -1,5 +1,5 @@
-#ifndef EVENTACCUMULATOR_HH
-#define EVENTACCUMULATOR_HH
+#ifndef ENERGYACCUMuLATORPERLV_HH
+#define ENERGYACCUMuLATORPERLV_HH
 
 #include <unordered_map>
 #include <vector>
@@ -7,7 +7,7 @@
 
 class G4LogicalVolume;
 
-class EventAccumulator
+class EnergyAccumulatorPerLV
 {
 public:
     std::unordered_map<G4LogicalVolume*, double> map;

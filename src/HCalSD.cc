@@ -95,7 +95,7 @@ G4bool HCalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*) {
     // event_energy += edep;
     event_energy_birk += (edep * birk_correction);
     event_energy_0wt += (edep * Wt0_correction);
-    accum.map[lv] += edep * birk_correction * Wt0_correction;
+    energy_accumulator.map[lv] += edep * birk_correction * Wt0_correction;
     // G4cout << "\t+++ New step: " << edep << "\t" << birk_correction << "\t" << Wt0_correction << std::endl;
     if(1<verbosity)
         std::cout << "\t[" + this->GetName() + "] " << edep/CLHEP::MeV << " MeV" << std::endl;
@@ -111,7 +111,7 @@ void HCalSD::Initialize(G4HCofThisEvent*) {
     event_energy = 0.0;
     event_energy_birk = 0.0;
     event_energy_0wt = 0.0;
-    accum.Initialize(sensitive_lv);
+    energy_accumulator.Initialize(sensitive_lv);
     event_energy_raw = 0;
     event_energy_raw_gamma = 0;
     event_energy_raw_electron = 0;

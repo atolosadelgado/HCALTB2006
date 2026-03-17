@@ -9,7 +9,7 @@
 
 #include "YourPrimaryGenerator.hh"
 
-#include "EventAccumulator.hh"
+#include "EnergyAccumulatorPerLV.hh"
 
 /* class ECalSD
  * reimplements CMSSW classes
@@ -65,7 +65,7 @@ public:
     double GetPrimaryEnergy(){return primary_energy;}
     void ResetPrimaryEnergy(){primary_energy={-std::numeric_limits<double>::max()};}
     double primary_energy = {-std::numeric_limits<double>::max()};
-    EventAccumulator accum;
+    EnergyAccumulatorPerLV energy_accumulator;
     // hardcoded members of ECalSD + CaloSD for ECal, as in CMSSW
     // ECalSD_config cms_config;
 

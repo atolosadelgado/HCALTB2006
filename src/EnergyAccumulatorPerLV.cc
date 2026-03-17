@@ -1,7 +1,7 @@
-#include "EventAccumulator.hh"
+#include "EnergyAccumulatorPerLV.hh"
 #include "G4Exception.hh"
 
-void EventAccumulator::Initialize(std::vector<std::string> & sensitive_lv)
+void EnergyAccumulatorPerLV::Initialize(std::vector<std::string> & sensitive_lv)
 {
     if( 0 == map.size() ) FillMap(sensitive_lv);
     else                  Reset();
@@ -9,7 +9,7 @@ void EventAccumulator::Initialize(std::vector<std::string> & sensitive_lv)
 
 
 #include "G4LogicalVolumeStore.hh"
-void EventAccumulator::FillMap(std::vector<std::string>& sensitive_lv)
+void EnergyAccumulatorPerLV::FillMap(std::vector<std::string>& sensitive_lv)
 {
     for(const auto & lvname : sensitive_lv)
     {
@@ -25,14 +25,14 @@ void EventAccumulator::FillMap(std::vector<std::string>& sensitive_lv)
         if(0 == counter)
         {
             std::string message = "LV <" + lvname + "> not found";
-            G4Exception("EventAccumulator::FillMap()", "EventAccumulator1", JustWarning, message.c_str() );
+            G4Exception("EnergyAccumulatorPerLV::FillMap()", "EnergyAccumulatorPerLV1", JustWarning, message.c_str() );
             continue;
         }
     }
 }
 
 #include <iostream>
-void EventAccumulator::Reset()
+void EnergyAccumulatorPerLV::Reset()
 {
     if(0<verbosity) std::cout << __PRETTY_FUNCTION__ << std::endl;
     for(auto & layer_energy : map){

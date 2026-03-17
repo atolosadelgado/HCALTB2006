@@ -38,7 +38,7 @@ file(GLOB sources   ${PROJECT_SOURCE_DIR}/src/YourDetectorConstructor.cc
                     ${PROJECT_SOURCE_DIR}/src/YourInputArgsParser.cc
                     ${PROJECT_SOURCE_DIR}/src/ECalSD.cc
                     ${PROJECT_SOURCE_DIR}/src/HCalSD.cc
-                    ${PROJECT_SOURCE_DIR}/src/EventAccumulator.cc
+                    ${PROJECT_SOURCE_DIR}/src/EnergyAccumulatorPerLV.cc
                     ${PROJECT_SOURCE_DIR}/src/TrackingAction.cc
                     )
 
@@ -55,7 +55,7 @@ file(GLOB headers   ${PROJECT_SOURCE_DIR}/include/YourDetectorConstructor.hh
                     ${PROJECT_SOURCE_DIR}/include/HCalSD.h
                     ${PROJECT_SOURCE_DIR}/include/SDutils.hh
                     ${PROJECT_SOURCE_DIR}/include/WelfordAccumulator.hh
-                    ${PROJECT_SOURCE_DIR}/include/EventAccumulator.hh
+                    ${PROJECT_SOURCE_DIR}/include/EnergyAccumulatorPerLV.hh
                     ${PROJECT_SOURCE_DIR}/include/TrackingAction.hh
                     )
 
