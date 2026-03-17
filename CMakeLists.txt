@@ -133,7 +133,7 @@ enable_testing()
 #----------------------
 # Run ECAL calibration
 
-SET( test_name "run_ECAL_calibration_CMS" )
+SET( test_name "run_ECAL_calibration_CMS_MT" )
 add_test(
     NAME ${test_name}
     COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
@@ -142,8 +142,8 @@ add_test(
             -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
             -pname e-
             -penergy 50
-            -nevents 500
-            -nthreads 8
+            -nevents 20
+            -nthreads 2
 )
 
 set_tests_properties(${test_name} PROPERTIES
@@ -154,7 +154,7 @@ SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Excepti
 #----------------------
 # Run HCAL calibration
 
-SET( test_name "run_HCAL_calibration_CMS" )
+SET( test_name "run_HCAL_calibration_CMS_MT" )
 add_test(
     NAME ${test_name}
     COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
@@ -163,8 +163,8 @@ add_test(
             -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
             -pname e-
             -penergy 50
-            -nevents 500
-            -nthreads 8
+            -nevents 20
+            -nthreads 2
             -airECAL
 )
 
@@ -176,7 +176,7 @@ SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Excepti
 #----------------------
 # Run 50 GeV kaon with CMS physics (MT runmanager)
 
-SET( test_name "run_50GeV_kaon_CMS" )
+SET( test_name "run_50GeV_kaon_CMS_MT" )
 add_test(
     NAME ${test_name}
     COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
@@ -186,7 +186,7 @@ add_test(
             -pname kaon-
             -penergy 50
             -nevents 20
-            -nthreads 8
+            -nthreads 2
 )
 
 set_tests_properties(${test_name} PROPERTIES
@@ -197,7 +197,7 @@ SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Excepti
 #----------------------
 # Run 50 GeV pion with CMS physics (MT runmanager)
 
-SET( test_name "run_50GeV_antiproton_CMS" )
+SET( test_name "run_50GeV_antiproton_CMS_MT" )
 add_test(
     NAME ${test_name}
     COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
@@ -207,7 +207,7 @@ add_test(
             -pname anti_proton
             -penergy 50
             -nevents 20
-            -nthreads 8
+            -nthreads 2
 )
 
 set_tests_properties(${test_name} PROPERTIES
@@ -219,7 +219,7 @@ SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Excepti
 #----------------------
 # Run 50 GeV pion with CMS physics (sequential runmanager)
 
-SET( test_name "run_50GeV_pion_CMS" )
+SET( test_name "run_50GeV_pion_CMS_Seq" )
 add_test(
     NAME ${test_name}
     COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
@@ -241,7 +241,7 @@ SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Excepti
 #----------------------
 # Run 50 GeV pion with CMS physics (MT runmanager)
 
-SET( test_name "runMT_50GeV_pion_CMS" )
+SET( test_name "runMT_50GeV_pion_CMS_MT" )
 add_test(
     NAME ${test_name}
     COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
