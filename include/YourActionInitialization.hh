@@ -5,13 +5,15 @@
 #include "G4VUserActionInitialization.hh"
 
 #include <string>
+
 class YourInputArgs;
 class G4MaterialScanner;
+
 class YourActionInitialization : public G4VUserActionInitialization {
 
 public:
 
-    YourActionInitialization(std::string ofilename, const YourInputArgs * args);
+    YourActionInitialization(const YourInputArgs * args);
     ~YourActionInitialization() override;
 
     void Build() const override;
@@ -19,7 +21,6 @@ public:
     void BuildForMaster() const override;
 
   private:
-    std::string _ofilename;
     const YourInputArgs * fInputArgs;
     G4MaterialScanner * ms;
 };

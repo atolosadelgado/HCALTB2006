@@ -13,7 +13,7 @@ class YourRunAction : public G4UserRunAction {
 
   public:
 
-    YourRunAction(const std::string & ofilename, const YourInputArgs * args);
+    YourRunAction(const YourInputArgs * args);
     virtual ~YourRunAction();
 
     void BeginOfRunAction(const G4Run* run) override;

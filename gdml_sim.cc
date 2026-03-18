@@ -87,7 +87,7 @@ int main(int argc, char** argv)
     }
 
     // create user actions
-    runManager->SetUserInitialization(new YourActionInitialization("ofilename_not_used", &iargs));
+    runManager->SetUserInitialization(new YourActionInitialization(&iargs));
 
     // initialize detector and physics
     runManager->Initialize();

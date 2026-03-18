@@ -23,7 +23,7 @@ struct YourInputArgs {
 
     // ----- Optional -----
     std::string macro;          // -m
-    std::string output;         // -o
+    std::string outputFileName;         // -o
 
     double particle_energy_GeV = -1.0;   // -penergy
     std::string particle_name;           // -pname
@@ -56,8 +56,8 @@ struct YourInputArgs {
         if (!macro.empty())
             (new TNamed("macro", macro.c_str()))->Write();
 
-        if (!output.empty())
-            (new TNamed("output", output.c_str()))->Write();
+        if (!outputFileName.empty())
+            (new TNamed("output", outputFileName.c_str()))->Write();
 
         if (!particle_name.empty())
             (new TNamed("particle_name", particle_name.c_str()))->Write();
@@ -94,7 +94,7 @@ struct YourInputArgs {
         os << "  Geometry         : " << a.geometry << "\n";
         os << "  Physics list     : " << a.physics_list << "\n";
         os << "  Macro file       : " << a.macro << "\n";
-        os << "  Output file      : " << a.output << "\n";
+        os << "  Output file      : " << a.outputFileName << "\n";
 
         os << "  Particle         : " << a.particle_name << "\n";
         os << "  Energy [GeV]     : "

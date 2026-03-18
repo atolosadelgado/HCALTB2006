@@ -69,7 +69,7 @@ bool YourInputArgParser::parse_one(int& i)
     }
     else if (arg == "-o") {
         if (!need_value(arg)) return false;
-        args_.output = argv_[++i];
+        args_.outputFileName = argv_[++i];
     }
     else if (arg == "-penergy") {
         if (!need_value(arg)) return false;

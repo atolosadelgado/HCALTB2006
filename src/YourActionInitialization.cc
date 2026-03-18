@@ -7,8 +7,8 @@
 
 #include "G4MaterialScanner.hh"
 
-YourActionInitialization::YourActionInitialization(std::string ofilename, const YourInputArgs * args)
-:   G4VUserActionInitialization(), _ofilename(ofilename),fInputArgs(args){
+YourActionInitialization::YourActionInitialization(const YourInputArgs * args)
+:   G4VUserActionInitialization(),fInputArgs(args){
   // ms = new G4MaterialScanner();
 }
 
@@ -16,7 +16,7 @@ YourActionInitialization::YourActionInitialization(std::string ofilename, const 
 YourActionInitialization::~YourActionInitialization() {}
 
 void YourActionInitialization::BuildForMaster() const {
-  SetUserAction(new YourRunAction(_ofilename,fInputArgs));
+  SetUserAction(new YourRunAction(fInputArgs));
 }
 
 void YourActionInitialization::Build() const {
@@ -25,7 +25,7 @@ void YourActionInitialization::Build() const {
 
   // Set UserRunAction
   // run action owns histograms to be written at the end
-  YourRunAction* runAction = new YourRunAction(_ofilename,fInputArgs);
+  YourRunAction* runAction = new YourRunAction(fInputArgs);
 
   // Set UserEventAction
   // event action accumulates energy deposited and radius per Z-bin, per event

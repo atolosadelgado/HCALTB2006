@@ -11,9 +11,9 @@
 
 
 
-YourRunAction::YourRunAction(const std::string & ofilename, const YourInputArgs * args):
+YourRunAction::YourRunAction(const YourInputArgs * args):
           G4UserRunAction(),
-          fOutputFileName(ofilename),
+          fOutputFileName(args->outputFileName),
           fInputArgs(args)
           {
             // to make UI commands available
