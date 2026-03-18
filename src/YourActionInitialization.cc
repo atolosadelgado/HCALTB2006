@@ -30,7 +30,7 @@ void YourActionInitialization::Build() const {
   // Set UserEventAction
   // event action accumulates energy deposited and radius per Z-bin, per event
   // end of event, update main histograms owned by run action and reset event histograms
-  YourEventAction* eventAction = new YourEventAction(runAction,gen);
+  YourEventAction* eventAction = new YourEventAction();
 
   // RunAction open the G4Analysis, and creates NTuple
   // it must notify EventAction which is the ID for each branch
