@@ -6,30 +6,27 @@
 #include <string>
 
 class YourPrimaryGenerator;
+class YourEventAction;
 class YourInputArgs;
 
 class YourRunAction : public G4UserRunAction {
 
   public:
 
-    YourRunAction(std::string ofilename, const YourInputArgs * args);
+    YourRunAction(const std::string & ofilename, const YourInputArgs * args);
     virtual ~YourRunAction();
 
-    void   BeginOfRunAction(const G4Run* run) override;
-    void   EndOfRunAction(const G4Run* run) override;
+    void BeginOfRunAction(const G4Run* run) override;
+    void EndOfRunAction(const G4Run* run) override;
 
-    void FillEventEnergy(double ecal_energy, double hcal_energy);
-
-    void ConstructOutputTree();
     void BeginOutputTree();
     void EndOutputTree();
-    void FillOutputTree(double ecal_eresponse, double hcal_eresponse);
 
-    void SetPrimaryGenerator(YourPrimaryGenerator * p){fPrimaryGenerator = p;}
+    void SetEventAction(YourEventAction * evtAct){fEventAction = evtAct;}
 
-    std::string _ofilename;
+    std::string fOutputFileName = {""};
     const YourInputArgs * fInputArgs;
-    YourPrimaryGenerator * fPrimaryGenerator;
+    YourEventAction * fEventAction;
 
     int verbosity = 0;
 };

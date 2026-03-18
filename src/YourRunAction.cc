@@ -1,22 +1,20 @@
-
-#include "YourPrimaryGenerator.hh"
 #include "YourRunAction.hh"
+
+#include "YourInputArgs.hh"
+#include "YourPrimaryGenerator.hh"
 #include "YourEventAction.hh"
 
-#include "G4Material.hh"
-#include "G4RegionStore.hh"
 #include <iostream>
 
 #include "G4AnalysisManager.hh"
 
-#include "YourInputArgs.hh"
 
 
 
-YourRunAction::YourRunAction(std::string ofilename, const YourInputArgs * args):
+YourRunAction::YourRunAction(const std::string & ofilename, const YourInputArgs * args):
           G4UserRunAction(),
-          _ofilename(ofilename),
-           fInputArgs(args)
+          fOutputFileName(ofilename),
+          fInputArgs(args)
           {
             // to make UI commands available
             auto analysisManager = G4AnalysisManager::Instance();
@@ -25,72 +23,63 @@ YourRunAction::YourRunAction(std::string ofilename, const YourInputArgs * args):
 
 YourRunAction::~YourRunAction() {}
 
-#include "G4RunManager.hh"
-#include "G4VUserActionInitialization.hh"
+
 void YourRunAction::BeginOfRunAction(const G4Run*)
 {
-    this->ConstructOutputTree();
     this->BeginOutputTree();
 }
 
 void YourRunAction::EndOfRunAction(const G4Run* ){
     this->EndOutputTree();
+#if HAVE_ROOT
     if (G4Threading::IsMasterThread()){
         fInputArgs->SaveToROOTfile( G4AnalysisManager::Instance()->GetFileName());
     }
+#endif
 
 }
 
 
-void YourRunAction::FillEventEnergy(double ecal_energy, double hcal_energy)
-{
-    if(0 > ecal_energy || 0 > hcal_energy) throw std::runtime_error("YourRunAction::FillEventEnergy cannot save negative energy");
-
-    double ecal_energy_MeV = ecal_energy / CLHEP::MeV;
-    double ecal_eventEnergyResponse = ecal_energy_MeV ;
-
-    double hcal_energy_MeV = hcal_energy / CLHEP::MeV;
-    double hcal_eventEnergyResponse = hcal_energy_MeV ;
-
-    this->FillOutputTree(ecal_eventEnergyResponse, hcal_eventEnergyResponse);
-}
-
-void YourRunAction::ConstructOutputTree()
+void YourRunAction::BeginOutputTree()
 {
   auto analysisManager = G4AnalysisManager::Instance();
-//   analysisManager->SetDefaultFileType("root"); // set in macrofile
+  // analysisManager->SetDefaultFileType("root"); // set in macrofile
   analysisManager->SetVerboseLevel(1);
-  // just to avoid a warning
+
+  // just to avoid a warning from G4Analysis
   if(1<fInputArgs->nthreads)
       analysisManager->SetNtupleMerging(true);  // important for MT
 
   analysisManager->CreateNtuple("tree", "tree for HCAL 2006 TB experiment");
-  analysisManager->CreateNtupleDColumn("ECAL_eresponse");
+  G4int id = -1;
+  id = analysisManager->CreateNtupleDColumn("ECAL_eresponse");
+  fEventAction->SetIdNtuple_EcalEnergy(id);
   analysisManager->CreateNtupleDColumn("HCAL_eresponse");
+  fEventAction->SetIdNtuple_HcalEnergy(id);
   analysisManager->FinishNtuple();
-}
 
-void YourRunAction::BeginOutputTree()
-{
-    G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
-    std::string ofilename = analysisManager->GetFileName();
+  // if user did not provide an output file name, create one
+  if(fOutputFileName.empty())
+  {
+      fOutputFileName = analysisManager->GetFileName();
     const std::string phys = fInputArgs->physics_list;
 
     // check position of '.'
-    std::size_t dotPos = ofilename.find_last_of('.');
+    std::size_t dotPos = fOutputFileName.find_last_of('.');
 
     if (std::string::npos != dotPos ) {
         // if it has extension
-        std::string basename  = ofilename.substr(0, dotPos);
-        std::string extension = ofilename.substr(dotPos); // including '.'
+        std::string basename  = fOutputFileName.substr(0, dotPos);
+        std::string extension = fOutputFileName.substr(dotPos); // including '.'
 
-        ofilename = basename + "_" + phys + extension;
+        fOutputFileName = basename + "_" + phys + extension;
     } else {
         // if no extension
-        ofilename = ofilename + "_" + phys;
+        fOutputFileName = fOutputFileName + "_" + phys;
     }
-    analysisManager->SetFileName(ofilename);
-    analysisManager->OpenFile(); // name set in macrofile
+  }
+  analysisManager->SetFileName(fOutputFileName);
+  analysisManager->OpenFile(); // name set in macrofile
 }
 
 void YourRunAction::EndOutputTree()
@@ -100,14 +89,3 @@ void YourRunAction::EndOutputTree()
     analysisManager->CloseFile();
 
 }
-
-void YourRunAction::FillOutputTree(double ecal_eresponse, double hcal_eresponse)
-{
-    auto analysisManager = G4AnalysisManager::Instance();
-    analysisManager->FillNtupleDColumn(0, ecal_eresponse);
-    analysisManager->FillNtupleDColumn(1, hcal_eresponse);
-    analysisManager->AddNtupleRow();
-    if(0 < verbosity)
-        G4cout << "\tadding new row: " << ecal_eresponse << "\t" << hcal_eresponse << std::endl;
-}
-

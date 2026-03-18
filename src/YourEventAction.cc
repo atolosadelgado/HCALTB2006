@@ -2,60 +2,23 @@
 #include "YourRunAction.hh"
 #include "YourPrimaryGenerator.hh"
 
-#include "G4EventManager.hh"
-
+#include "G4AnalysisManager.hh"
+#include "G4Material.hh"
 
 YourEventAction::YourEventAction(YourRunAction * myRunAction, YourPrimaryGenerator * gen)
   : G4UserEventAction(),
-  fRunAction(myRunAction), fPrimaryGenerator(gen), fTimeMax(50*CLHEP::ns) {
+  fRunAction(myRunAction), fPrimaryGenerator(gen), fTimeMax(50*CLHEP::ns) {}
 
-  }
-
-
-YourEventAction::~YourEventAction() {
-
-}
-
-void YourEventAction::BeginOfEventAction(const G4Event* anEvent) {
-  visible_energy_ecal = 0;
-  visible_energy_hcal = 0;
-  time_first_hit = 0;
-  time_last_hit = 0;
-
-  // superseeded by UI command /run/printProgress 50
-  // if( anEvent->GetEventID() % 10 == 0 )
-  //   std::cout << "Event\t" << anEvent->GetEventID() << std::endl;
-
+void YourEventAction::BeginOfEventAction(const G4Event*) {
+  fEdepEcalPerEvt = 0;
+  fEdepHcalPerEvt = 0;
 }
 
 
-void YourEventAction::EndOfEventAction(const G4Event* /*evt*/) {
-  fRunAction->FillEventEnergy(visible_energy_ecal,visible_energy_hcal);
-  if(0 < fRunAction->verbosity)
-    G4cout << "\tTime duration of event in calorimeters : "
-              << (time_last_hit - time_first_hit) / CLHEP::ns
-              << " ns" << std::endl;
-}
-
-void YourEventAction::RegisterTime(double t)
+void YourEventAction::EndOfEventAction(const G4Event* /*evt*/)
 {
-  if(0 == time_first_hit)
-    time_first_hit = t;
-  time_last_hit = std::max(time_last_hit,t);
+    auto* ana = G4AnalysisManager::Instance();
+    ana->FillNtupleDColumn(fIdNtuple_EcalEnergy, fEdepEcalPerEvt );
+    ana->FillNtupleDColumn(fIdNtuple_HcalEnergy, fEdepHcalPerEvt );
+    ana->AddNtupleRow();
 }
-
-bool YourEventAction::IsTimeWithinEventTimeWindow(double t)
-{
-  // initialize if needed
-  if(0 == time_first_hit)
-    time_first_hit = t;
-
-  // time is within the event window if
-  // time since event started in the calorimeter (t-time_first_hit)
-  // is smaller than the limit fTimeMax
-  bool IsTimeWithinEventTimeWindow_val = t-time_first_hit<fTimeMax;
-  if(IsTimeWithinEventTimeWindow_val)
-    time_last_hit = std::max(time_last_hit,t);
-  return IsTimeWithinEventTimeWindow_val;
-}
-
