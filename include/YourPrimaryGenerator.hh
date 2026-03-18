@@ -2,10 +2,9 @@
 #define YOURPRIMARYGENERATOR_HH
 
 #include <G4VUserPrimaryGeneratorAction.hh>
-#include <G4VPrimaryGenerator.hh>
-#include <G4ParticleGun.hh>
-#include <G4GeneralParticleSource.hh>
-#include <CLHEP/Units/SystemOfUnits.h>
+#include "G4ThreeVector.hh"
+
+class G4VPrimaryGenerator;
 
 class YourPrimaryGenerator : public G4VUserPrimaryGeneratorAction
 {
@@ -20,17 +19,13 @@ public:
 
     virtual void GeneratePrimaries(G4Event* event);
 
-    G4double x0_mm{-999.};
-    G4double y0_mm{-999.};
-    G4double E0_MeV{-999.};
-
-    std::string primary_particle_name;
+    G4ThreeVector position0;
+    G4ThreeVector direction0;
 
 private:
+    int verbosity = 1;
     G4VPrimaryGenerator* fPrimaryGen = nullptr;
     SourceType fType;
-
-    int counter = 0;
 
     // Extract direction from beamline PV
     void ShowBeamLineDirection();

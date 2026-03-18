@@ -1,5 +1,11 @@
 #include "YourPrimaryGenerator.hh"
+
 #include <iostream>
+
+#include <G4VPrimaryGenerator.hh>
+#include <G4ParticleGun.hh>
+#include <G4GeneralParticleSource.hh>
+#include "G4PhysicalVolumeStore.hh"
 
 YourPrimaryGenerator::YourPrimaryGenerator(SourceType type)
 : G4VUserPrimaryGeneratorAction(), fType(type)
@@ -25,21 +31,43 @@ void YourPrimaryGenerator::GeneratePrimaries(G4Event* event)
     fPrimaryGen->GeneratePrimaryVertex(event);
 
     auto vertex = event->GetPrimaryVertex(0);
-    x0_mm = vertex->GetPosition().x() / CLHEP::mm;
-    y0_mm = vertex->GetPosition().y() / CLHEP::mm;
-    E0_MeV = vertex->GetPrimary()->GetKineticEnergy() / CLHEP::MeV;
+    position0 = vertex->GetPosition();
+    direction0 = vertex->GetPrimary()->GetMomentumDirection();
 
-    if(0 >= E0_MeV) throw std::runtime_error("YourPrimaryGenerator::GeneratePrimaries cannot generate negative or zero energy particles");
-
-
-    if( "" == primary_particle_name )
+    // show information about the primary particle in first event
+    if( 0<verbosity && 0 == event->GetEventID() )
     {
-        primary_particle_name = vertex->GetPrimary(0)->GetParticleDefinition()->GetParticleName();
-        G4cout << "\tSetting primary particle name : " << primary_particle_name << std::endl;
+        G4cout << "=== Primary particle ===" << G4endl;
+        G4cout << "Particle: "
+                << vertex->GetPrimary()->GetParticleDefinition()->GetParticleName()
+                << G4endl;
+
+        G4cout << "Vertex position (global) [mm]: "
+                << position0.x()/CLHEP::mm << " "
+                << position0.y()/CLHEP::mm << " "
+                << position0.z()/CLHEP::mm << G4endl;
+
+        G4cout << "Direction (unit vector): "
+                << direction0.x() << " "
+                << direction0.y() << " "
+                << direction0.z() << G4endl;
+
+        auto mom = vertex->GetPrimary()->GetMomentum();
+        G4cout << "Momentum [GeV]: "
+                << mom.x()/CLHEP::GeV << " "
+                << mom.y()/CLHEP::GeV << " "
+                << mom.z()/CLHEP::GeV << G4endl;
+
+        G4cout << "Kinetic Energy [GeV]: "
+                << vertex->GetPrimary()->GetKineticEnergy()/CLHEP::GeV << G4endl;
+
+                G4cout << "Total Energy [GeV]: "
+                << vertex->GetPrimary()->GetTotalEnergy()/CLHEP::GeV << G4endl;
+
+        G4cout << "========================" << G4endl;
     }
 }
 
-#include "G4PhysicalVolumeStore.hh"
 void YourPrimaryGenerator::ShowBeamLineDirection()
 {
     G4PhysicalVolumeStore * pvstore = G4PhysicalVolumeStore::GetInstance();
@@ -55,7 +83,7 @@ void YourPrimaryGenerator::ShowBeamLineDirection()
 
     if(not beamline_pv)
     {
-        G4cout << "No HcalTestBeamLine found in physical volume store" << std::endl;
+        G4cout << "No HcalTestBeamLine found in physical volume store" << G4endl;
         return;
     }
 
@@ -65,6 +93,6 @@ void YourPrimaryGenerator::ShowBeamLineDirection()
     m->invert();
     // the direction of the beamline (Z axis) in world coordinates corresponds to Z column
     G4ThreeVector z_axis = m->colZ();
-    G4cout << "Z axis of HcalTestBeamLine in mother coords: " << z_axis << std::endl;
+    G4cout << "Z axis of HcalTestBeamLine in mother coords: " << z_axis << G4endl;
     return;
 }

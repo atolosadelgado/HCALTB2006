@@ -47,10 +47,10 @@ void YourRunAction::FillEventEnergy(double ecal_energy, double hcal_energy)
     if(0 > ecal_energy || 0 > hcal_energy) throw std::runtime_error("YourRunAction::FillEventEnergy cannot save negative energy");
 
     double ecal_energy_MeV = ecal_energy / CLHEP::MeV;
-    double ecal_eventEnergyResponse = ecal_energy_MeV / fPrimaryGenerator->E0_MeV;
+    double ecal_eventEnergyResponse = ecal_energy_MeV ;
 
     double hcal_energy_MeV = hcal_energy / CLHEP::MeV;
-    double hcal_eventEnergyResponse = hcal_energy_MeV / fPrimaryGenerator->E0_MeV;
+    double hcal_eventEnergyResponse = hcal_energy_MeV ;
 
     this->FillOutputTree(ecal_eventEnergyResponse, hcal_eventEnergyResponse);
 }
