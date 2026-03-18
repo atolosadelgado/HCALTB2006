@@ -9,6 +9,7 @@
 
 
 #include "G4PhysListFactory.hh"
+#include "CMSPhysicsList.hh"
 #include "YourDetectorConstructor.hh"
 #include "YourActionInitialization.hh"
 
@@ -70,10 +71,20 @@ int main(int argc, char** argv)
     runManager->SetUserInitialization(user_detector_constructor);
 
     // create Physics factory
-    G4PhysListFactory pl_factory;
-    auto physics_list = pl_factory.GetReferencePhysList( iargs.physics_list );
-    if( ! physics_list ) throw std::runtime_error("No physics list named <"+ iargs.physics_list+"> found");
-    runManager->SetUserInitialization(physics_list);
+    if("CMS" == iargs.physics_list)
+    {
+        auto * pl = new CMSPhysicsList;
+        runManager->SetUserInitialization(pl);
+        pl->SetCMSParameters();
+    }
+    else
+    {
+        // create Physics factory
+        G4PhysListFactory pl_factory;
+        auto physics_list = pl_factory.GetReferencePhysList( iargs.physics_list );
+        if( ! physics_list ) throw std::runtime_error("No physics list named <"+ iargs.physics_list+"> found");
+        runManager->SetUserInitialization(physics_list);
+    }
 
     // create user actions
     runManager->SetUserInitialization(new YourActionInitialization("ofilename_not_used", &iargs));

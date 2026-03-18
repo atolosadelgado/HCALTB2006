@@ -3,7 +3,6 @@
 #include "YourPrimaryGenerator.hh"
 #include "YourRunAction.hh"
 #include "YourEventAction.hh"
-#include "YourSteppingAction.hh"
 #include "YourInputArgs.hh"
 
 #include "G4MaterialScanner.hh"
@@ -35,18 +34,5 @@ void YourActionInitialization::Build() const {
   // end of event, update main histograms owned by run action and reset event histograms
   YourEventAction* eventAction = new YourEventAction(runAction,gen);
   SetUserAction(eventAction);
-
-  // Set UserSteppingAction
-  // steping action updates histograms owned by event action, for energy deposited and shower width
-  YourSteppingAction * steppingAction = new YourSteppingAction(eventAction);
-  if( 0 == fInputArgs->saturation )
-    steppingAction->SetSaturationNone();
-  else if( 1 == fInputArgs->saturation )
-    steppingAction->SetSaturationG4Birk();
-  else if( 2 == fInputArgs->saturation )
-    steppingAction->SetSaturationCMSBirk();
-  SetUserAction( steppingAction );
-
-  runAction->SetSteppingAction(steppingAction);
   runAction->SetPrimaryGenerator(gen);
 }

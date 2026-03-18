@@ -1,4 +1,5 @@
 #include "YourInputArgsParser.hh"
+
 #include <iostream>
 #include <cstdlib>
 
@@ -82,10 +83,6 @@ bool YourInputArgParser::parse_one(int& i)
         if (!need_value(arg)) return false;
         args_.nevents = std::stoi(argv_[++i]);
     }
-    else if (arg == "-saturation") {
-        if (!need_value(arg)) return false;
-        args_.saturation = std::stoi(argv_[++i]);
-    }
     else if (arg == "-nthreads") {
         if (!need_value(arg)) return false;
         args_.nthreads = std::stoi(argv_[++i]);
@@ -101,6 +98,14 @@ bool YourInputArgParser::parse_one(int& i)
     }
     else if (arg == "-airECAL") {
         args_.airECAL = true;
+    }
+    else if (arg == "-f_ECAL") {
+        if (!need_value(arg)) return false;
+        args_.f_ECAL = std::stod(argv_[++i]);
+    }
+    else if (arg == "-f_HCAL") {
+        if (!need_value(arg)) return false;
+        args_.f_HCAL = std::stod(argv_[++i]);
     }
     else {
         std::cerr << "Unknown option: " << arg << "\n";
@@ -128,11 +133,13 @@ void YourInputArgParser::help(const char* prog)
         << "  -o         Output filename\n"
         << "  -penergy   Particle energy (MeV)\n"
         << "  -pname     Particle name (e.g. pi-)\n"
+        << "  -f_ECAL    Energy calibration factor for ECAL\n"
+        << "  -f_HCAL    Energy calibration factor for HCAL\n"
+        << "             -> E_vis = f_ECAL * E_ECAL + f_HCAL * E_HCAL\n"
+        << "  -airECAL   Make ECAL of air\n"
         << "  -nevents   Number of events (0 = macro/UI)\n"
         << "  -vis       Enable visualization\n"
         << "  -novis     Disable visualization (default)\n"
-        << "  -s         Saturation effect model; 0 = none, 1 = Geant4 Birk, 2 = CMS Birk \n"
-        << "  -airECAL   Make ECAL of air\n"
         << "  -visSensitiveOnly   Visualize sensitive vols only\n"
         << "  -h         Show this help\n";
 }

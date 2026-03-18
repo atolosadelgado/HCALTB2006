@@ -1,35 +1,22 @@
-# ----------------------------
-# Macro minimalista para Geant4
-# Dibuja la geometría según visAttributes
-# ----------------------------
-
-# Abrir un visualizador (OpenGL por defecto)
 /vis/open OGL
 
-# Pausar refresco automático mientras se carga la escena
 /vis/viewer/set/autoRefresh false
 
-# Nivel de mensajes de visualización
 /vis/verbose errors
 
-# Dibujar toda la geometría respetando visAttributes
 /vis/drawVolume
 
-# Estilo de dibujo: sólido (respetando colores y transparencias)
 /vis/viewer/set/style w
+
+# remove beam line and walls from visualization
 #/vis/geometry/set/visibility OTBHCal 1 false
 /vis/geometry/set/visibility HcalTestBeamLine 1 false
 /vis/geometry/set/visibility HcalTestBeamLineDown 1 false
 /vis/geometry/set/visibility VMWall1 1 false
 /vis/geometry/set/visibility VMWall2 1 false
 
-
-# Añadir ejes coordenados (opcional)
 /vis/scene/add/axes 0 0 0 5 m green
 
-# Ajustar zoom (opcional)
-
-# Reactivar refresco automático y warnings
 /vis/viewer/set/autoRefresh true
 /vis/verbose warnings
 
@@ -48,8 +35,6 @@
 
 /vis/viewer/set/viewpointThetaPhi 180. 180.
 
-#/vis/viewer/centreAndZoomInOn
-
 /vis/viewer/set/background white
 
-/control/execute gps_singlerun.mac
+# /control/execute gps_singlerun.mac

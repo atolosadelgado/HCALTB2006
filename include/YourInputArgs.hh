@@ -5,9 +5,13 @@
 #include <ostream>
 #include <iomanip> // std::fixed, std::setprecision
 
+#if HAVE_ROOT
+
 #include "TDirectory.h"
 #include "TParameter.h"
 #include "TFile.h"
+
+#endif
 
 #include "G4Version.hh"
 
@@ -27,14 +31,16 @@ struct YourInputArgs {
     int nevents = 0;            // -nevents
     bool vis_mode = false;      // -vis
 
-    int saturation = 0; // 0 = none, 1 = Geant4 Birk, 2 = CMS Birk
-
     bool airECAL = false;
 
     bool visSensitiveOnly = false;
 
+    double f_ECAL = {1.};
+    double f_HCAL = {1.};
+
     int nthreads = 1;
 
+#if HAVE_ROOT
     void Write(TDirectory * d) const {
         if (!d) return;
 
@@ -59,8 +65,9 @@ struct YourInputArgs {
         // ---------- Numerical parameters ----------
         (new TParameter<double>("particle_energy_GeV", particle_energy_GeV))->Write();
         (new TParameter<int>("nevents", nevents))->Write();
-        (new TParameter<int>("saturation", saturation))->Write();
         (new TParameter<int>("nthreads", nthreads))->Write();
+        (new TParameter<double>("f_ECAL", f_ECAL))->Write();
+        (new TParameter<double>("f_HCAL", f_HCAL))->Write();
 
         // ---------- Boolean ----------
         (new TParameter<bool>("vis_mode", vis_mode))->Write();
@@ -79,30 +86,32 @@ struct YourInputArgs {
         this->Write(ofile);
         ofile->Close();
     }
-
+#endif
     // -------- Inline operator<< --------
     friend std::ostream& operator<<(std::ostream& os, const YourInputArgs& a) {
         os << "Configuration:\n";
 
-        os << "  Geometry        : " << a.geometry << "\n";
-        os << "  Physics list    : " << a.physics_list << "\n";
-        os << "  Macro file      : " << a.macro << "\n";
-        os << "  Output file     : " << a.output << "\n";
+        os << "  Geometry         : " << a.geometry << "\n";
+        os << "  Physics list     : " << a.physics_list << "\n";
+        os << "  Macro file       : " << a.macro << "\n";
+        os << "  Output file      : " << a.output << "\n";
 
-        os << "  Particle        : " << a.particle_name << "\n";
-        os << "  Energy [GeV]    : "
+        os << "  Particle         : " << a.particle_name << "\n";
+        os << "  Energy [GeV]     : "
                << std::fixed << std::setprecision(3)
                << a.particle_energy_GeV << "\n";
 
-        os << "  N events        : " << a.nevents << "\n";
+        os << "  N events         : " << a.nevents << "\n";
 
-        os << "  Visualization   : "
+        os << "  Visualization    : "
            << (a.vis_mode ? "ON" : "OFF") << "\n";
 
-        os << "  Saturation type : " << a.saturation << "\n";
-        os << "  Air ECAL        : " << (a.airECAL ? "TRUE" : "FALSE") << "\n";
-        os << "  Vis Sensitive   : " << (a.visSensitiveOnly ? "TRUE" : "FALSE") << "\n";
-        os << "  Number threads  : " << a.nthreads << "\n";
+        os << "  Air ECAL         : " << (a.airECAL ? "TRUE" : "FALSE") << "\n";
+        os << "  Vis Sensitive    : " << (a.visSensitiveOnly ? "TRUE" : "FALSE") << "\n";
+        os << "  Number threads   : " << a.nthreads << "\n";
+        os << "  Energy calibration factors ECAL/HCAL : "
+               << std::fixed << std::setprecision(3)
+               << a.f_ECAL << " / " << a.f_HCAL << "\n";
 
         return os;
     }
