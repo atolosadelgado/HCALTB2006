@@ -29,7 +29,7 @@ public:
     void SetNTupleColumnID(G4int id){fNTupleColumnID = id;}
 
 private:
-    int fVerbosity = {1};
+    int fVerbosity = {0};
     std::unique_ptr<YourVCaloResponse> fCaloResponse;
     G4double fTotalEnergy;
     G4int fNTupleColumnID={-1};
