@@ -54,7 +54,7 @@ void YourRunAction::BeginOutputTree()
   G4int id = -1;
   id = analysisManager->CreateNtupleDColumn("ECAL_eresponse");
   fEventAction->SetIdNtuple_EcalEnergy(id);
-  analysisManager->CreateNtupleDColumn("HCAL_eresponse");
+  id = analysisManager->CreateNtupleDColumn("HCAL_eresponse");
   fEventAction->SetIdNtuple_HcalEnergy(id);
   analysisManager->FinishNtuple();
 
