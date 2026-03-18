@@ -1,4 +1,5 @@
 #include "YourPrimaryGenerator.hh"
+#include "YourEventInfo.hh"
 
 #include <iostream>
 
@@ -29,10 +30,13 @@ void YourPrimaryGenerator::GeneratePrimaries(G4Event* event)
     // this->ShowBeamLineDirection();
 
     fPrimaryGen->GeneratePrimaryVertex(event);
-
+    YourEventInfo * info = new YourEventInfo();
     auto vertex = event->GetPrimaryVertex(0);
-    position0 = vertex->GetPosition();
-    direction0 = vertex->GetPrimary()->GetMomentumDirection();
+
+    info->primaryPos = vertex->GetPosition();
+    info->primaryDir = vertex->GetPrimary()->GetMomentumDirection();
+
+    event->SetUserInformation(info);
 
     // show information about the primary particle in first event
     if( 0<verbosity && 0 == event->GetEventID() )
@@ -43,14 +47,14 @@ void YourPrimaryGenerator::GeneratePrimaries(G4Event* event)
                 << G4endl;
 
         G4cout << "Vertex position (global) [mm]: "
-                << position0.x()/CLHEP::mm << " "
-                << position0.y()/CLHEP::mm << " "
-                << position0.z()/CLHEP::mm << G4endl;
+                << info->primaryPos.x()/CLHEP::mm << " "
+                << info->primaryPos.y()/CLHEP::mm << " "
+                << info->primaryPos.z()/CLHEP::mm << G4endl;
 
         G4cout << "Direction (unit vector): "
-                << direction0.x() << " "
-                << direction0.y() << " "
-                << direction0.z() << G4endl;
+                << info->primaryDir.x() << " "
+                << info->primaryDir.y() << " "
+                << info->primaryDir.z() << G4endl;
 
         auto mom = vertex->GetPrimary()->GetMomentum();
         G4cout << "Momentum [GeV]: "
