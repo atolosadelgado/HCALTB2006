@@ -48,6 +48,8 @@ file(GLOB headers   ${PROJECT_SOURCE_DIR}/include/YourDetectorConstructor.hh
                     ${PROJECT_SOURCE_DIR}/include/YourPrimaryGenerator.hh
                     ${PROJECT_SOURCE_DIR}/include/YourCaloSD.hh
                     ${PROJECT_SOURCE_DIR}/include/YourVCaloResponse.hh
+                    ${PROJECT_SOURCE_DIR}/include/YourEcalResponse.hh
+                    ${PROJECT_SOURCE_DIR}/include/YourHcalResponse.hh
                     ${PROJECT_SOURCE_DIR}/include/YourInputArgsParser.hh
                     )
 

@@ -1,37 +1,36 @@
-
 #include "YourDetectorConstructor.hh"
+#include "YourCaloSD.hh"
+#include "YourEcalResponse.hh"
+#include "YourHcalResponse.hh"
+
+#include <queue>
+#include <set>
+
+#include "G4GDMLParser.hh"
+#include "G4VSensitiveDetector.hh"
 #include "G4Exception.hh"
-#include "G4LossTableManager.hh"
+#include "G4PhysicalVolumeStore.hh"
+#include "G4LogicalVolumeStore.hh"
+#include "G4LogicalVolume.hh"
+#include "G4VisAttributes.hh"
+#include "G4Material.hh"
+#include "G4Colour.hh"
+#include "G4SDManager.hh"
 
 YourDetectorConstructor::YourDetectorConstructor(std::string fname) :  G4VUserDetectorConstruction() {
     if (fname.empty())
         G4Exception("YourDetectorConstructor", "InvalidGDML",
                     FatalException, "Filename cannot be empty");
-
     gdml_filename = fname;
 }
-
-
-#include "G4GDMLParser.hh"
-#include "G4LogicalVolumeStore.hh"
-#include "G4LogicalVolume.hh"
-#include "G4Material.hh"
-#include "G4VisAttributes.hh"
-#include "G4Colour.hh"
 
 G4VPhysicalVolume * YourDetectorConstructor::Construct(){
   G4GDMLParser Parser;
   Parser.Read(gdml_filename, false);
   worldPV = Parser.GetWorldVolume();
 
-  G4Material* scint = G4Material::GetMaterial("Scintillator");
-  scint->GetIonisation()->SetBirksConstant(0.006*CLHEP::mm/CLHEP::MeV);
-  G4LossTableManager::Instance()->EmSaturation()->InitialiseG4Saturation();
-// G4LossTableManager::Instance()->EmSaturation()->DumpBirksCoefficients();
-
   if(ECALAsAir)
     this->MakeECALAsAir();
-
 
   if(visSensitiveOnly)
   {
@@ -43,21 +42,19 @@ G4VPhysicalVolume * YourDetectorConstructor::Construct(){
     HighlightMaterial("Scintillator", false, blue);
   }
 
-// G4VisAttributes* invisibleVis = new G4VisAttributes();
-// invisibleVis->SetVisibility(false);
-// worldPV->GetLogicalVolume()->SetVisAttributes(invisibleVis);
-//   // worldPV->GetLogicalVolume()->SetVisAttributes( G4VisAttributes::GetInvisible() );
   return worldPV;
 }
 
-
-YourDetectorConstructor::~YourDetectorConstructor(){
-
+void YourDetectorConstructor::ConstructSDandField()
+{
+  // register SD objects
+  YourCaloSD * ecalSD = new YourCaloSD(fEcalSDname, std::make_unique<YourEcalResponse>() );
+  G4SDManager::GetSDMpointer()->AddNewDetector(ecalSD);
+  AssignSDtoLV(fECAL_sensLV, ecalSD);
+  YourCaloSD * hcalSD = new YourCaloSD(fHcalSDname, std::make_unique<YourHcalResponse>() );
+  G4SDManager::GetSDMpointer()->AddNewDetector(hcalSD);
+  AssignSDtoLV(fHCAL_sensLV, hcalSD);
 }
-
-#include "G4PhysicalVolumeStore.hh"
-#include "G4LogicalVolumeStore.hh"
-#include "G4GeometryManager.hh"
 
 void YourDetectorConstructor::MakeECALAsAir()
 {
@@ -85,10 +82,9 @@ void YourDetectorConstructor::MakeECALAsAir()
 
   ReplaceMaterialInTree(ecalPV, air_mat);
 
-}
+  return;
 
-#include <queue>
-#include <set>
+}
 
 void YourDetectorConstructor::ReplaceMaterialInTree(G4VPhysicalVolume* rootPV,
                             G4Material* newMat)
@@ -115,6 +111,8 @@ void YourDetectorConstructor::ReplaceMaterialInTree(G4VPhysicalVolume* rootPV,
       queue.push(lv->GetDaughter(i));
     }
   }
+
+  return;
 }
 
 
@@ -138,7 +136,35 @@ void YourDetectorConstructor::HighlightMaterial(const G4String& targetMaterialNa
             // Todos los demás: invisibles
             lv->SetVisAttributes( G4VisAttributes::GetInvisible() );
         }
+    } // end loop over LV store
 
-
-    }
+    return;
 }
+
+void YourDetectorConstructor::AssignSDtoLV(std::vector<std::string>& lvnames, G4VSensitiveDetector* sd)
+{
+    auto * lvstore = G4LogicalVolumeStore::GetInstance();
+
+    for(const auto & lvname : lvnames )
+    {
+      // in case there are several lv with the same name
+      int lvcounter = 0;
+      for(auto lv : *lvstore)
+      {
+        if(lv->GetName() == lvname)
+        {
+          lv->SetSensitiveDetector(sd);
+          ++lvcounter;
+          if(0<fVerbosity)
+            G4cout << "\t" << sd->GetName() <<" SD assigned to LV <" << lvname << ">" << G4endl;
+        }
+      }
+      // check if there was at least 1 volume with lvname
+      if( 0 == lvcounter )
+        G4cerr << "\tECAL SD volume <" << lvname << "> not found" << G4endl;
+
+    } // end loop over lvnames
+
+    return;
+}
+

@@ -87,7 +87,7 @@ int main(int argc, char** argv)
     }
 
     // create user actions
-    runManager->SetUserInitialization(new YourActionInitialization(&iargs));
+    runManager->SetUserInitialization(new YourActionInitialization(&iargs,user_detector_constructor));
 
     // initialize detector and physics
     runManager->Initialize();

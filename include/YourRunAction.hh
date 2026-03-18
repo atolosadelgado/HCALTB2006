@@ -7,13 +7,14 @@
 
 class YourPrimaryGenerator;
 class YourEventAction;
+class YourDetectorConstructor;
 class YourInputArgs;
 
 class YourRunAction : public G4UserRunAction {
 
   public:
 
-    YourRunAction(const YourInputArgs * args);
+    YourRunAction(const YourInputArgs * args, const YourDetectorConstructor * detector);
     virtual ~YourRunAction();
 
     void BeginOfRunAction(const G4Run* run) override;
@@ -22,11 +23,12 @@ class YourRunAction : public G4UserRunAction {
     void BeginOutputTree();
     void EndOutputTree();
 
-    void SetEventAction(YourEventAction * evtAct){fEventAction = evtAct;}
+    // void SetEventAction(YourEventAction * evtAct){fEventAction = evtAct;}
 
     std::string fOutputFileName = {""};
     const YourInputArgs * fInputArgs;
-    YourEventAction * fEventAction;
+    // YourEventAction * fEventAction;
+    const YourDetectorConstructor * fDetector;
 
     int verbosity = 0;
 };

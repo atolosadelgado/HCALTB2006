@@ -2,7 +2,7 @@
 
 #include "G4Step.hh"
 
-inline double YourVCaloResponse::getAttenuation(const G4Step* aStep, double birk1, double birk2, double birk3) {
+double YourVCaloResponse::getAttenuation(const G4Step* aStep, double birk1, double birk2, double birk3) {
     double weight = 1.;
     double charge = aStep->GetPreStepPoint()->GetCharge();
     double length = aStep->GetStepLength();
@@ -21,7 +21,7 @@ inline double YourVCaloResponse::getAttenuation(const G4Step* aStep, double birk
 
 // from CMSSW, this function is a method of ECalSD,
 // https://github.com/cms-sw/cmssw/blob/2c3832ae6100c8b0c791afaa038a0de475cde39a/SimG4CMS/Calo/src/ECalSD.cc#L479
-inline double YourVCaloResponse::getBirkL3(const G4Step* aStep, double birk1, double birkSlope, double birkCut) {
+double YourVCaloResponse::getBirkL3(const G4Step* aStep, double birk1, double birkSlope, double birkCut) {
     double weight = 1.;
     const G4StepPoint* preStepPoint = aStep->GetPreStepPoint();
     double charge = preStepPoint->GetCharge();

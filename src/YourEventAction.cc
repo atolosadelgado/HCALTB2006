@@ -10,15 +10,15 @@ YourEventAction::YourEventAction(YourRunAction * myRunAction, YourPrimaryGenerat
   fRunAction(myRunAction), fPrimaryGenerator(gen), fTimeMax(50*CLHEP::ns) {}
 
 void YourEventAction::BeginOfEventAction(const G4Event*) {
-  fEdepEcalPerEvt = 12;
-  fEdepHcalPerEvt = 34;
+  // fEdepEcalPerEvt = 12;
+  // fEdepHcalPerEvt = 34;
 }
 
 
 void YourEventAction::EndOfEventAction(const G4Event* /*evt*/)
 {
     auto* ana = G4AnalysisManager::Instance();
-    ana->FillNtupleDColumn(fIdNtuple_EcalEnergy, fEdepEcalPerEvt );
-    ana->FillNtupleDColumn(fIdNtuple_HcalEnergy, fEdepHcalPerEvt );
+    // ana->FillNtupleDColumn(fIdNtuple_EcalEnergy, fEdepEcalPerEvt );
+    // ana->FillNtupleDColumn(fIdNtuple_HcalEnergy, fEdepHcalPerEvt );
     ana->AddNtupleRow();
 }

@@ -3,18 +3,19 @@
 #include "YourInputArgs.hh"
 #include "YourPrimaryGenerator.hh"
 #include "YourEventAction.hh"
+#include "YourCaloSD.hh"
+#include "YourDetectorConstructor.hh"
 
 #include <iostream>
 
 #include "G4AnalysisManager.hh"
+#include "G4SDManager.hh"
 
-
-
-
-YourRunAction::YourRunAction(const YourInputArgs * args):
+YourRunAction::YourRunAction(const YourInputArgs * args, const YourDetectorConstructor * detector):
           G4UserRunAction(),
           fOutputFileName(args->outputFileName),
-          fInputArgs(args)
+          fInputArgs(args),
+          fDetector(detector)
           {
             // to make UI commands available
             auto analysisManager = G4AnalysisManager::Instance();
@@ -42,6 +43,10 @@ void YourRunAction::EndOfRunAction(const G4Run* ){
 
 void YourRunAction::BeginOutputTree()
 {
+  auto SDmanager = G4SDManager::GetSDMpointer();
+  auto* ecalSD = dynamic_cast<YourCaloSD*>(SDmanager->FindSensitiveDetector(fDetector->GetEcalSDname() ));
+  auto* hcalSD = dynamic_cast<YourCaloSD*>(SDmanager->FindSensitiveDetector(fDetector->GetHcalSDname() ));
+
   auto analysisManager = G4AnalysisManager::Instance();
   // analysisManager->SetDefaultFileType("root"); // set in macrofile
   analysisManager->SetVerboseLevel(1);
@@ -52,10 +57,13 @@ void YourRunAction::BeginOutputTree()
 
   analysisManager->CreateNtuple("tree", "tree for HCAL 2006 TB experiment");
   G4int id = -1;
+
   id = analysisManager->CreateNtupleDColumn("ECAL_eresponse");
-  fEventAction->SetIdNtuple_EcalEnergy(id);
+  ecalSD->SetNTupleColumnID(id);
+
   id = analysisManager->CreateNtupleDColumn("HCAL_eresponse");
-  fEventAction->SetIdNtuple_HcalEnergy(id);
+  hcalSD->SetNTupleColumnID(id);
+
   analysisManager->FinishNtuple();
 
   // if user did not provide an output file name, create one

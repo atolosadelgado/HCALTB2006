@@ -7,8 +7,8 @@
 
 #include "G4MaterialScanner.hh"
 
-YourActionInitialization::YourActionInitialization(const YourInputArgs * args)
-:   G4VUserActionInitialization(),fInputArgs(args){
+YourActionInitialization::YourActionInitialization(const YourInputArgs * args, const YourDetectorConstructor * detector)
+:   G4VUserActionInitialization(),fInputArgs(args), fDetector(detector){
   // ms = new G4MaterialScanner();
 }
 
@@ -16,7 +16,7 @@ YourActionInitialization::YourActionInitialization(const YourInputArgs * args)
 YourActionInitialization::~YourActionInitialization() {}
 
 void YourActionInitialization::BuildForMaster() const {
-  SetUserAction(new YourRunAction(fInputArgs));
+  SetUserAction(new YourRunAction(fInputArgs, fDetector));
 }
 
 void YourActionInitialization::Build() const {
@@ -25,7 +25,7 @@ void YourActionInitialization::Build() const {
 
   // Set UserRunAction
   // run action owns histograms to be written at the end
-  YourRunAction* runAction = new YourRunAction(fInputArgs);
+  YourRunAction* runAction = new YourRunAction(fInputArgs, fDetector);
 
   // Set UserEventAction
   // event action accumulates energy deposited and radius per Z-bin, per event
@@ -34,7 +34,7 @@ void YourActionInitialization::Build() const {
 
   // RunAction open the G4Analysis, and creates NTuple
   // it must notify EventAction which is the ID for each branch
-  runAction->SetEventAction(eventAction);
+  // runAction->SetEventAction(eventAction);
 
   SetUserAction(gen);
   SetUserAction(runAction);
