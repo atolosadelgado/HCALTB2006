@@ -4,7 +4,7 @@
 class G4Step;
 
 /* YourVCaloResponse is an interface to calculate correction to energy deposited in the step
- * TODO: extend it to account for time/radial calculates
+ * TODO: extend it to account for time/radial cuts
  */
 class YourVCaloResponse
 {
