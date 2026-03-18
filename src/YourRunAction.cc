@@ -71,6 +71,7 @@ void YourRunAction::BeginOutputTree()
   {
       fOutputFileName = analysisManager->GetFileName();
     const std::string phys = fInputArgs->physics_list;
+    const bool airECAL = fInputArgs->airECAL;
 
     // check position of '.'
     std::size_t dotPos = fOutputFileName.find_last_of('.');
@@ -80,10 +81,10 @@ void YourRunAction::BeginOutputTree()
         std::string basename  = fOutputFileName.substr(0, dotPos);
         std::string extension = fOutputFileName.substr(dotPos); // including '.'
 
-        fOutputFileName = basename + "_" + phys + extension;
+        fOutputFileName = basename + "_" + phys + "_airECAL" + std::to_string(airECAL) + extension;
     } else {
         // if no extension
-        fOutputFileName = fOutputFileName + "_" + phys;
+        fOutputFileName = fOutputFileName + "_" + phys + "_airECAL" + std::to_string(airECAL);
     }
   }
   analysisManager->SetFileName(fOutputFileName);
