@@ -10,8 +10,8 @@ YourEventAction::YourEventAction(YourRunAction * myRunAction, YourPrimaryGenerat
   fRunAction(myRunAction), fPrimaryGenerator(gen), fTimeMax(50*CLHEP::ns) {}
 
 void YourEventAction::BeginOfEventAction(const G4Event*) {
-  fEdepEcalPerEvt = 0;
-  fEdepHcalPerEvt = 0;
+  fEdepEcalPerEvt = 12;
+  fEdepHcalPerEvt = 34;
 }
 
 
