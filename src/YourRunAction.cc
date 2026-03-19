@@ -60,9 +60,11 @@ void YourRunAction::BeginOutputTree()
 
   id = analysisManager->CreateNtupleDColumn("ECAL_eresponse");
   ecalSD->SetNTupleColumnID(id);
+  analysisManager->CreateNtupleDColumn("ECAL_eresponse_raw");
 
   id = analysisManager->CreateNtupleDColumn("HCAL_eresponse");
   hcalSD->SetNTupleColumnID(id);
+  analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw");
 
   analysisManager->FinishNtuple();
 

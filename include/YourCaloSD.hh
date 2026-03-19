@@ -32,6 +32,7 @@ private:
     int fVerbosity = {0};
     std::unique_ptr<YourVCaloResponse> fCaloResponse;
     G4double fTotalEnergy;
+    G4double fTotalEnergy_raw;
     G4int fNTupleColumnID={-1};
 };
 
