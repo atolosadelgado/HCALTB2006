@@ -1,0 +1,28 @@
+executable = run.sh
+
+NUM_EVENTS = 20000
+NTHREADS = 4
+
+arguments = -g geometryTB2006H2.gdml \
+            -pl CMS \
+            -m gps_singlerun.mac \
+            -pname $(pname) \
+            -penergy $(penergy) \
+            -nevents $(NUM_EVENTS) \
+            -nthreads $(NTHREADS)
+
+output = out.$(pname).$(penergy).out
+error  = err.$(pname).$(penergy).err
+log    = log.$(ClusterId)
+
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = ../build/gdml_sim, ../data/geometry/geometryTB2006H2.gdml, ../gps_singlerun.mac
+
+RequestCpus = $(NTHREADS)
+
++JobFlavour = "tomorrow"
+#+JobFlavour = "microcentury"
+#+JobFlavour = "workday"
+
+queue pname, penergy from particle_energy.scan

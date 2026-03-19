@@ -1,0 +1,17 @@
+executable = run_cmssw.sh
+
+arguments = $(configfile)
+
+output = output.$(ClusterId).$(ProcId).out
+error  = error.$(ClusterId).$(ProcId).err
+log    = log.$(ClusterId).$(ProcId).log
+
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = run_cmssw.sh, ./configs/$(configfile)
+
+RequestCpus = 4
+
++JobFlavour = "tomorrow"
+
+queue configfile from configs/config_list.txt
