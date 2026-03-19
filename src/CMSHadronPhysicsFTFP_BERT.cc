@@ -35,7 +35,7 @@ void CMSHadronPhysicsFTFP_BERT::ConstructProcess() {
     DumpBanner();
   }
   CreateModels();
-  {
+  if(fPrintArguments){
     using CLHEP::GeV;
     std::ofstream out("physics_config_CMSHadronPhysicsFTFP_BERT.txt");
 

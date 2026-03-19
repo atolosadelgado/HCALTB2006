@@ -17,6 +17,8 @@ public:
   // copy constructor and hide assignment operator
   CMSHadronPhysicsFTFP_BERT(CMSHadronPhysicsFTFP_BERT &) = delete;
   CMSHadronPhysicsFTFP_BERT &operator=(const CMSHadronPhysicsFTFP_BERT &right) = delete;
+
+  bool fPrintArguments = {false};
 };
 
 
