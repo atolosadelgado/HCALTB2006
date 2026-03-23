@@ -75,25 +75,33 @@ void YourRunAction::BeginOutputTree()
   {
       int nmodels = G4PhysicsModelCatalog::Entries();
       YourParticleInfoMap particleInfoMap;
-      // e-, pdg 11
-      {
-          YourParticleInfo electronInfo;
-          electronInfo.pdg=11;
-          electronInfo.hIDe0 = analysisManager->CreateH2("hE0_electron","",1000,-6,6, nmodels,0,nmodels);
-          electronInfo.hIDef = analysisManager->CreateH2("hEf_electron","",1000,-6,6, nmodels,0,nmodels);
-          electronInfo.hIDtf = analysisManager->CreateH2("hTf_electron","",1000,-6,6, nmodels,0,nmodels);
-          particleInfoMap.emplace( electronInfo.pdg, electronInfo );
+      std::vector<std::pair<int, G4String>> particles = {
+            {11,   "electron"},   // e-
+            {22,   "gamma"},
+            {2112, "neutron"},
+            {211,  "piPlus"},
+            {-211, "piMinus"},
+            {111,  "pi0"},
+            {2212, "proton"},
+            {YourParticleInfo::PDG_OTHER, "others"}
+
+      };
+      for (const auto& [pdg, name] : particles) {
+            YourParticleInfo info;
+            info.pdg = pdg;
+
+            info.hIDe0 = analysisManager->CreateH2(
+                "hE0_" + name, "", 2500, -15, 10, nmodels, 0, nmodels);
+
+            info.hIDef = analysisManager->CreateH2(
+                "hEf_" + name, "", 2500, -15, 10, nmodels, 0, nmodels);
+
+            info.hIDtf = analysisManager->CreateH2(
+                "hTf_" + name, "", 2500, -15, 10, nmodels, 0, nmodels);
+
+            particleInfoMap.emplace(pdg, info);
       }
 
-      // other particles
-      {
-          YourParticleInfo electronInfo;
-          electronInfo.pdg=YourParticleInfo::PDG_OTHER;
-          electronInfo.hIDe0 = analysisManager->CreateH2("hE0_other","",1000,-6,6, nmodels,0,nmodels);
-          electronInfo.hIDef = analysisManager->CreateH2("hEf_other","",1000,-6,6, nmodels,0,nmodels);
-          electronInfo.hIDtf = analysisManager->CreateH2("hTf_other","",1000,-6,6, nmodels,0,nmodels);
-          particleInfoMap.emplace( electronInfo.pdg, electronInfo );
-      }
       if(fTrackingAction) fTrackingAction->SetParticleInfoMap(particleInfoMap);
   }
 
