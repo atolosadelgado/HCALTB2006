@@ -20,6 +20,7 @@ void YourSteppingAction::UserSteppingAction(const G4Step* theStep) {
 
     double radius = YourVCaloResponse::Calculate_hitpos_to_shower_axis_distance(theStep, fYourEventAction->GetPrimaryVertexDir(), fYourEventAction->GetPrimaryVertexPos());
     fYourEventAction->UpdateProfileHistograms(lv, eDep, radius);
+    fYourEventAction->UpdateTotalEnergyPerRegion(lv->GetRegion(), eDep);
 }
 
 

@@ -2,6 +2,7 @@
 
 #include "G4AnalysisManager.hh"
 #include "G4Event.hh"
+#include "G4RegionStore.hh"
 
 
 YourEventAction::YourEventAction()
@@ -12,6 +13,8 @@ void YourEventAction::BeginOfEventAction(const G4Event* evt) {
   std::fill(fEnergyProfile.begin(), fEnergyProfile.end(), 0);
   std::fill(fRadiusProfile.begin(), fRadiusProfile.end(), 0);
   fEventInfo = dynamic_cast<YourEventInfo*>(evt->GetUserInformation());
+  fEcalAccum.fTotalEnergy = 0.0;
+  fHcalAccum.fTotalEnergy = 0.0;
 }
 
 
@@ -19,6 +22,10 @@ void YourEventAction::EndOfEventAction(const G4Event* /*evt*/)
 {
     this->FinalizeProfileHistograms();
     auto* ana = G4AnalysisManager::Instance();
+
+    ana->FillNtupleDColumn(fEcalAccum.fNtupleId, fEcalAccum.fTotalEnergy );
+    ana->FillNtupleDColumn(fHcalAccum.fNtupleId, fHcalAccum.fTotalEnergy );
+
     ana->AddNtupleRow();
 }
 
@@ -67,4 +74,18 @@ std::vector<double> & YourEventAction::GetRadiusProfileVector()
       G4Exception("YourEventAction::GetEnergyProfileVector", "Code002", JustWarning, msg);
     }
     return fRadiusProfile;
+}
+
+void YourEventAction::InitializeRegionDefinition()
+{
+  G4RegionStore * regionStore = G4RegionStore::GetInstance();
+  // FIXME: names are hardcoded, valid only for GDML HCAL TB 2006 geometry!
+  fEcalAccum.fRegion = regionStore->FindOrCreateRegion("EcalRegion");
+  fHcalAccum.fRegion = regionStore->FindOrCreateRegion("HcalRegion");
+}
+
+void YourEventAction::UpdateTotalEnergyPerRegion(G4Region* rg, G4double edep)
+{
+  if(fHcalAccum.fRegion == rg) fHcalAccum.fTotalEnergy+=edep;
+  else if(fEcalAccum.fRegion == rg) fEcalAccum.fTotalEnergy+=edep;
 }

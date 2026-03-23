@@ -31,6 +31,7 @@ YourRunAction::~YourRunAction() {}
 void YourRunAction::BeginOfRunAction(const G4Run*)
 {
     fEventAction->InitializeProfileHistograms(fDetector->GetLayerInfo() );
+    fEventAction->InitializeRegionDefinition();
 
     this->BeginOutputTree();
 }
@@ -70,6 +71,13 @@ void YourRunAction::BeginOutputTree()
   id = analysisManager->CreateNtupleDColumn("HCAL_eresponse");
   hcalSD->SetNTupleColumnID(id);
   analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw");
+
+  id = analysisManager->CreateNtupleDColumn("TotalEnergyECALregion");
+  fEventAction->SetEcalTotalEnergyNtupleID(id);
+
+  id = analysisManager->CreateNtupleDColumn("TotalEnergyHCALregion");
+  fEventAction->SetHcalTotalEnergyNtupleID(id);
+
   analysisManager->CreateNtupleDColumn("Eprofile", fEventAction->GetEnergyProfileVector());
   analysisManager->CreateNtupleDColumn("Rprofile", fEventAction->GetRadiusProfileVector());
 

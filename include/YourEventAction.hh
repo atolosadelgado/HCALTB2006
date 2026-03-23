@@ -29,16 +29,28 @@ public:
 
   std::vector<double> & GetRadiusProfileVector();
 
+  void InitializeRegionDefinition();
+  void UpdateTotalEnergyPerRegion(G4Region * rg, G4double edep);
+  void SetEcalTotalEnergyNtupleID(G4int id){fEcalAccum.fNtupleId = id; }
+  void SetHcalTotalEnergyNtupleID(G4int id){fHcalAccum.fNtupleId = id; }
+
   // hot functions, no checking if null ptr
   G4ThreeVector & GetPrimaryVertexPos(){return fEventInfo->primaryPos;}
   G4ThreeVector & GetPrimaryVertexDir(){return fEventInfo->primaryDir;}
 
 private:
+  struct YourGlobalAccum
+  {
+    G4Region * fRegion;
+    G4double fTotalEnergy;
+    G4int    fNtupleId;
+  };
   YourLayerInfo fLayerInfo;
   std::vector<double> fEnergyProfile;
   std::vector<double> fRadiusProfile;
   YourEventInfo * fEventInfo;
-
+  YourGlobalAccum fEcalAccum;
+  YourGlobalAccum fHcalAccum;
 };
 
 #endif
