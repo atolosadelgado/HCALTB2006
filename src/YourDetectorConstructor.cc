@@ -54,6 +54,8 @@ void YourDetectorConstructor::ConstructSDandField()
   YourCaloSD * hcalSD = new YourCaloSD(fHcalSDname, std::make_unique<YourHcalResponse>() );
   G4SDManager::GetSDMpointer()->AddNewDetector(hcalSD);
   AssignSDtoLV(fHCAL_sensLV, hcalSD);
+  if(0<fVerbosity)
+    fLayerInfo.Print();
 }
 
 void YourDetectorConstructor::MakeECALAsAir()
@@ -69,7 +71,7 @@ void YourDetectorConstructor::MakeECALAsAir()
   for (int i = 0; i < motherLV->GetNoDaughters(); i++) {
       G4VPhysicalVolume* daughter = motherLV->GetDaughter(i);
       std::cout << "World daughter : " << daughter->GetName() << std::endl;
-      if (daughter->GetName() == "ECAL") { // nombre del physvol del ECAL
+      if (daughter->GetName() == "ECAL") { // physvol name of ECAL
           ecalPV = daughter;
           break;
       }
@@ -126,14 +128,14 @@ void YourDetectorConstructor::HighlightMaterial(const G4String& targetMaterialNa
 
         if (mat->GetName() == targetMaterialName) {
             G4VisAttributes* visAtt = nullptr;
-            // Material objetivo: verde sólido
+            // make the goal material solid and visible
             visAtt = new G4VisAttributes( color );
             visAtt->SetVisibility(true);
             visAtt->SetForceSolid(true);
             lv->SetVisAttributes(visAtt);
             std::cout << " New crystal for visualization: " << lv->GetName() << std::endl;
         } else if(makeOtherInvisible){
-            // Todos los demás: invisibles
+            // make anything else invisible
             lv->SetVisAttributes( G4VisAttributes::GetInvisible() );
         }
     } // end loop over LV store
@@ -155,6 +157,7 @@ void YourDetectorConstructor::AssignSDtoLV(std::vector<std::string>& lvnames, G4
         {
           lv->SetSensitiveDetector(sd);
           ++lvcounter;
+          FillLayerInfo(lv);
           if(0<fVerbosity)
             G4cout << "\t" << sd->GetName() <<" SD assigned to LV <" << lvname << ">" << G4endl;
         }
@@ -166,5 +169,33 @@ void YourDetectorConstructor::AssignSDtoLV(std::vector<std::string>& lvnames, G4
     } // end loop over lvnames
 
     return;
+}
+
+void YourDetectorConstructor::FillLayerInfo(G4LogicalVolume* lv)
+{
+  if(nullptr == lv) return;
+  std::string  lvname = lv->GetName();
+
+  // if ECAL
+  if(std::size_t found = lvname.find("EBRY_"); found!=std::string::npos){
+    // ECAL crystals are named as EBRY_*
+    // ECAL is homogeneous, 1 single layer
+    // assigning 1 as layer number for convenience
+    fLayerInfo.AddLV(lv,1);
+  }
+  // if HCAL barrel
+  else if(std::size_t found = lvname.find("HBScintillatorLayer"); found!=std::string::npos){
+    // number of HCAL layer is extracted from LV name
+    size_t posLayer = lvname.find("Layer") + 5;
+    size_t posIn = lvname.size() - 3; // "In1" o "In2"
+    int hcal_nlayer = std::stoi(lvname.substr(posLayer, posIn - posLayer));
+    // HCAL layers will start at layer 2, but in the name they start at 0
+    // so we add an offset of 2
+    fLayerInfo.AddLV(lv,hcal_nlayer+2);
+  }
+  else
+    // default layer of anything else
+    fLayerInfo.AddLV(lv,0);
+
 }
 

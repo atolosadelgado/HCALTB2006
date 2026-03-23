@@ -1,8 +1,9 @@
 #ifndef YOURDETECTORCONSTRUCTOR
 #define YOURDETECTORCONSTRUCTOR
 
-
 #include "G4VUserDetectorConstruction.hh"
+
+#include "YourLayerInfo.hh"
 
 class G4Material;
 class G4VPhysicalVolume;
@@ -26,7 +27,7 @@ class YourDetectorConstructor : public G4VUserDetectorConstruction
 
   private:
       std::string gdml_filename;
-      G4int fVerbosity = {0};
+      G4int fVerbosity = {1};
       G4String fEcalSDname = {"ecalSD"};
       G4String fHcalSDname = {"hcalSD"};
       G4VPhysicalVolume * worldPV;
@@ -94,6 +95,12 @@ class YourDetectorConstructor : public G4VUserDetectorConstruction
     // Method G4VUserDetectorConstruction::SetSensitiveDetector cannot be used
     // because assumes uniqueness of Logical Volumes
     void AssignSDtoLV(std::vector<std::string> & lvnames, G4VSensitiveDetector *sd);
+
+    // storage class to map LV -> layer number
+    // this can be used by either SD or Event Action
+    YourLayerInfo fLayerInfo;
+    // this method contains the logic to fill fLayerInfo
+    void FillLayerInfo(G4LogicalVolume * lv);
 };
 
 
