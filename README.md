@@ -1,8 +1,8 @@
-HCAL 2006 Test Beam — Geant4 Stand-Alone Application
-====================================================
+Combined CMS ECAL+HCAL test-beam (2006) — Geant4 Stand-Alone Application
+========================================================================
 
 This project is a stand-alone Geant4 application designed to be integrated into geant-val, the official Geant4 validation suite.
-It implements the configuration of the HCAL 2006 Test Beam, as documented in: EPJ C (2009) 60: 359 
+It implements the configuration of the Combined CMS ECAL+HCAL test-beam (2006), as documented in: EPJ C (2009) 60: 359
 
 The goal of this application is to reproduce the geometry and beam conditions of the 2006 test beam setup, enabling direct comparison between simulated calorimeter response and the corresponding experimental measurements for validation purposes.
 
