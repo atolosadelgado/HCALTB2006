@@ -4,6 +4,7 @@
 #include "YourRunAction.hh"
 #include "YourEventAction.hh"
 #include "YourTrackingAction.hh"
+#include "YourSteppingAction.hh"
 #include "YourInputArgs.hh"
 
 #include "G4MaterialScanner.hh"
@@ -38,13 +39,20 @@ void YourActionInitialization::Build() const {
   // and life time of particle in the simulation
   YourTrackingAction * trackingAction = new YourTrackingAction();
 
+  // Set User Stepping Action
+  // stepping action calls EventAction methods to accumulate global quantities during the event
+  YourSteppingAction * stepAction = new YourSteppingAction(eventAction);
+
   // RunAction open the G4Analysis, and creates NTuple
   // it must notify EventAction which is the ID for each branch
   // runAction->SetEventAction(eventAction);
   runAction->SetTrackingAction(trackingAction);
+  // RunAction configures the event action at the begining of the run
+  runAction->SetEventAction(eventAction);
 
   SetUserAction(gen);
   SetUserAction(runAction);
   SetUserAction(eventAction);
   SetUserAction(trackingAction);
+  SetUserAction(stepAction);
 }

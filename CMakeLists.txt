@@ -34,6 +34,7 @@ file(GLOB sources   ${PROJECT_SOURCE_DIR}/src/YourDetectorConstructor.cc
                     ${PROJECT_SOURCE_DIR}/src/YourRunAction.cc
                     ${PROJECT_SOURCE_DIR}/src/YourEventAction.cc
                     ${PROJECT_SOURCE_DIR}/src/YourTrackingAction.cc
+                    ${PROJECT_SOURCE_DIR}/src/YourSteppingAction.cc
                     ${PROJECT_SOURCE_DIR}/src/YourPrimaryGenerator.cc
                     ${PROJECT_SOURCE_DIR}/src/YourCaloSD.cc
                     ${PROJECT_SOURCE_DIR}/src/YourVCaloResponse.cc
@@ -46,6 +47,7 @@ file(GLOB headers   ${PROJECT_SOURCE_DIR}/include/YourDetectorConstructor.hh
                     ${PROJECT_SOURCE_DIR}/include/YourRunAction.hh
                     ${PROJECT_SOURCE_DIR}/include/YourEventAction.hh
                     ${PROJECT_SOURCE_DIR}/include/YourTrackingAction.hh
+                    ${PROJECT_SOURCE_DIR}/include/YourSteppingAction.hh
                     ${PROJECT_SOURCE_DIR}/include/YourEventInfo.hh
                     ${PROJECT_SOURCE_DIR}/include/YourPrimaryGenerator.hh
                     ${PROJECT_SOURCE_DIR}/include/YourCaloSD.hh

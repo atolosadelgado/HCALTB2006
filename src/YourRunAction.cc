@@ -30,6 +30,8 @@ YourRunAction::~YourRunAction() {}
 
 void YourRunAction::BeginOfRunAction(const G4Run*)
 {
+    fEventAction->SetLayerInfo(fDetector->GetLayerInfo() );
+
     this->BeginOutputTree();
 }
 
@@ -68,10 +70,11 @@ void YourRunAction::BeginOutputTree()
   id = analysisManager->CreateNtupleDColumn("HCAL_eresponse");
   hcalSD->SetNTupleColumnID(id);
   analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw");
+  analysisManager->CreateNtupleDColumn("Eprofile", fEventAction->GetEnergyProfileVector());
 
   analysisManager->FinishNtuple();
 
-  // create histograms
+  // create histograms of initial and final energy, and lifetime of particles
   {
       int nmodels = G4PhysicsModelCatalog::Entries();
       YourParticleInfoMap particleInfoMap;
