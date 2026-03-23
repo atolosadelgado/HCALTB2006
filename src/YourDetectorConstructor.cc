@@ -161,7 +161,7 @@ void YourDetectorConstructor::AssignSDtoLV(std::vector<std::string>& lvnames, G4
       }
       // check if there was at least 1 volume with lvname
       if( 0 == lvcounter )
-        G4cerr << "\tECAL SD volume <" << lvname << "> not found" << G4endl;
+        G4cerr << "\tSD volume <" << lvname << "> not found" << G4endl;
 
     } // end loop over lvnames
 
