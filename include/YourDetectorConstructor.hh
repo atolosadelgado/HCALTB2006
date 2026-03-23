@@ -25,6 +25,8 @@ class YourDetectorConstructor : public G4VUserDetectorConstruction
   const G4String GetEcalSDname() const {return fEcalSDname; }
   const G4String GetHcalSDname() const {return fHcalSDname; }
 
+  const YourLayerInfo & GetLayerInfo() const {return fLayerInfo;}
+
   private:
       std::string gdml_filename;
       G4int fVerbosity = {1};
