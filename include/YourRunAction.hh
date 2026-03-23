@@ -7,6 +7,7 @@
 
 class YourPrimaryGenerator;
 class YourEventAction;
+class YourTrackingAction;
 class YourDetectorConstructor;
 class YourInputArgs;
 
@@ -24,10 +25,12 @@ class YourRunAction : public G4UserRunAction {
     void EndOutputTree();
 
     // void SetEventAction(YourEventAction * evtAct){fEventAction = evtAct;}
+    void SetTrackingAction(YourTrackingAction * trkAct){fTrackingAction = trkAct;}
 
     std::string fOutputFileName = {""};
     const YourInputArgs * fInputArgs;
     // YourEventAction * fEventAction;
+    YourTrackingAction * fTrackingAction;
     const YourDetectorConstructor * fDetector;
 
     int verbosity = 0;

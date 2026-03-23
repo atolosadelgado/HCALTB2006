@@ -3,13 +3,16 @@
 #include "YourInputArgs.hh"
 #include "YourPrimaryGenerator.hh"
 #include "YourEventAction.hh"
+#include "YourTrackingAction.hh"
 #include "YourCaloSD.hh"
 #include "YourDetectorConstructor.hh"
+#include "YourParticleInfo.hh"
 
 #include <iostream>
 
 #include "G4AnalysisManager.hh"
 #include "G4SDManager.hh"
+#include "G4PhysicsModelCatalog.hh"
 
 YourRunAction::YourRunAction(const YourInputArgs * args, const YourDetectorConstructor * detector):
           G4UserRunAction(),
@@ -67,6 +70,32 @@ void YourRunAction::BeginOutputTree()
   analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw");
 
   analysisManager->FinishNtuple();
+
+  // create histograms
+  {
+      int nmodels = G4PhysicsModelCatalog::Entries();
+      YourParticleInfoMap particleInfoMap;
+      // e-, pdg 11
+      {
+          YourParticleInfo electronInfo;
+          electronInfo.pdg=11;
+          electronInfo.hIDe0 = analysisManager->CreateH2("hE0_electron","",1000,-6,6, nmodels,0,nmodels);
+          electronInfo.hIDef = analysisManager->CreateH2("hEf_electron","",1000,-6,6, nmodels,0,nmodels);
+          electronInfo.hIDtf = analysisManager->CreateH2("hTf_electron","",1000,-6,6, nmodels,0,nmodels);
+          particleInfoMap.emplace( electronInfo.pdg, electronInfo );
+      }
+
+      // other particles
+      {
+          YourParticleInfo electronInfo;
+          electronInfo.pdg=YourParticleInfo::PDG_OTHER;
+          electronInfo.hIDe0 = analysisManager->CreateH2("hE0_other","",1000,-6,6, nmodels,0,nmodels);
+          electronInfo.hIDef = analysisManager->CreateH2("hEf_other","",1000,-6,6, nmodels,0,nmodels);
+          electronInfo.hIDtf = analysisManager->CreateH2("hTf_other","",1000,-6,6, nmodels,0,nmodels);
+          particleInfoMap.emplace( electronInfo.pdg, electronInfo );
+      }
+      if(fTrackingAction) fTrackingAction->SetParticleInfoMap(particleInfoMap);
+  }
 
   // if user did not provide an output file name, create one
   if(fOutputFileName.empty())

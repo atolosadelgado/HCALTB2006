@@ -3,6 +3,7 @@
 #include "YourPrimaryGenerator.hh"
 #include "YourRunAction.hh"
 #include "YourEventAction.hh"
+#include "YourTrackingAction.hh"
 #include "YourInputArgs.hh"
 
 #include "G4MaterialScanner.hh"
@@ -32,11 +33,18 @@ void YourActionInitialization::Build() const {
   // end of event, update main histograms owned by run action and reset event histograms
   YourEventAction* eventAction = new YourEventAction();
 
+  // Set UserTracking action
+  // tracking action stores information of G4Analysis to score initial and final energy
+  // and life time of particle in the simulation
+  YourTrackingAction * trackingAction = new YourTrackingAction();
+
   // RunAction open the G4Analysis, and creates NTuple
   // it must notify EventAction which is the ID for each branch
   // runAction->SetEventAction(eventAction);
+  runAction->SetTrackingAction(trackingAction);
 
   SetUserAction(gen);
   SetUserAction(runAction);
   SetUserAction(eventAction);
+  SetUserAction(trackingAction);
 }
