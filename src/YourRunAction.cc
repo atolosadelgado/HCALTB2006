@@ -71,6 +71,7 @@ void YourRunAction::BeginOutputTree()
   hcalSD->SetNTupleColumnID(id);
   analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw");
   analysisManager->CreateNtupleDColumn("Eprofile", fEventAction->GetEnergyProfileVector());
+  analysisManager->CreateNtupleDColumn("Rprofile", fEventAction->GetRadiusProfileVector());
 
   analysisManager->FinishNtuple();
 
