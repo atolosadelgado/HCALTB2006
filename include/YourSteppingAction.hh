@@ -14,7 +14,6 @@ class YourSteppingAction : public G4UserSteppingAction {
 
   private:
     YourEventAction*             fYourEventAction;
-    double Calculate_hitpos_to_shower_axis_distance(const G4Step* aStep) const;
 };
 
 #endif

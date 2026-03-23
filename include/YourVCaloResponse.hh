@@ -1,6 +1,8 @@
 #ifndef YOURVCALORESPONSE_HH
 #define YOURVCALORESPONSE_HH
 
+#include "G4ThreeVector.hh"
+
 class G4Step;
 
 /* YourVCaloResponse is an interface to calculate correction to energy deposited in the step
@@ -11,6 +13,11 @@ class YourVCaloResponse
 public:
     virtual ~YourVCaloResponse() = default;
     virtual double GetCorrection(const G4Step * theStep) = 0;
+
+    // utility for calculating the distance to the shower axis
+    // it is static so it can be used by other classes too
+    static double Calculate_hitpos_to_shower_axis_distance(const G4Step* aStep, G4ThreeVector & dir0,G4ThreeVector & pos0);
+
 
 protected:
     // from CMSSW, this function is a method of CaloSD
