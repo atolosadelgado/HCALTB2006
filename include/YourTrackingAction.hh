@@ -15,8 +15,8 @@ public:
     YourTrackingAction();
     virtual ~YourTrackingAction();
 
-    virtual void PostUserYourTrackingAction(const G4Track * track);
-    virtual void PreUserTrackingAction(const G4Track * track);
+    virtual void PostUserTrackingAction(const G4Track * track) override;
+    virtual void PreUserTrackingAction(const G4Track * track) override;
 
     void SetParticleInfoMap(YourParticleInfoMap & m){fParticleInfoMap = m;}
     YourParticleInfoMap fParticleInfoMap;
