@@ -15,13 +15,18 @@ struct YourLayerInfo
 
     void AddLV(G4LogicalVolume* lv, layerNumber_t nlayer) {
         auto [it, inserted] = fLayerInfo.emplace(lv, nlayer);
-        if (!inserted){
+        if (inserted)
+            maxLayer = std::max(maxLayer, nlayer);
+        else{
             G4ExceptionDescription msg;
             msg << "Logical Volume <" << lv->GetName() << ">already inserted in Layer info map" << G4endl;
             G4Exception("YourLayerInfo::AddLV", "Code001", JustWarning, msg);
         }
+
     }
 
+    /// This method returns the associated layer number to lv
+    /// if lv was not added, return NO_LAYER
     layerNumber_t GetLayer(G4LogicalVolume * lv) const {
         const auto it = fLayerInfo.find(lv);
         return (it != fLayerInfo.end()) ? it->second : NO_LAYER;
