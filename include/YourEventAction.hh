@@ -16,11 +16,11 @@ public:
   void BeginOfEventAction(const G4Event* evt) override;
   void EndOfEventAction(const G4Event* evt) override;
 
-  void SetLayerInfo(const YourLayerInfo & linfo);
+  void InitializeProfileHistograms(const YourLayerInfo & linfo);
 
   std::vector<double> & GetEnergyProfileVector();
 
-  void AddEnergy(G4LogicalVolume * lv, double edep);
+  void UpdateProfileHistograms(G4LogicalVolume * lv, double edep);
 
 private:
   YourLayerInfo fLayerInfo;

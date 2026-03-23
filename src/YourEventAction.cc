@@ -29,13 +29,13 @@ std::vector<double> & YourEventAction::GetEnergyProfileVector()
     return fEnergyProfile;
 }
 
-void YourEventAction::SetLayerInfo(const YourLayerInfo & linfo){
+void YourEventAction::InitializeProfileHistograms(const YourLayerInfo & linfo){
   fLayerInfo = linfo;
   // initialize energy profile vector to the number of layers
   fEnergyProfile = std::vector<double>( fLayerInfo.GetMaxLayerNumber(), 0.0 );
 }
 
-void YourEventAction::AddEnergy(G4LogicalVolume* lv, double edep)
+void YourEventAction::UpdateProfileHistograms(G4LogicalVolume* lv, double edep)
 {
   auto l = fLayerInfo.GetLayer(lv);
   // if l is NO_LAYER means that the volume is not in the database

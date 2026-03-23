@@ -30,7 +30,7 @@ YourRunAction::~YourRunAction() {}
 
 void YourRunAction::BeginOfRunAction(const G4Run*)
 {
-    fEventAction->SetLayerInfo(fDetector->GetLayerInfo() );
+    fEventAction->InitializeProfileHistograms(fDetector->GetLayerInfo() );
 
     this->BeginOutputTree();
 }
