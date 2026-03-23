@@ -49,6 +49,4 @@ void YourTrackingAction::PostUserTrackingAction(const G4Track* track)
     auto analysisManager = G4AnalysisManager::Instance();
     analysisManager->FillH2(hIDef, std::log10(ef) ,modelIndex);
     analysisManager->FillH2(hIDtf, std::log10(tf) ,modelIndex);
-    if(ef<1e-15)
-        G4cout << "Warning, final energy is " << ef << std::endl;
 }
