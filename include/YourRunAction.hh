@@ -3,7 +3,10 @@
 
 #include "G4UserRunAction.hh"
 
+#include "YourParticleInfo.hh"
+
 #include <string>
+#include <vector>
 
 class YourPrimaryGenerator;
 class YourEventAction;
@@ -28,10 +31,14 @@ class YourRunAction : public G4UserRunAction {
     void SetTrackingAction(YourTrackingAction * trkAct){fTrackingAction = trkAct;}
 
     std::string fOutputFileName = {""};
-    const YourInputArgs * fInputArgs;
-    YourEventAction * fEventAction;
-    YourTrackingAction * fTrackingAction;
-    const YourDetectorConstructor * fDetector;
+    const YourInputArgs * fInputArgs = {nullptr};
+    YourEventAction * fEventAction = {nullptr};
+    YourTrackingAction * fTrackingAction = {nullptr};
+    const YourDetectorConstructor * fDetector = {nullptr};
+    YourParticleInfoMap particleInfoMap;
+
+    std::vector<double> fEnergyProfile;
+    std::vector<double> fRadiusProfile;
 
     int verbosity = 0;
 };

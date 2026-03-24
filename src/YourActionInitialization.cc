@@ -45,7 +45,6 @@ void YourActionInitialization::Build() const {
 
   // RunAction open the G4Analysis, and creates NTuple
   // it must notify EventAction which is the ID for each branch
-  // runAction->SetEventAction(eventAction);
   runAction->SetTrackingAction(trackingAction);
   // RunAction configures the event action at the begining of the run
   runAction->SetEventAction(eventAction);

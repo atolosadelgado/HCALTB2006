@@ -25,9 +25,8 @@ public:
 
   void FinalizeProfileHistograms();
 
-  std::vector<double> & GetEnergyProfileVector();
-
-  std::vector<double> & GetRadiusProfileVector();
+  void SetEnergyProfileVector(std::vector<double> * EnergyProfileVector){fEnergyProfile=EnergyProfileVector;}
+  void SetRadiusProfileVector(std::vector<double> * RadiusProfileVector){fRadiusProfile=RadiusProfileVector;}
 
   void InitializeRegionDefinition();
   void UpdateTotalEnergyPerRegion(G4Region * rg, G4double edep);
@@ -46,8 +45,9 @@ private:
     G4int    fNtupleId;
   };
   YourLayerInfo fLayerInfo;
-  std::vector<double> fEnergyProfile;
-  std::vector<double> fRadiusProfile;
+  // vectors owned by run action
+  std::vector<double> * fEnergyProfile;
+  std::vector<double> * fRadiusProfile;
   YourEventInfo * fEventInfo;
   YourGlobalAccum fEcalAccum;
   YourGlobalAccum fHcalAccum;

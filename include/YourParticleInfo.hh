@@ -8,7 +8,7 @@ struct YourParticleInfo {
   int hIDe0;
   int hIDef;
   int hIDtf;
-  static constexpr int PDG_OTHER = -9999;
+  static constexpr int PDG_OTHER = 0;
 };
 
 using YourParticleInfoMap = std::map<int, YourParticleInfo>;

@@ -6,7 +6,6 @@
 #include "YourTrackingAction.hh"
 #include "YourCaloSD.hh"
 #include "YourDetectorConstructor.hh"
-#include "YourParticleInfo.hh"
 
 #include <iostream>
 
@@ -30,10 +29,22 @@ YourRunAction::~YourRunAction() {}
 
 void YourRunAction::BeginOfRunAction(const G4Run*)
 {
-    fEventAction->InitializeProfileHistograms(fDetector->GetLayerInfo() );
-    fEventAction->InitializeRegionDefinition();
 
-    this->BeginOutputTree();
+  auto layerInfo = fDetector->GetLayerInfo();
+  // initialize energy profile vector to the number of layers
+  fEnergyProfile = std::vector<double>( layerInfo.GetMaxLayerNumber() , 0.0 );
+  fRadiusProfile = std::vector<double>( layerInfo.GetMaxLayerNumber() , 0.0 );
+
+
+  if(fEventAction){
+      fEventAction->InitializeProfileHistograms(layerInfo);
+      fEventAction->InitializeRegionDefinition();
+      fEventAction->SetEnergyProfileVector(&fEnergyProfile);
+      fEventAction->SetRadiusProfileVector(&fRadiusProfile);
+  }
+
+
+  this->BeginOutputTree();
 }
 
 void YourRunAction::EndOfRunAction(const G4Run* ){
@@ -73,20 +84,21 @@ void YourRunAction::BeginOutputTree()
   analysisManager->CreateNtupleDColumn("HCAL_eresponse_raw");
 
   id = analysisManager->CreateNtupleDColumn("TotalEnergyECALregion");
-  fEventAction->SetEcalTotalEnergyNtupleID(id);
+  if(fEventAction) fEventAction->SetEcalTotalEnergyNtupleID(id);
 
   id = analysisManager->CreateNtupleDColumn("TotalEnergyHCALregion");
-  fEventAction->SetHcalTotalEnergyNtupleID(id);
+  if(fEventAction) fEventAction->SetHcalTotalEnergyNtupleID(id);
 
-  analysisManager->CreateNtupleDColumn("Eprofile", fEventAction->GetEnergyProfileVector());
-  analysisManager->CreateNtupleDColumn("Rprofile", fEventAction->GetRadiusProfileVector());
+  analysisManager->CreateNtupleDColumn("Eprofile", fEnergyProfile);
+
+  analysisManager->CreateNtupleDColumn("Rprofile", fRadiusProfile);
 
   analysisManager->FinishNtuple();
 
   // create histograms of initial and final energy, and lifetime of particles
-  {
+  if(particleInfoMap.empty()){
       int nmodels = G4PhysicsModelCatalog::Entries();
-      YourParticleInfoMap particleInfoMap;
+
       std::vector<std::pair<int, G4String>> particles = {
             {11,   "electron"},   // e-
             {22,   "gamma"},
@@ -103,19 +115,18 @@ void YourRunAction::BeginOutputTree()
             info.pdg = pdg;
 
             info.hIDe0 = analysisManager->CreateH2(
-                "hE0_" + name, "", 2500, -15, 10, nmodels, 0, nmodels);
+                "hE0_" + name, "", 200, -10, 10, nmodels, 0, nmodels);
 
             info.hIDef = analysisManager->CreateH2(
-                "hEf_" + name, "", 2500, -15, 10, nmodels, 0, nmodels);
+                "hEf_" + name, "", 200, -10, 10, nmodels, 0, nmodels);
 
             info.hIDtf = analysisManager->CreateH2(
-                "hTf_" + name, "", 2500, -15, 10, nmodels, 0, nmodels);
+                "hTf_" + name, "", 200, -10, 10, nmodels, 0, nmodels);
 
             particleInfoMap.emplace(pdg, info);
       }
-
-      if(fTrackingAction) fTrackingAction->SetParticleInfoMap(particleInfoMap);
   }
+  if(fTrackingAction) fTrackingAction->SetParticleInfoMap(particleInfoMap);
 
   // if user did not provide an output file name, create one
   if(fOutputFileName.empty())
