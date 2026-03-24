@@ -115,13 +115,13 @@ void YourRunAction::BeginOutputTree()
             info.pdg = pdg;
 
             info.hIDe0 = analysisManager->CreateH2(
-                "hE0_" + name, "", 200, -10, 10, nmodels, 0, nmodels);
+                "hE0_" + name, "", 2500, -15, 10, nmodels, 0, nmodels);
 
             info.hIDef = analysisManager->CreateH2(
-                "hEf_" + name, "", 200, -10, 10, nmodels, 0, nmodels);
+                "hEf_" + name, "", 2500, -15, 10, nmodels, 0, nmodels);
 
             info.hIDtf = analysisManager->CreateH2(
-                "hTf_" + name, "", 200, -10, 10, nmodels, 0, nmodels);
+                "hTf_" + name, "", 2500, -15, 10, nmodels, 0, nmodels);
 
             particleInfoMap.emplace(pdg, info);
       }
