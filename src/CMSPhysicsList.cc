@@ -62,10 +62,10 @@ CMSPhysicsList::CMSPhysicsList()
 
 void CMSPhysicsList::SetCuts()
 {
-  SetCutValue(10 * CLHEP::mm, "proton");
-  SetCutValue(10 * CLHEP::mm, "e-");
-  SetCutValue(10 * CLHEP::mm, "e+");
-  SetCutValue(10 * CLHEP::mm, "gamma");
+  SetCutValue(10 * CLHEP::um, "proton");
+  SetCutValue(10 * CLHEP::um, "e-");
+  SetCutValue(10 * CLHEP::um, "e+");
+  SetCutValue(10 * CLHEP::um, "gamma");
 }
 
 void CMSPhysicsList::SetCMSParameters()
