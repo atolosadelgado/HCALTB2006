@@ -40,7 +40,8 @@ class YourRunAction : public G4UserRunAction {
     std::vector<double> fEnergyProfile;
     std::vector<double> fRadiusProfile;
 
-    int verbosity = 0;
+    int verbosity = 1;
+    void PrintGeant4Configuration();
 };
 
 #endif
