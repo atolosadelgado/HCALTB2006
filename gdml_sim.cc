@@ -5,8 +5,9 @@
 // UI + vis
 #include "G4UIExecutive.hh"
 #include "G4UImanager.hh"
-#include "G4VisExecutive.hh"
-
+#ifdef G4VIS_USE
+    #include "G4VisExecutive.hh"
+#endif
 
 #include "G4PhysListFactory.hh"
 #include "CMSPhysicsList.hh"
@@ -105,13 +106,16 @@ int main(int argc, char** argv)
         std::to_string(iargs.nevents)
     );
     // Initialize visualization
+#ifdef G4VIS_USE
     G4VisManager* visManager = new G4VisExecutive;
     visManager->Initialize();
-
+#endif
     if( true == iargs.vis_mode )
     {
         G4UIExecutive* ui = new G4UIExecutive(argc, argv);
+#ifdef G4VIS_USE
         UImanager->ApplyCommand("/control/execute vis.mac");
+#endif
         ui->SessionStart();
         delete ui;
     }
@@ -123,8 +127,9 @@ int main(int argc, char** argv)
 
 
     //________________________________________________________________________________
-
+#ifdef G4VIS_USE
     delete visManager;
+#endif
     delete runManager;
 
     return 0;

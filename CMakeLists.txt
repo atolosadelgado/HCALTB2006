@@ -4,16 +4,11 @@ cmake_minimum_required(VERSION 3.16...3.27)
 project(G01)
 set(CMAKE_BUILD_TYPE Release)
 #----------------------------------------------------------------------------
-# Find Geant4 package, activating all available Vis drivers by default
-# You can set WITH_GEANT4_VIS to OFF via the command line or ccmake/cmake-gui
-# to build a batch mode only executable
-#
-option(WITH_GEANT4_VIS "Build example with Geant4 Vis drivers" ON)
-if(WITH_GEANT4_VIS)
-  find_package(Geant4 REQUIRED gdml vis_all)
-else()
-  find_package(Geant4 REQUIRED gdml)
-endif()
+# Find Geant4 package
+find_package(Geant4 REQUIRED gdml vis_all)
+# vis_all never result in a FATAL_ERROR, even if the REQUIRED find_package
+# argument is set. This is because these options do not depend on specific
+# components being available. Further details in Geant4Config.cmake.in
 
 #----------------------------------------------------------------------------
 # Setup Geant4 include directories and compile definitions
@@ -75,7 +70,12 @@ endif()
 
 add_executable(gdml_sim gdml_sim.cc ${sources} ${headers})
 target_link_libraries(gdml_sim ${Geant4_LIBRARIES}  ${ROOT_LIBRARIES})
-
+if(Geant4_vis_all_FOUND)
+    target_compile_definitions(gdml_sim PRIVATE G4VIS_USE)
+    message("--> Geant4 visualization components were found. Visualization will be enabled.")
+else()
+    message("--> Geant4 visualization components were not found. Visualization will be disabled.")
+endif()
 
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
