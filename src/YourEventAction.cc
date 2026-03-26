@@ -47,7 +47,7 @@ void YourEventAction::UpdateProfileHistograms(G4LogicalVolume* lv, double edep, 
 void YourEventAction::FinalizeProfileHistograms()
 {
   // normalize radius*edep by total energy in that layer
-  for(auto l = 0; l < fEnergyProfile->size(); ++l)
+  for(std::size_t l = 0; l < fEnergyProfile->size(); ++l)
     fRadiusProfile->operator[](l)/=fEnergyProfile->operator[](l);
 }
 

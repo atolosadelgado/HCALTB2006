@@ -21,6 +21,7 @@ YourRunAction::YourRunAction(const YourInputArgs * args, const YourDetectorConst
           {
             // to make UI commands available
             auto analysisManager = G4AnalysisManager::Instance();
+            (void)analysisManager; // trick to avoid error: unused variable
 }
 
 

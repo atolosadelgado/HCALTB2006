@@ -68,7 +68,7 @@ void YourDetectorConstructor::MakeECALAsAir()
 
   if(nullptr == motherLV) throw std::runtime_error("YourDetectorConstructor::SetupECALAsAir cannot find Calo LV");
 
-  for (int i = 0; i < motherLV->GetNoDaughters(); i++) {
+  for (std::size_t i = 0; i < motherLV->GetNoDaughters(); i++) {
       G4VPhysicalVolume* daughter = motherLV->GetDaughter(i);
       std::cout << "World daughter : " << daughter->GetName() << std::endl;
       if (daughter->GetName() == "ECAL") { // physvol name of ECAL
@@ -108,7 +108,7 @@ void YourDetectorConstructor::ReplaceMaterialInTree(G4VPhysicalVolume* rootPV,
       lv->SetMaterial(newMat);
     }
 
-    for (int i = 0; i < lv->GetNoDaughters(); ++i)
+    for (std::size_t i = 0; i < lv->GetNoDaughters(); ++i)
     {
       queue.push(lv->GetDaughter(i));
     }
