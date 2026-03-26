@@ -59,6 +59,12 @@ void YourRunAction::EndOfRunAction(const G4Run* ){
     }
 #endif
 
+    // if(fTrackingAction){
+    //     std::ofstream ofile("proc.out");
+    //     for( auto [procname, procid] : fTrackingAction->fProcNameId )
+    //         ofile << procname.c_str() << std::endl;
+    //
+    // }
 }
 
 
@@ -284,6 +290,7 @@ void YourRunAction::PrintGeant4Configuration()
     }
 
 
+    std::set<std::string> processnames;
     G4cout << "================================\n";
     G4cout << "\n=== Processes per Particle ===\n" << G4endl;
 
@@ -307,9 +314,16 @@ void YourRunAction::PrintGeant4Configuration()
             G4cout << "  Process: "
                    << (*pv)[i]->GetProcessName()
                    << G4endl;
+            processnames.emplace((*pv)[i]->GetProcessName());
         }
     }
-
+    G4cout << "\n=== List of process names ===" << G4endl;
+    int counter = 0;
+    for(auto & procname : processnames ){
+        G4cout << "\t{\"" << procname.c_str() << "\", " << std::to_string(counter) <<"}, " <<  std::endl;
+        counter++;
+    }
+    G4cout << "\n\n================================\n";
 
     G4cout << "===== G4EmParameters =====\n";
     G4EmParameters::Instance()->StreamInfo(G4cout);

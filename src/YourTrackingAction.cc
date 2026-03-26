@@ -28,9 +28,14 @@ const YourParticleInfo & YourTrackingAction::GetParticleInfo(const G4Track* trac
 
 void YourTrackingAction::PostUserTrackingAction(const G4Track* track)
 {
-    const G4VProcess * track_creator_process = track->GetCreatorProcess();
     // if no creator process, return early
+    if(0 == track->GetParentID() ) return;
+    const G4VProcess * track_creator_process = track->GetCreatorProcess();
     if (nullptr == track_creator_process) return;
+
+
+    // fProcNameId.emplace(track_creator_process->GetProcessName(), counter);
+    // counter++;
 
     auto particleInformation = GetParticleInfo(track);
     int hIDe0 = particleInformation.hIDe0;
@@ -39,18 +44,34 @@ void YourTrackingAction::PostUserTrackingAction(const G4Track* track)
     double e0 = track->GetVertexKineticEnergy();
     double ef = track->GetKineticEnergy();
     double tf = track->GetLocalTime();
+
     // MSC and other EM models do not assign modelID...
     // int modelIndex = track->GetCreatorModelIndex();
-    auto * pmanager = track->GetDynamicParticle()->GetParticleDefinition()->GetProcessManager();
-    G4ProcessVector * pv = pmanager->GetProcessList();
+
+    // this does not work either, because many particle processes can create this one, not 1-1 relationship
+    // auto * pmanager = track->GetDynamicParticle()->GetParticleDefinition()->GetProcessManager();
+    // G4ProcessVector * pv = pmanager->GetProcessList();
+    // int pindex = 0;
+    // for(int i = 0; i < pmanager->GetProcessListLength(); ++i)
+    // {
+    //     if( track_creator_process->GetProcessName() == (*pv)[i]->GetProcessName() ){
+    //         pindex = i+1;
+    //         break;
+    //     }
+    // }
+    // if(0 == pindex)
+    //     std::cerr << "\tAlvaro warning: creator process name not found in process manager process list" << std::endl;
+
     int pindex = 0;
-    for(int i = 0; i < pmanager->GetProcessListLength(); ++i)
-    {
-        if( track_creator_process->GetProcessName() == (*pv)[i]->GetProcessName() ){
-            pindex = i;
-            break;
-        }
+    auto procIt = fProcNameId.find(track_creator_process->GetProcessName());
+    if(fProcNameId.end() == procIt ){
+        //std::cerr << "\tAlvaro warning: creator process name <"
+        //          << track_creator_process->GetProcessName()
+        //          << "> not found in fProcNameId" << std::endl;
+        pindex = 0;
     }
+    else
+        pindex = procIt->second + 1;
 
     auto analysisManager = G4AnalysisManager::Instance();
     analysisManager->FillH2(hIDe0, std::log10(e0) ,pindex);
