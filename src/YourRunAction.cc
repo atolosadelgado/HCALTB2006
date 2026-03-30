@@ -58,13 +58,6 @@ void YourRunAction::EndOfRunAction(const G4Run* ){
         fInputArgs->SaveToROOTfile( G4AnalysisManager::Instance()->GetFileName());
     }
 #endif
-
-    // if(fTrackingAction){
-    //     std::ofstream ofile("proc.out");
-    //     for( auto [procname, procid] : fTrackingAction->fProcNameId )
-    //         ofile << procname.c_str() << std::endl;
-    //
-    // }
 }
 
 
