@@ -125,13 +125,13 @@ void YourRunAction::BeginOutputTree()
             info.pdg = pdg;
 
             info.hIDe0 = analysisManager->CreateH2(
-                "hE0_" + name, "", 1000, -10, 10, nmodels+1, -1, nmodels);
+                "hE0_" + name, "", 1000, -5, 5, nmodels+1, -1, nmodels);
 
             analysisManager->CreateH2(
-                "hE0_" + name + "_n", "", 1000, -10, 10, nmodels+1, -1, nmodels);
+                "hE0_" + name + "_n", "", 1000, -5, 5, nmodels+1, -1, nmodels);
 
             analysisManager->CreateH2(
-                "hE0_" + name + "_pi", "", 1000, -10, 10, nmodels+1, -1, nmodels);
+                "hE0_" + name + "_pi", "", 1000, -5, 5, nmodels+1, -1, nmodels);
 
             info.hIDef = analysisManager->CreateH2(
                 "hEf_" + name, "", 1000, -10, 10, nmodels+1, -1, nmodels);
