@@ -3,11 +3,13 @@
 
 #include "YourParticleInfo.hh"
 #include <map>
+#include <unordered_map>
 
 #include "G4UserTrackingAction.hh"
 #include "globals.hh"
 
 class G4Track;
+class G4ParticleDefinition;
 
 class YourTrackingAction : public G4UserTrackingAction
 {
@@ -20,6 +22,7 @@ public:
     void SetParticleInfoMap(YourParticleInfoMap & m){fParticleInfoMap = m;}
     YourParticleInfoMap fParticleInfoMap;
     const YourParticleInfo & GetParticleInfo(const G4Track * track) const;
+    std::map<int, std::pair<const G4ParticleDefinition*,double>> trackIDmap;
     std::unordered_map<std::string,int> fProcNameId = {{"muBrems", 1},
                                                         {"muPairProd", 2},
                                                         {"alphaInelastic", 3},

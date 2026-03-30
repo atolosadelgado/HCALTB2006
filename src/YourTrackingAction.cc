@@ -6,6 +6,12 @@
 #include "G4AnalysisManager.hh"
 #include "G4VProcess.hh"
 #include "G4ProcessManager.hh"
+#include "G4RegionStore.hh"
+#include "G4Proton.hh"
+#include "G4Neutron.hh"
+#include "G4PionPlus.hh"
+#include "G4PionMinus.hh"
+#include "G4PionZero.hh"
 
 #include "YourEventAction.hh"
 
@@ -28,14 +34,18 @@ const YourParticleInfo & YourTrackingAction::GetParticleInfo(const G4Track* trac
 
 void YourTrackingAction::PostUserTrackingAction(const G4Track* track)
 {
+    trackIDmap[track->GetTrackID()] = {track->GetParticleDefinition(), track->GetVertexKineticEnergy()};
     // if no creator process, return early
     if(0 == track->GetParentID() ) return;
     const G4VProcess * track_creator_process = track->GetCreatorProcess();
     if (nullptr == track_creator_process) return;
 
-
-    // fProcNameId.emplace(track_creator_process->GetProcessName(), counter);
-    // counter++;
+    G4RegionStore * regionStore = G4RegionStore::GetInstance();
+    auto * fRegionEcal = regionStore->FindOrCreateRegion("EcalRegion");
+    auto * fRegionHcal = regionStore->FindOrCreateRegion("HcalRegion");
+    auto * trackRegion = track->GetLogicalVolumeAtVertex()->GetRegion();
+    if(trackRegion != fRegionEcal && trackRegion != fRegionHcal )
+        return;
 
     auto particleInformation = GetParticleInfo(track);
     int hIDe0 = particleInformation.hIDe0;
@@ -48,26 +58,9 @@ void YourTrackingAction::PostUserTrackingAction(const G4Track* track)
     // MSC and other EM models do not assign modelID...
     // int modelIndex = track->GetCreatorModelIndex();
 
-    // this does not work either, because many particle processes can create this one, not 1-1 relationship
-    // auto * pmanager = track->GetDynamicParticle()->GetParticleDefinition()->GetProcessManager();
-    // G4ProcessVector * pv = pmanager->GetProcessList();
-    // int pindex = 0;
-    // for(int i = 0; i < pmanager->GetProcessListLength(); ++i)
-    // {
-    //     if( track_creator_process->GetProcessName() == (*pv)[i]->GetProcessName() ){
-    //         pindex = i+1;
-    //         break;
-    //     }
-    // }
-    // if(0 == pindex)
-    //     std::cerr << "\tAlvaro warning: creator process name not found in process manager process list" << std::endl;
-
     int pindex = 0;
     auto procIt = fProcNameId.find(track_creator_process->GetProcessName());
     if(fProcNameId.end() == procIt ){
-        //std::cerr << "\tAlvaro warning: creator process name <"
-        //          << track_creator_process->GetProcessName()
-        //          << "> not found in fProcNameId" << std::endl;
         pindex = 0;
     }
     else
@@ -75,6 +68,20 @@ void YourTrackingAction::PostUserTrackingAction(const G4Track* track)
 
     auto analysisManager = G4AnalysisManager::Instance();
     analysisManager->FillH2(hIDe0, std::log10(e0) ,pindex);
+    if(auto it = trackIDmap.find(track->GetParentID()); it != trackIDmap.end()){
+        if(G4Neutron::Neutron() == it->second.first)
+        {
+            analysisManager->FillH2(hIDe0+1, std::log10(e0) ,pindex);
+        }
+        else if(G4PionMinus::PionMinus() == it->second.first ||
+                G4PionPlus::PionPlus() == it->second.first ||
+                G4PionZero::PionZero() == it->second.first
+                )
+        {
+            analysisManager->FillH2(hIDe0+2, std::log10(e0) ,pindex);
+        }
+    }
     analysisManager->FillH2(hIDef, std::log10(ef) ,pindex);
     analysisManager->FillH2(hIDtf, std::log10(tf) ,pindex);
+
 }

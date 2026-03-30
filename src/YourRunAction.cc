@@ -125,18 +125,27 @@ void YourRunAction::BeginOutputTree()
             info.pdg = pdg;
 
             info.hIDe0 = analysisManager->CreateH2(
-                "hE0_" + name, "", 2500, -15, 10, nmodels, 0, nmodels);
+                "hE0_" + name, "", 1000, -10, 10, nmodels+1, -1, nmodels);
+
+            analysisManager->CreateH2(
+                "hE0_" + name + "_n", "", 1000, -10, 10, nmodels+1, -1, nmodels);
+
+            analysisManager->CreateH2(
+                "hE0_" + name + "_pi", "", 1000, -10, 10, nmodels+1, -1, nmodels);
 
             info.hIDef = analysisManager->CreateH2(
-                "hEf_" + name, "", 2500, -15, 10, nmodels, 0, nmodels);
+                "hEf_" + name, "", 1000, -10, 10, nmodels+1, -1, nmodels);
 
             info.hIDtf = analysisManager->CreateH2(
-                "hTf_" + name, "", 2500, -15, 10, nmodels, 0, nmodels);
+                "hTf_" + name, "", 1000, -10, 10, nmodels+1, -1, nmodels);
 
             particleInfoMap.emplace(pdg, info);
       }
   }
   if(fTrackingAction) fTrackingAction->SetParticleInfoMap(particleInfoMap);
+  int nH2s = analysisManager->GetNofH2s();
+  for(int i = 0; i<nH2s; ++i)
+    std::cout << "\t" << i << "\t" << analysisManager->GetH2Name(i) << std::endl;
 
   // if user did not provide an output file name, create one
   if(fOutputFileName.empty())
