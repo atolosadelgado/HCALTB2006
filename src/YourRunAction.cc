@@ -31,11 +31,13 @@ YourRunAction::~YourRunAction() {}
 void YourRunAction::BeginOfRunAction(const G4Run*)
 {
 
-    if (G4Threading::IsMasterThread() && 0<verbosity)
+  if(G4Threading::IsMasterThread() && 0<verbosity)
         this->PrintGeant4Configuration();
 
   auto layerInfo = fDetector->GetLayerInfo();
+
   // initialize energy profile vector to the number of layers
+  // these vectors will be tied to G4Analysis later in BeginOutputTree()
   fEnergyProfile = std::vector<double>( layerInfo.GetMaxLayerNumber() , 0.0 );
   fRadiusProfile = std::vector<double>( layerInfo.GetMaxLayerNumber() , 0.0 );
 
@@ -46,7 +48,6 @@ void YourRunAction::BeginOfRunAction(const G4Run*)
       fEventAction->SetEnergyProfileVector(&fEnergyProfile);
       fEventAction->SetRadiusProfileVector(&fRadiusProfile);
   }
-
 
   this->BeginOutputTree();
 }
@@ -136,9 +137,6 @@ void YourRunAction::BeginOutputTree()
       }
   }
   if(fTrackingAction) fTrackingAction->SetParticleInfoMap(particleInfoMap);
-  int nH2s = analysisManager->GetNofH2s();
-  for(int i = 0; i<nH2s; ++i)
-    std::cout << "\t" << i << "\t" << analysisManager->GetH2Name(i) << std::endl;
 
   // if user did not provide an output file name, create one
   if(fOutputFileName.empty())
