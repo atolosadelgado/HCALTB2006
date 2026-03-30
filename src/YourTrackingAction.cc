@@ -1,11 +1,8 @@
 #include "YourTrackingAction.hh"
 
 #include "G4Track.hh"
-#include "G4Neutron.hh"
-#include "G4EventManager.hh"
 #include "G4AnalysisManager.hh"
 #include "G4VProcess.hh"
-#include "G4ProcessManager.hh"
 #include "G4RegionStore.hh"
 #include "G4Proton.hh"
 #include "G4Neutron.hh"

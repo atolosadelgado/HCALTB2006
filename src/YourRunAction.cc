@@ -7,8 +7,6 @@
 #include "YourCaloSD.hh"
 #include "YourDetectorConstructor.hh"
 
-#include <iostream>
-
 #include "G4AnalysisManager.hh"
 #include "G4SDManager.hh"
 #include "G4PhysicsModelCatalog.hh"
