@@ -29,7 +29,7 @@ class YourDetectorConstructor : public G4VUserDetectorConstruction
 
   private:
       std::string gdml_filename;
-      G4int fVerbosity = {1};
+      G4int fVerbosity = {0};
       G4String fEcalSDname = {"ecalSD"};
       G4String fHcalSDname = {"hcalSD"};
       G4VPhysicalVolume * worldPV;

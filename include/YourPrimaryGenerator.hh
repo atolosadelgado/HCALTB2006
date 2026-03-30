@@ -19,7 +19,7 @@ public:
     virtual void GeneratePrimaries(G4Event* event);
 
 private:
-    int verbosity = 1;
+    int verbosity = 0;
     G4VPrimaryGenerator* fPrimaryGen = nullptr;
     SourceType fType;
 
