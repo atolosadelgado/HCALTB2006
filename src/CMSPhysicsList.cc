@@ -1,7 +1,6 @@
 #include "CMSPhysicsList.hh"
 
 #include "G4EmStandardPhysics.hh"
-// #include "G4EmStandardPhysics_option4.hh"
 #include "G4EmExtraPhysics.hh"
 
 
@@ -31,7 +30,6 @@ CMSPhysicsList::CMSPhysicsList()
   if (emPhys) {
     // EM Physics
     RegisterPhysics(new G4EmStandardPhysics(ver));
-    // RegisterPhysics(new G4EmStandardPhysics_option4(ver));
 
     // Synchroton Radiation & GN Physics
     G4EmExtraPhysics* gn = new G4EmExtraPhysics(ver);
