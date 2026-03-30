@@ -47,7 +47,8 @@ private:
   // set by BeginOfRunAction
   YourLayerInfo fLayerInfo;
 
-  // vectors owned by run action
+  // vectors are actually owned by run action
+  // the pointer is used to access them from event action
   std::vector<double> * fEnergyProfile;
   std::vector<double> * fRadiusProfile;
 

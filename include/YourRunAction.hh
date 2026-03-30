@@ -37,6 +37,9 @@ class YourRunAction : public G4UserRunAction {
     const YourDetectorConstructor * fDetector = {nullptr};
     YourParticleInfoMap particleInfoMap;
 
+    // this vectors will be assigned to G4Analysis
+    // at the end of the event, report centroid
+    // and RMS for each one
     std::vector<double> fEnergyProfile;
     std::vector<double> fRadiusProfile;
 
