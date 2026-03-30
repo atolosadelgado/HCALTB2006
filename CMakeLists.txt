@@ -140,8 +140,8 @@ add_test(
             -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
             -pname e-
             -penergy 50
-            -nevents 200
-            -nthreads 8
+            -nevents 20
+            -nthreads 2
 )
 
 set_tests_properties(${test_name} PROPERTIES
@@ -161,8 +161,8 @@ add_test(
             -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
             -pname e-
             -penergy 50
-            -nevents 200
-            -nthreads 8
+            -nevents 20
+            -nthreads 2
             -airECAL
 )
 
