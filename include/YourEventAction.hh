@@ -38,17 +38,28 @@ public:
   G4ThreeVector & GetPrimaryVertexDir(){return fEventInfo->primaryDir;}
 
 private:
+
+  // pointer to G4 event information
+  // initialized in BeginOfEventAction
+  YourEventInfo * fEventInfo;
+
+  // object storing map LV -> layer ID
+  // set by BeginOfRunAction
+  YourLayerInfo fLayerInfo;
+
+  // vectors owned by run action
+  std::vector<double> * fEnergyProfile;
+  std::vector<double> * fRadiusProfile;
+
+  // helper structure to score energy
+  // in ECAl/HCAL regions and keep ntuple ID
+  // id setup in BeginOfRunAction
   struct YourGlobalAccum
   {
     G4Region * fRegion;
     G4double fTotalEnergy;
     G4int    fNtupleId;
   };
-  YourLayerInfo fLayerInfo;
-  // vectors owned by run action
-  std::vector<double> * fEnergyProfile;
-  std::vector<double> * fRadiusProfile;
-  YourEventInfo * fEventInfo;
   YourGlobalAccum fEcalAccum;
   YourGlobalAccum fHcalAccum;
 };
