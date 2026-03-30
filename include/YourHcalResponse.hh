@@ -23,6 +23,8 @@ public:
         double birk_correction = getAttenuation(aStep, 3.74491e+17, 0.142, 1.75);
         G4LogicalVolume * lv = aStep->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume();
         std::string lvname = lv->GetName();
+        // this correction is used to apply a global correction factor, is copied from CMSSW and to keep it simple
+        // but scaling the energy like this it is not physical
         double Wt0_correction = ("HBScintillatorLayer0In1" == lvname) || ("HBScintillatorLayer0In2" == lvname) ? 0.41 : 1.0;
         double correction = birk_correction * Wt0_correction;
         return correction;
