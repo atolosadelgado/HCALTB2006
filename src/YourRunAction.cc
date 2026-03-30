@@ -186,6 +186,9 @@ void YourRunAction::EndOutputTree()
 #include "G4DeexPrecoParameters.hh"
 #include "G4NuclearLevelData.hh"
 #include "G4PhysicsModelCatalog.hh"
+#include "G4HadronicProcess.hh"
+#include "G4EnergyRangeManager.hh"
+#include "G4HadronicInteraction.hh"
 
 #include <fstream>
 
@@ -305,16 +308,41 @@ void YourRunAction::PrintGeant4Configuration()
 
         if (!pm) continue;
 
-        G4cout << "\nParticle (pdgID): " << particle->GetParticleName()
-                                         << "(" << particle->GetPDGEncoding() << ")" << G4endl;
+        G4cout << "\nParticle (pdgID): "
+            << particle->GetParticleName()
+            << " (" << particle->GetPDGEncoding() << ")"
+            << G4endl;
 
         G4ProcessVector * pv = pm->GetProcessList();
+
         for (int i = 0; i < pm->GetProcessListLength(); ++i)
         {
+            auto proc = (*pv)[i];
+
             G4cout << "  Process: "
-                   << (*pv)[i]->GetProcessName()
-                   << G4endl;
-            processnames.emplace((*pv)[i]->GetProcessName());
+                << proc->GetProcessName()
+                << G4endl;
+
+            processnames.emplace(proc->GetProcessName());
+
+            // -------------------------------------------------
+            // only for hadronic processes
+            // -------------------------------------------------
+            auto hadProc = dynamic_cast<G4HadronicProcess*>((*pv)[i]);
+
+            if (!hadProc) continue;
+
+            auto& models = hadProc->GetHadronicInteractionList();
+
+            for (auto model : models)
+            {
+                G4cout << "    Model: "
+                    << model->GetModelName()
+                    << " | Emin = " << model->GetMinEnergy()/CLHEP::GeV << " GeV"
+                    << " | Emax = " << model->GetMaxEnergy()/CLHEP::GeV << " GeV"
+                    << G4endl;
+            }
+
         }
     }
     G4cout << "\n=== List of process names ===" << G4endl;
