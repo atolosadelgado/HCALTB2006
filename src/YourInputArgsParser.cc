@@ -107,6 +107,12 @@ bool YourInputArgParser::parse_one(int& i)
         if (!need_value(arg)) return false;
         args_.f_HCAL = std::stod(argv_[++i]);
     }
+    else if (arg == "-enableSecondaryTrackInfo") {
+        args_.secondaryTrackInfo = true;
+    }
+    else if (arg == "-disableSecondaryTrackInfo") {
+        args_.secondaryTrackInfo = false;
+    }
     else {
         std::cerr << "Unknown option: " << arg << "\n";
         return false;
@@ -141,5 +147,7 @@ void YourInputArgParser::help(const char* prog)
         << "  -vis       Enable visualization\n"
         << "  -novis     Disable visualization (default)\n"
         << "  -visSensitiveOnly   Visualize sensitive vols only\n"
+        << "  -enableSecondaryTrackInfo    Enable saving track information of secondary particle\n"
+        << "  -disableSecondaryTrackInfo   Disable saving track information of secondary particle\n"
         << "  -h         Show this help\n";
 }

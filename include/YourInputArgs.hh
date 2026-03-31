@@ -38,6 +38,8 @@ struct YourInputArgs {
     double f_ECAL = {1.};
     double f_HCAL = {1.};
 
+    bool secondaryTrackInfo = {false};
+
     int nthreads = 1;
 
 #if HAVE_ROOT

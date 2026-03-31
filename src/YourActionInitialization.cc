@@ -37,7 +37,9 @@ void YourActionInitialization::Build() const {
   // Set UserTracking action
   // tracking action stores information of G4Analysis to score initial and final energy
   // and life time of particle in the simulation
-  YourTrackingAction * trackingAction = new YourTrackingAction();
+  YourTrackingAction * trackingAction = nullptr;
+  if(fInputArgs->secondaryTrackInfo)
+    trackingAction = new YourTrackingAction();
 
   // Set User Stepping Action
   // stepping action calls EventAction methods to accumulate global quantities during the event
@@ -52,6 +54,7 @@ void YourActionInitialization::Build() const {
   SetUserAction(gen);
   SetUserAction(runAction);
   SetUserAction(eventAction);
-  SetUserAction(trackingAction);
+  if(trackingAction)
+    SetUserAction(trackingAction);
   SetUserAction(stepAction);
 }
