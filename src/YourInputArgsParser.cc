@@ -148,6 +148,7 @@ void YourInputArgParser::help(const char* prog)
         << "  -novis     Disable visualization (default)\n"
         << "  -visSensitiveOnly   Visualize sensitive vols only\n"
         << "  -enableSecondaryTrackInfo    Enable saving track information of secondary particle\n"
+        << "                               (requires 1GB/thread of memory)\n"
         << "  -disableSecondaryTrackInfo   Disable saving track information of secondary particle\n"
         << "  -h         Show this help\n";
 }

@@ -26,6 +26,7 @@ class YourRunAction : public G4UserRunAction {
 
     void BeginOutputTree();
     void EndOutputTree();
+    void InitializeSecondaryTrackHistogram();
 
     void SetEventAction(YourEventAction * evtAct){fEventAction = evtAct;}
     void SetTrackingAction(YourTrackingAction * trkAct){fTrackingAction = trkAct;}

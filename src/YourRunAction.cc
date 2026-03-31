@@ -97,7 +97,38 @@ void YourRunAction::BeginOutputTree()
 
   analysisManager->FinishNtuple();
 
+  if(fInputArgs->secondaryTrackInfo)
+      this->InitializeSecondaryTrackHistogram();
+
+  // if user did not provide an output file name, create one
+  if(fOutputFileName.empty())
+  {
+      fOutputFileName = analysisManager->GetFileName();
+    const std::string phys = fInputArgs->physics_list;
+    const bool airECAL = fInputArgs->airECAL;
+
+    // check position of '.'
+    std::size_t dotPos = fOutputFileName.find_last_of('.');
+
+    if (std::string::npos != dotPos ) {
+        // if it has extension
+        std::string basename  = fOutputFileName.substr(0, dotPos);
+        std::string extension = fOutputFileName.substr(dotPos); // including '.'
+
+        fOutputFileName = basename + "_" + phys + "_airECAL" + std::to_string(airECAL) + extension;
+    } else {
+        // if no extension
+        fOutputFileName = fOutputFileName + "_" + phys + "_airECAL" + std::to_string(airECAL);
+    }
+  }
+  analysisManager->SetFileName(fOutputFileName);
+  analysisManager->OpenFile(); // name set in macrofile
+}
+
+void YourRunAction::InitializeSecondaryTrackHistogram()
+{
   // create histograms of initial and final energy, and lifetime of particles
+  auto analysisManager = G4AnalysisManager::Instance();
   if(particleInfoMap.empty()){
       int nmodels = G4PhysicsModelCatalog::Entries();
 
@@ -135,31 +166,8 @@ void YourRunAction::BeginOutputTree()
       }
   }
   if(fTrackingAction) fTrackingAction->SetParticleInfoMap(particleInfoMap);
-
-  // if user did not provide an output file name, create one
-  if(fOutputFileName.empty())
-  {
-      fOutputFileName = analysisManager->GetFileName();
-    const std::string phys = fInputArgs->physics_list;
-    const bool airECAL = fInputArgs->airECAL;
-
-    // check position of '.'
-    std::size_t dotPos = fOutputFileName.find_last_of('.');
-
-    if (std::string::npos != dotPos ) {
-        // if it has extension
-        std::string basename  = fOutputFileName.substr(0, dotPos);
-        std::string extension = fOutputFileName.substr(dotPos); // including '.'
-
-        fOutputFileName = basename + "_" + phys + "_airECAL" + std::to_string(airECAL) + extension;
-    } else {
-        // if no extension
-        fOutputFileName = fOutputFileName + "_" + phys + "_airECAL" + std::to_string(airECAL);
-    }
-  }
-  analysisManager->SetFileName(fOutputFileName);
-  analysisManager->OpenFile(); // name set in macrofile
 }
+
 
 void YourRunAction::EndOutputTree()
 {
