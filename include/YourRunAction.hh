@@ -9,6 +9,7 @@
 #include <vector>
 
 class YourPrimaryGenerator;
+class YourSteppingAction;
 class YourEventAction;
 class YourTrackingAction;
 class YourDetectorConstructor;
@@ -30,11 +31,13 @@ class YourRunAction : public G4UserRunAction {
 
     void SetEventAction(YourEventAction * evtAct){fEventAction = evtAct;}
     void SetTrackingAction(YourTrackingAction * trkAct){fTrackingAction = trkAct;}
+    void SetSteppingAction(YourSteppingAction * stepAct){fSteppingAction = stepAct;}
 
     std::string fOutputFileName = {""};
     const YourInputArgs * fInputArgs = {nullptr};
     YourEventAction * fEventAction = {nullptr};
     YourTrackingAction * fTrackingAction = {nullptr};
+    YourSteppingAction * fSteppingAction = {nullptr};
     const YourDetectorConstructor * fDetector = {nullptr};
     YourParticleInfoMap particleInfoMap;
 

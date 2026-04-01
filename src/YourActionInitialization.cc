@@ -50,6 +50,8 @@ void YourActionInitialization::Build() const {
   runAction->SetTrackingAction(trackingAction);
   // RunAction configures the event action at the begining of the run
   runAction->SetEventAction(eventAction);
+  // run action initializes pointer to Calo LV for energy leakage scoring`
+  runAction->SetSteppingAction(stepAction);
 
   SetUserAction(gen);
   SetUserAction(runAction);

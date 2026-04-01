@@ -13,6 +13,7 @@ YourSteppingAction::YourSteppingAction(YourEventAction* evtAction)
 YourSteppingAction::~YourSteppingAction() {}
 
 void YourSteppingAction::UserSteppingAction(const G4Step* theStep) {
+    this->UpdateLeakedEnergy(theStep);
 
     const G4double eDep = theStep->GetTotalEnergyDeposit();
     if(eDep<=0.0) return;
@@ -23,4 +24,19 @@ void YourSteppingAction::UserSteppingAction(const G4Step* theStep) {
     fYourEventAction->UpdateTotalEnergyPerRegion(lv->GetRegion(), eDep);
 }
 
+void YourSteppingAction::UpdateLeakedEnergy(const G4Step * theStep)
+{
+    // if step is not crossing a boundary, return right away
+    if (theStep->GetPostStepPoint()->GetStepStatus() != fGeomBoundary) return;
 
+    // check if the boundary crossing is Calo-> out (fTBHCalPV)
+    if( fCaloPV   == theStep->GetPreStepPoint()->GetPhysicalVolume() &&
+        fTBHCalPV == theStep->GetPostStepPoint()->GetPhysicalVolume())
+        fYourEventAction->UpdateCaloEfluxOut(theStep->GetTrack()->GetKineticEnergy());
+    // check if the boundary crossing is out(fTBHCalPV -> Calo
+    // exclude primary particle
+    if( 0 != theStep->GetTrack()->GetParentID() &&
+        fTBHCalPV == theStep->GetPreStepPoint()->GetPhysicalVolume() &&
+        fCaloPV   == theStep->GetPostStepPoint()->GetPhysicalVolume())
+        fYourEventAction->UpdateCaloEfluxIn(theStep->GetTrack()->GetKineticEnergy());
+}

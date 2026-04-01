@@ -3,13 +3,36 @@
 #include "YourInputArgs.hh"
 #include "YourPrimaryGenerator.hh"
 #include "YourEventAction.hh"
+#include "YourSteppingAction.hh"
 #include "YourTrackingAction.hh"
 #include "YourCaloSD.hh"
 #include "YourDetectorConstructor.hh"
 
+
 #include "G4AnalysisManager.hh"
 #include "G4SDManager.hh"
 #include "G4PhysicsModelCatalog.hh"
+#include "G4PhysicalVolumeStore.hh"
+
+// the following headers are needed to printout the Geant4 configuration
+#include "G4ProductionCutsTable.hh"
+#include "G4RegionStore.hh"
+#include "G4LogicalVolumeStore.hh"
+#include "G4ParticleTable.hh"
+#include "G4ProcessManager.hh"
+#include "G4ProcessVector.hh"
+#include "G4UserLimits.hh"
+#include "G4ios.hh"
+#include "G4HadronicParameters.hh"
+#include "G4EmParameters.hh"
+#include "G4HadronicProcessStore.hh"
+#include "G4DeexPrecoParameters.hh"
+#include "G4NuclearLevelData.hh"
+#include "G4PhysicsModelCatalog.hh"
+#include "G4HadronicProcess.hh"
+#include "G4EnergyRangeManager.hh"
+#include "G4HadronicInteraction.hh"
+#include <fstream>
 
 YourRunAction::YourRunAction(const YourInputArgs * args, const YourDetectorConstructor * detector):
           G4UserRunAction(),
@@ -47,7 +70,22 @@ void YourRunAction::BeginOfRunAction(const G4Run*)
       fEventAction->SetRadiusProfileVector(&fRadiusProfile);
   }
 
+  if(fSteppingAction)
+  {
+    G4VPhysicalVolume * calolv = G4PhysicalVolumeStore::GetInstance()->GetVolume("Calo");
+    G4VPhysicalVolume * TBHCalPV = G4PhysicalVolumeStore::GetInstance()->GetVolume("TBHCal");
+    if(!calolv)
+        throw std::runtime_error("No physical volume named <Calo> was found");
+    if(!TBHCalPV)
+        throw std::runtime_error("No physical volume named <TBHCal> was found");
+    fSteppingAction->SetCaloPV(calolv);
+    fSteppingAction->SetTBHCalPV(TBHCalPV);
+   }
+
+
+
   this->BeginOutputTree();
+
 }
 
 void YourRunAction::EndOfRunAction(const G4Run* ){
@@ -90,6 +128,12 @@ void YourRunAction::BeginOutputTree()
 
   id = analysisManager->CreateNtupleDColumn("TotalEnergyHCALregion");
   if(fEventAction) fEventAction->SetHcalTotalEnergyNtupleID(id);
+
+  id = analysisManager->CreateNtupleDColumn("CaloEfluxOut");
+  if(fEventAction) fEventAction->SetCaloEfluxOutNtupleID(id);
+
+  id = analysisManager->CreateNtupleDColumn("CaloEfluxIn");
+  if(fEventAction) fEventAction->SetCaloEfluxInNtupleID(id);
 
   analysisManager->CreateNtupleDColumn("Eprofile", fEnergyProfile);
 
@@ -176,27 +220,6 @@ void YourRunAction::EndOutputTree()
     analysisManager->CloseFile();
 
 }
-
-
-#include "G4ProductionCutsTable.hh"
-#include "G4RegionStore.hh"
-#include "G4LogicalVolumeStore.hh"
-#include "G4ParticleTable.hh"
-#include "G4ProcessManager.hh"
-#include "G4ProcessVector.hh"
-#include "G4UserLimits.hh"
-#include "G4ios.hh"
-#include "G4HadronicParameters.hh"
-#include "G4EmParameters.hh"
-#include "G4HadronicProcessStore.hh"
-#include "G4DeexPrecoParameters.hh"
-#include "G4NuclearLevelData.hh"
-#include "G4PhysicsModelCatalog.hh"
-#include "G4HadronicProcess.hh"
-#include "G4EnergyRangeManager.hh"
-#include "G4HadronicInteraction.hh"
-
-#include <fstream>
 
 void YourRunAction::PrintGeant4Configuration()
 {

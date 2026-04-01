@@ -37,6 +37,12 @@ public:
   G4ThreeVector & GetPrimaryVertexPos(){return fEventInfo->primaryPos;}
   G4ThreeVector & GetPrimaryVertexDir(){return fEventInfo->primaryDir;}
 
+  void UpdateCaloEfluxOut(G4double eflux_out){fCaloEfluxOut.fTotalEnergy+=eflux_out;}
+  void UpdateCaloEfluxIn (G4double eflux_in ){fCaloEfluxIn.fTotalEnergy +=eflux_in ;}
+
+  void SetCaloEfluxOutNtupleID(G4int id){fCaloEfluxOut.fNtupleId = id; }
+  void SetCaloEfluxInNtupleID (G4int id){fCaloEfluxIn.fNtupleId  = id; }
+
 private:
 
   // pointer to G4 event information
@@ -57,12 +63,14 @@ private:
   // id setup in BeginOfRunAction
   struct YourGlobalAccum
   {
-    G4Region * fRegion;
-    G4double fTotalEnergy;
-    G4int    fNtupleId;
+    G4Region * fRegion = nullptr;
+    G4double fTotalEnergy = 0;
+    G4int    fNtupleId = 0;
   };
   YourGlobalAccum fEcalAccum;
   YourGlobalAccum fHcalAccum;
+  YourGlobalAccum fCaloEfluxOut;
+  YourGlobalAccum fCaloEfluxIn;
 };
 
 #endif

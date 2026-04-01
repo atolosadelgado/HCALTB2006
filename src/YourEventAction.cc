@@ -15,6 +15,8 @@ void YourEventAction::BeginOfEventAction(const G4Event* evt) {
   fEventInfo = dynamic_cast<YourEventInfo*>(evt->GetUserInformation());
   fEcalAccum.fTotalEnergy = 0.0;
   fHcalAccum.fTotalEnergy = 0.0;
+  fCaloEfluxOut.fTotalEnergy = 0.0;
+  fCaloEfluxIn.fTotalEnergy  = 0.0;
 }
 
 
@@ -25,6 +27,9 @@ void YourEventAction::EndOfEventAction(const G4Event* /*evt*/)
 
     ana->FillNtupleDColumn(fEcalAccum.fNtupleId, fEcalAccum.fTotalEnergy );
     ana->FillNtupleDColumn(fHcalAccum.fNtupleId, fHcalAccum.fTotalEnergy );
+
+    ana->FillNtupleDColumn(fCaloEfluxOut.fNtupleId, fCaloEfluxOut.fTotalEnergy);
+    ana->FillNtupleDColumn(fCaloEfluxIn.fNtupleId,  fCaloEfluxIn.fTotalEnergy );
 
     ana->AddNtupleRow();
 }
