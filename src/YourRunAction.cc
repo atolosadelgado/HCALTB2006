@@ -10,6 +10,7 @@
 
 
 #include "G4AnalysisManager.hh"
+#include "tools/histo/h1d"
 #include "G4SDManager.hh"
 #include "G4PhysicsModelCatalog.hh"
 #include "G4PhysicalVolumeStore.hh"
@@ -59,8 +60,12 @@ void YourRunAction::BeginOfRunAction(const G4Run*)
 
   // initialize energy profile vector to the number of layers
   // these vectors will be tied to G4Analysis later in BeginOutputTree()
-  fEnergyProfile = std::vector<double>( layerInfo.GetMaxLayerNumber() , 0.0 );
-  fRadiusProfile = std::vector<double>( layerInfo.GetMaxLayerNumber() , 0.0 );
+  int nlayers = layerInfo.GetMaxLayerNumber();
+  fEnergyProfile = std::vector<double>( nlayers , 0.0 );
+  fRadiusProfile = std::vector<double>( nlayers , 0.0 );
+  auto analysisManager = G4AnalysisManager::Instance();
+  hIDeprofile = analysisManager->CreateH1("hEprofile", "", nlayers, 0, nlayers);
+  hIDrprofile = analysisManager->CreateH1("hRprofile", "", nlayers, 0, nlayers);
 
 
   if(fEventAction){
@@ -68,7 +73,9 @@ void YourRunAction::BeginOfRunAction(const G4Run*)
       fEventAction->InitializeRegionDefinition();
       fEventAction->SetEnergyProfileVector(&fEnergyProfile);
       fEventAction->SetRadiusProfileVector(&fRadiusProfile);
-  }
+      fEventAction->SetEprofileHid(hIDeprofile);
+      fEventAction->SetRprofileHid(hIDrprofile);
+}
 
   if(fSteppingAction)
   {
@@ -89,7 +96,54 @@ void YourRunAction::BeginOfRunAction(const G4Run*)
 }
 
 void YourRunAction::EndOfRunAction(const G4Run* ){
+
+    // normalize radius RMS
+    // radius RMS is defined as
+    // RMS_r = sqrt( <r^2> - <r>^2)
+    // where the averages <> are weighted by energy, ie,
+    // <r^2> = sum (E*r^2) / sum (E)
+    // azimutal symmetry is assumed, ie, <r> = 0
+    // so RMS_r = sqrt( <r^2>)
+    // however, we saved E*r^2 in the histogram,
+    // we have to normalize by Energy and make the sqrt for each layer,
+    if(G4Threading::IsMasterThread())
+    {
+        auto analysisManager = G4AnalysisManager::Instance();
+        auto hEprofile = analysisManager->GetH1(hIDeprofile);
+        auto hRprofile = analysisManager->GetH1(hIDrprofile);
+        int nbins = hEprofile->axis().bins();
+
+        for(int i = 1; i <= nbins; ++i)
+        {
+            unsigned int e_entries, r_entries;
+            double e_Sw, e_Sw2, e_Sxw, e_Sx2w;
+            double r_Sw, r_Sw2, r_Sxw, r_Sx2w;
+
+            hEprofile->get_bin_content(i, e_entries, e_Sw, e_Sw2, e_Sxw, e_Sx2w);
+            hRprofile->get_bin_content(i, r_entries, r_Sw, r_Sw2, r_Sxw, r_Sx2w);
+
+            double E   = e_Sw;
+            double ER2 = r_Sw;
+
+            if(E <= 0) continue;
+
+            double rms = std::sqrt(ER2 / E);
+
+            hRprofile->set_bin_content(
+                i,
+                r_entries,
+                rms,          // overwrite content
+                0,            // error, none
+                0.,           // non relevant
+                0.            // non relevant
+            );
+        }
+
+    }
+
+    // this saves ntuple and closes the file
     this->EndOutputTree();
+
 #if HAVE_ROOT
     if (G4Threading::IsMasterThread()){
         fInputArgs->SaveToROOTfile( G4AnalysisManager::Instance()->GetFileName());

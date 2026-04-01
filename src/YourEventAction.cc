@@ -42,10 +42,16 @@ void YourEventAction::InitializeProfileHistograms(const YourLayerInfo & linfo){
 void YourEventAction::UpdateProfileHistograms(G4LogicalVolume* lv, double edep, double radius)
 {
   auto l = fLayerInfo.GetLayer(lv);
+  double edepr2 = edep*radius*radius;
+  auto analysisManager = G4AnalysisManager::Instance();
+  analysisManager->FillH1(fHidEprofile,l,edep);
+  analysisManager->FillH1(fHidRprofile,l,edepr2);
+
+
   // // if l is NO_LAYER means that the volume is not in the database
   if(YourLayerInfo::NO_LAYER != l){
     fEnergyProfile->operator[](l)+=edep;
-    fRadiusProfile->operator[](l)+=edep*radius*radius;
+    fRadiusProfile->operator[](l)+=edepr2;
   }
 }
 

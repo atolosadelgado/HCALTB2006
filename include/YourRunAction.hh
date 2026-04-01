@@ -49,6 +49,9 @@ class YourRunAction : public G4UserRunAction {
 
     int verbosity = 0;
     void PrintGeant4Configuration();
+
+    int hIDeprofile;
+    int hIDrprofile;
 };
 
 #endif

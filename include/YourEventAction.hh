@@ -43,6 +43,9 @@ public:
   void SetCaloEfluxOutNtupleID(G4int id){fCaloEfluxOut.fNtupleId = id; }
   void SetCaloEfluxInNtupleID (G4int id){fCaloEfluxIn.fNtupleId  = id; }
 
+  void SetEprofileHid(int id){fHidEprofile=id;}
+  void SetRprofileHid(int id){fHidRprofile=id;}
+
 private:
 
   // pointer to G4 event information
@@ -71,6 +74,9 @@ private:
   YourGlobalAccum fHcalAccum;
   YourGlobalAccum fCaloEfluxOut;
   YourGlobalAccum fCaloEfluxIn;
+
+  int fHidEprofile = -1;
+  int fHidRprofile = -1;
 };
 
 #endif
