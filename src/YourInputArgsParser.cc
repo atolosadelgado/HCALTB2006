@@ -113,6 +113,12 @@ bool YourInputArgParser::parse_one(int& i)
     else if (arg == "-disableSecondaryTrackInfo") {
         args_.secondaryTrackInfo = false;
     }
+    else if (arg == "-enableHistoProfileInfo") {
+        args_.histoProfileInfo = true;
+    }
+    else if (arg == "-disableHistoProfileInfo") {
+        args_.histoProfileInfo = false;
+    }
     else {
         std::cerr << "Unknown option: " << arg << "\n";
         return false;
@@ -150,5 +156,8 @@ void YourInputArgParser::help(const char* prog)
         << "  -enableSecondaryTrackInfo    Enable saving track information of secondary particle\n"
         << "                               (requires 1GB/thread of memory)\n"
         << "  -disableSecondaryTrackInfo   Disable saving track information of secondary particle\n"
+        << "  -enableHistoProfileInfo      Enable saving energy and radius RMS longitudinal profiles\n"
+        << "                               (output file size around 30MB/100kevt)\n"
+        << "  -disableHistoProfileInfo     Disable saving energy and radius RMS longitudinal profiles\n"
         << "  -h         Show this help\n";
 }

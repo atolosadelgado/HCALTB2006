@@ -135,9 +135,11 @@ void YourRunAction::BeginOutputTree()
   id = analysisManager->CreateNtupleDColumn("CaloEfluxIn");
   if(fEventAction) fEventAction->SetCaloEfluxInNtupleID(id);
 
-  analysisManager->CreateNtupleDColumn("Eprofile", fEnergyProfile);
-
-  analysisManager->CreateNtupleDColumn("Rprofile", fRadiusProfile);
+  if(fInputArgs->histoProfileInfo)
+  {
+    analysisManager->CreateNtupleDColumn("Eprofile", fEnergyProfile);
+    analysisManager->CreateNtupleDColumn("Rprofile", fRadiusProfile);
+  }
 
   analysisManager->FinishNtuple();
 

@@ -40,6 +40,8 @@ struct YourInputArgs {
 
     bool secondaryTrackInfo = {false};
 
+    bool histoProfileInfo = {false};
+
     int nthreads = 1;
 
 #if HAVE_ROOT
