@@ -27,6 +27,9 @@ class YourDetectorConstructor : public G4VUserDetectorConstruction
 
   const YourLayerInfo & GetLayerInfo() const {return fLayerInfo;}
 
+  // for debuging only
+  void ShowLVperRegion() const;
+
   private:
       std::string gdml_filename;
       G4int fVerbosity = {0};
@@ -103,6 +106,7 @@ class YourDetectorConstructor : public G4VUserDetectorConstruction
     YourLayerInfo fLayerInfo;
     // this method contains the logic to fill fLayerInfo
     void FillLayerInfo(G4LogicalVolume * lv);
+
 };
 
 

@@ -28,6 +28,57 @@ G4VPhysicalVolume * YourDetectorConstructor::Construct(){
   G4GDMLParser Parser;
   Parser.Read(gdml_filename, false);
   worldPV = Parser.GetWorldVolume();
+  // The first 4 levels of the geometry tree are shown below
+  // The tree is generated with Geant4 /vis/drawTree + grep -E '^ {4,10}"'
+  // Format is: PV:n / LV (SD,RO)
+  // "TBHCal":1 / "TBHCal"
+  //   "Calo":1 / "Calo"
+  //     "HCal":1 / "HCal"
+  //       "HcalCable":1 / "HcalCable"
+  //       "HB":1 / "HB"
+  //       "HE":1 / "HE"
+  //     "ECAL":1 / "ECAL"
+  //       "EBAR":1 / "EBAR"
+  //   "HcalTestBeamLine":1 / "HcalTestBeamLine"
+  //     "HcalTestBeamLineWChamb":1 / "HcalTestBeamLineWChamb"
+  //       "HcalTestBeamLineWChambGas":1 / "HcalTestBeamLineWChambGas"
+  //       "HcalTestBeamLineWChambAl1":1-8 / "HcalTestBeamLineWChambAl1"
+  //       "HcalTestBeamLineWChambAl2":1-4 / "HcalTestBeamLineWChambAl2"
+  //       "HcalTestBeamLineWChambWindow":1,2 / "HcalTestBeamLineWChambWindow"
+  //     "HcalTestBeamLineWChamb":2,3 (repeated LV) / "HcalTestBeamLineWChamb"
+  //     "HcalTestBeamLineS1":1 / "HcalTestBeamLineS1"
+  //     "HcalTestBeamLineS2":2 / "HcalTestBeamLineS2"
+  //     "HcalTestBeamLineS3":3 / "HcalTestBeamLineS3"
+  //     "HcalTestBeamLineS4":4 / "HcalTestBeamLineS4"
+  //     "HcalTestBeamLineTOFCounter":5 / "HcalTestBeamLineTOFCounter"
+  //     "HcalTestBeamLineHaloCounter":11-14 / "HcalTestBeamLineHaloCounter"
+  //     "HcalTestBeamLineCK3":0 / "HcalTestBeamLineCK3"
+  //   "HcalTestBeamLineDown":1 / "HcalTestBeamLineDown"
+  //     "HcalTestBeamLineWChamb":4,5 (repeated LV) / "HcalTestBeamLineWChamb"
+  //     "HcalTestBeamLineMuonCounter":7,8 / "HcalTestBeamLineMuonCounter"
+  //     "HcalTestBeamLineIronBlock":1 / "HcalTestBeamLineIronBlock"
+  //   "HadronOuter":0 / "HadronOuter"
+  //     "HadronOuterYoke":1 / "HadronOuterYoke"
+  //     "HadronOuterTail":1 / "HadronOuterTail"
+  //     "HadronOuterLayer0":1 / "HadronOuterLayer0"
+  //       "HadronOuterLayer0Tray":2 / "HadronOuterLayer0Tray"
+  //       "HadronOuterLayer0Tray":3-6 (repeated LV) / "HadronOuterLayer0Tray"
+  //     "HadronOuterLayer1":1 / "HadronOuterLayer1"
+  //       "HadronOuterLayer1Tray":2 / "HadronOuterLayer1Tray"
+  //       "HadronOuterLayer1Tray":3-6 (repeated LV) / "HadronOuterLayer1Tray"
+  //     "HadronOuterLayer2":1 / "HadronOuterLayer2"
+  //       "HadronOuterLayer2Tray":1 / "HadronOuterLayer2Tray"
+  //       "HadronOuterLayer2Tray":2-6 (repeated LV) / "HadronOuterLayer2Tray"
+  //     "HadronOuterLayer3":1 / "HadronOuterLayer3"
+  //       "HadronOuterLayer3Tray":1 / "HadronOuterLayer3Tray"
+  //       "HadronOuterLayer3Tray":2-6 (repeated LV) / "HadronOuterLayer3Tray"
+  //     "HadronOuterCoil":1 / "HadronOuterCoil"
+  //   "VMWall1":1 / "VMWall1"
+  //     "VMWallCounter":21-24 / "VMWallCounter"
+  //   "VMWall2":1 / "VMWall2"
+  //     "VMWallCounter":25-28 / "VMWallCounter"
+
+
 
   if(ECALAsAir)
     this->MakeECALAsAir();
@@ -41,6 +92,9 @@ G4VPhysicalVolume * YourDetectorConstructor::Construct(){
     HighlightMaterial("E_PbWO4", true, green);
     HighlightMaterial("Scintillator", false, blue);
   }
+
+  if(0<fVerbosity)
+    this->ShowLVperRegion();
 
   return worldPV;
 }
@@ -198,4 +252,25 @@ void YourDetectorConstructor::FillLayerInfo(G4LogicalVolume* lv)
     fLayerInfo.AddLV(lv,0);
 
 }
+#include "G4RegionStore.hh"
+void YourDetectorConstructor::ShowLVperRegion() const
+{
+  std::map<G4Region*,std::vector<G4LogicalVolume*>> region_lv_map;
 
+  for( auto region : * G4RegionStore::GetInstance())
+    region_lv_map[region] = {};
+
+  for(auto lv : * G4LogicalVolumeStore::GetInstance() )
+    if(lv->GetRegion())
+      region_lv_map[lv->GetRegion()].push_back(lv);
+
+  G4cout << "List of logical volumes in each region:\n";
+  for(auto [region, LVvector] : region_lv_map)
+  {
+    G4cout << "-Region: " << region->GetName() << G4endl;
+    for(auto lv : LVvector)
+      G4cout << "\t" << lv->GetName() << G4endl;
+
+
+  }
+}
