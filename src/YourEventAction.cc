@@ -45,7 +45,7 @@ void YourEventAction::UpdateProfileHistograms(G4LogicalVolume* lv, double edep, 
   // // if l is NO_LAYER means that the volume is not in the database
   if(YourLayerInfo::NO_LAYER != l){
     fEnergyProfile->operator[](l)+=edep;
-    fRadiusProfile->operator[](l)+=edep*radius;
+    fRadiusProfile->operator[](l)+=edep*radius*radius;
   }
 }
 
