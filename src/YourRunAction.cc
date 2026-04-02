@@ -56,17 +56,33 @@ void YourRunAction::BeginOfRunAction(const G4Run*)
   if(G4Threading::IsMasterThread() && 0<verbosity)
         this->PrintGeant4Configuration();
 
+  // the layerInfo is a map that relates the LV which are sensitive
+  // and a layer ID, to be used later to create the profile histograms
   auto layerInfo = fDetector->GetLayerInfo();
 
   // initialize energy profile vector to the number of layers
   // these vectors will be tied to G4Analysis later in BeginOutputTree()
+  // if the input switch is turned on
   int nlayers = layerInfo.GetMaxLayerNumber();
   fEnergyProfile = std::vector<double>( nlayers , 0.0 );
   fRadiusProfile = std::vector<double>( nlayers , 0.0 );
+
   auto analysisManager = G4AnalysisManager::Instance();
+  // histogram containing the total energy deposited in the layer, where
+  // with bin=layer, with the numbering as coded in the "layerInfo" object
+  // layer = 0 -> volume not assigned to any layer
+  // layer = 1 -> ECAL
+  // layer = {2-17} -> HCAL
   hIDeprofile = analysisManager->CreateH1("hEprofile", "", nlayers, 0, nlayers);
+  // during the run, this histogram stores E*r^2
+  // in the end of run of the master thread, this quantity is reduced to the radius RMS
+  // by normalizing by total energy, ie, radius RMS_i = sqrt( (E*r²)_i / E_i)
+  // where i represents a bin of the histograms and the layer
   hIDrprofile = analysisManager->CreateH1("hRprofile", "", nlayers, 0, nlayers);
 
+
+  // the following if protect in case the pointer to event/stepping action is not set
+  // this would be equivalent to checkk if this is not the master thread
 
   if(fEventAction){
       fEventAction->InitializeProfileHistograms(layerInfo);
@@ -90,7 +106,7 @@ void YourRunAction::BeginOfRunAction(const G4Run*)
    }
 
 
-
+  // G4Analysis requires to be configured for every RunAction
   this->BeginOutputTree();
 
 }
@@ -141,7 +157,7 @@ void YourRunAction::EndOfRunAction(const G4Run* ){
 
     }
 
-    // this saves ntuple and closes the file
+    // this function saves ntuple and closes the file
     this->EndOutputTree();
 
 #if HAVE_ROOT
@@ -197,6 +213,9 @@ void YourRunAction::BeginOutputTree()
 
   analysisManager->FinishNtuple();
 
+  // creating this 2D histograms consume large memory (~1GB/thread)
+  // therefore they are left as optional
+  // TODO: investigate this G4Analysis issue
   if(fInputArgs->secondaryTrackInfo)
       this->InitializeSecondaryTrackHistogram();
 
@@ -279,7 +298,13 @@ void YourRunAction::EndOutputTree()
 
 void YourRunAction::PrintGeant4Configuration()
 {
-    static std::ofstream dumpFile("geant4_dump.txt");
+    // this method redirects the printout of the
+    // Geant4 physics configuration to a file
+    // the redirection of the G4cout buffer to a file is needed
+    // because some Geant4 printout methods stream to
+    // G4cout without possibility of choosing other stream
+
+    static std::ofstream dumpFile("g4physics_configuration.txt");
     //save buffer to restore it later
     auto cout_buf = G4cout.rdbuf();
     auto cerr_buf = G4cerr.rdbuf();
