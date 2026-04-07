@@ -2,6 +2,7 @@
 #include "YourCaloSD.hh"
 #include "YourEcalResponse.hh"
 #include "YourHcalResponse.hh"
+#include "YourClusterCut.hh"
 
 #include <queue>
 #include <set>
@@ -102,10 +103,16 @@ G4VPhysicalVolume * YourDetectorConstructor::Construct(){
 void YourDetectorConstructor::ConstructSDandField()
 {
   // register SD objects
-  YourCaloSD * ecalSD = new YourCaloSD(fEcalSDname, std::make_unique<YourEcalResponse>() );
+  YourCaloSD * ecalSD = new YourCaloSD(fEcalSDname,
+                                       std::make_unique<YourEcalResponse>(),
+                                       nullptr
+                                       );
   G4SDManager::GetSDMpointer()->AddNewDetector(ecalSD);
   AssignSDtoLV(fECAL_sensLV, ecalSD);
-  YourCaloSD * hcalSD = new YourCaloSD(fHcalSDname, std::make_unique<YourHcalResponse>() );
+  YourCaloSD * hcalSD = new YourCaloSD(fHcalSDname,
+                                       std::make_unique<YourHcalResponse>(),
+                                       nullptr
+                                       );
   G4SDManager::GetSDMpointer()->AddNewDetector(hcalSD);
   AssignSDtoLV(fHCAL_sensLV, hcalSD);
   if(0<fVerbosity)

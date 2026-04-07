@@ -1,7 +1,7 @@
 #include "YourSteppingAction.hh"
 
 #include "YourEventAction.hh"
-#include "YourVCaloResponse.hh"
+#include "YourClusterCut.hh"
 
 #include "G4Step.hh"
 
@@ -19,7 +19,7 @@ void YourSteppingAction::UserSteppingAction(const G4Step* theStep) {
     if(eDep<=0.0) return;
     G4LogicalVolume * lv = theStep->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume();
 
-    double radius = YourVCaloResponse::Calculate_hitpos_to_shower_axis_distance(theStep, fYourEventAction->GetPrimaryVertexDir(), fYourEventAction->GetPrimaryVertexPos());
+    double radius = YourClusterCut::Calculate_hitpos_to_shower_axis_distance(theStep, fYourEventAction->GetPrimaryVertexDir(), fYourEventAction->GetPrimaryVertexPos());
     fYourEventAction->UpdateProfileHistograms(lv, eDep, radius);
     fYourEventAction->UpdateTotalEnergyPerRegion(lv->GetRegion(), eDep);
 }

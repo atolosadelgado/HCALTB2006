@@ -1,15 +1,20 @@
 #include "YourCaloSD.hh"
 #include "YourVCaloResponse.hh"
+#include "YourClusterCut.hh"
 
 #include "G4AnalysisManager.hh"
 
 YourCaloSD::YourCaloSD(std::string name,
-                       std::unique_ptr<YourVCaloResponse> response)
+                       std::unique_ptr<YourVCaloResponse> response,
+                       std::unique_ptr<YourClusterCut> clustercut  )
 : G4VSensitiveDetector(name),
-  fCaloResponse(std::move(response)){}
+  fCaloResponse(std::move(response)),
+  fClusterCut(std::move(clustercut)){}
 
 bool YourCaloSD::ProcessHits(G4Step* aStep, G4TouchableHistory* ROhist)
 {
+    // early return if hit away
+    if (fClusterCut && !fClusterCut->IsInside(aStep)) return false;
     G4double edep = aStep->GetTotalEnergyDeposit();
     G4double corr = fCaloResponse->GetCorrection(aStep);
     fTotalEnergy += edep * corr;

@@ -34,7 +34,7 @@ void YourPrimaryGenerator::GeneratePrimaries(G4Event* event)
     auto vertex = event->GetPrimaryVertex(0);
 
     info->primaryPos = vertex->GetPosition();
-    info->primaryDir = vertex->GetPrimary()->GetMomentumDirection();
+    info->primaryDir = vertex->GetPrimary()->GetMomentumDirection().unit();
 
     event->SetUserInformation(info);
 

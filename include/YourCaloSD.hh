@@ -7,6 +7,7 @@
 #include "G4VSensitiveDetector.hh"
 
 class YourVCaloResponse;
+class YourClusterCut;;
 
 /* class YourCaloSD
  * reimplements CMSSW classes
@@ -16,7 +17,8 @@ class YourVCaloResponse;
 class YourCaloSD : public G4VSensitiveDetector {
 public:
     YourCaloSD(std::string name,
-               std::unique_ptr<YourVCaloResponse> response);
+               std::unique_ptr<YourVCaloResponse> response,
+               std::unique_ptr<YourClusterCut> clustercut  );
 
     ~YourCaloSD() override = default;
 
@@ -31,6 +33,7 @@ public:
 private:
     int fVerbosity = {0};
     std::unique_ptr<YourVCaloResponse> fCaloResponse;
+    std::unique_ptr<YourClusterCut>    fClusterCut;
     G4double fTotalEnergy;
     G4double fTotalEnergy_raw;
     G4int fNTupleColumnID={-1};
