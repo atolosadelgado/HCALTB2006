@@ -103,15 +103,21 @@ G4VPhysicalVolume * YourDetectorConstructor::Construct(){
 void YourDetectorConstructor::ConstructSDandField()
 {
   // register SD objects
+  std::unique_ptr<YourClusterCut> ecalClusterCut;
+  ecalClusterCut = std::make_unique<YourClusterCut>(8.5*CLHEP::cm);
   YourCaloSD * ecalSD = new YourCaloSD(fEcalSDname,
                                        std::make_unique<YourEcalResponse>(),
-                                       nullptr
+                                       std::move(ecalClusterCut)
                                        );
   G4SDManager::GetSDMpointer()->AddNewDetector(ecalSD);
   AssignSDtoLV(fECAL_sensLV, ecalSD);
+
+
+  std::unique_ptr<YourClusterCut> hcalClusterCut;
+  hcalClusterCut = std::make_unique<YourClusterCut>(28.2*CLHEP::cm);
   YourCaloSD * hcalSD = new YourCaloSD(fHcalSDname,
                                        std::make_unique<YourHcalResponse>(),
-                                       nullptr
+                                       std::move(hcalClusterCut)
                                        );
   G4SDManager::GetSDMpointer()->AddNewDetector(hcalSD);
   AssignSDtoLV(fHCAL_sensLV, hcalSD);
