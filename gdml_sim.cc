@@ -63,6 +63,9 @@ int main(int argc, char** argv)
 
     // create detector from GDML file
     YourDetectorConstructor * user_detector_constructor = new YourDetectorConstructor(iargs.geometry);
+
+    user_detector_constructor->ConfigureRadialCutSD(iargs.radialCutSD);
+
     if(iargs.airECAL){
         user_detector_constructor->ConfigureECALAsAir();
     }

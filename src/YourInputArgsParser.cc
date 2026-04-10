@@ -111,6 +111,12 @@ bool YourInputArgParser::parse_one(int& i)
     else if (arg == "-disableHistoProfileInfo") {
         args_.histoProfileInfo = false;
     }
+    else if (arg == "-enableRadialCutSD") {
+        args_.radialCutSD = true;
+    }
+    else if (arg == "-disableRadialCutSD") {
+        args_.radialCutSD = false;
+    }
     else {
         std::cerr << "Unknown option: " << arg << "\n";
         return false;
@@ -151,5 +157,7 @@ void YourInputArgParser::help(const char* prog)
         << "  -enableHistoProfileInfo      Enable saving energy and radius RMS longitudinal profiles\n"
         << "                               (output file size around 30MB/100kevt)\n"
         << "  -disableHistoProfileInfo     Disable saving energy and radius RMS longitudinal profiles\n"
+        << "  -enableRadialCutSD           Enable radial cut when scoring energy in SensitiveDetectors\n"
+        << "  -disableRadialCutSD          Disable radial cut when scoring energy in SensitiveDetectors\n"
         << "  -h         Show this help\n";
 }

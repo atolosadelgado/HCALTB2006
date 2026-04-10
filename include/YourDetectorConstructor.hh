@@ -21,6 +21,7 @@ class YourDetectorConstructor : public G4VUserDetectorConstruction
 
   void ConfigureECALAsAir(){ECALAsAir=true;}
   void ConfigureVisSensitiveOnly(){visSensitiveOnly=true;}
+  void ConfigureRadialCutSD(bool radialCut){fRadialCutSD=radialCut;}
 
   const G4String GetEcalSDname() const {return fEcalSDname; }
   const G4String GetHcalSDname() const {return fHcalSDname; }
@@ -107,6 +108,7 @@ class YourDetectorConstructor : public G4VUserDetectorConstruction
     // this method contains the logic to fill fLayerInfo
     void FillLayerInfo(G4LogicalVolume * lv);
 
+    bool fRadialCutSD = false;
 };
 
 

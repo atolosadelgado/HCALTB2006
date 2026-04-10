@@ -39,6 +39,8 @@ struct YourInputArgs {
 
     bool histoProfileInfo = {false};
 
+    bool radialCutSD = {false};
+
     int nthreads = 1;
 
 #if HAVE_ROOT
@@ -72,6 +74,7 @@ struct YourInputArgs {
         (new TParameter<bool>("vis_mode", vis_mode))->Write();
         (new TParameter<bool>("airECAL", airECAL))->Write();
         (new TParameter<bool>("visSensitiveOnly", visSensitiveOnly))->Write();
+        (new TParameter<bool>("radialCutSD", radialCutSD))->Write();
 
         // ---------- Geant4 version ----------
         (new TNamed("geant4_version", G4Version))->Write();
@@ -107,6 +110,7 @@ struct YourInputArgs {
 
         os << "  Air ECAL         : " << (a.airECAL ? "TRUE" : "FALSE") << "\n";
         os << "  Vis Sensitive    : " << (a.visSensitiveOnly ? "TRUE" : "FALSE") << "\n";
+        os << "  Radial cut (SD)  : " << (a.radialCutSD ? "TRUE" : "FALSE") << "\n";
         os << "  Number threads   : " << a.nthreads << "\n";
 
         return os;
