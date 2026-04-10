@@ -99,14 +99,6 @@ bool YourInputArgParser::parse_one(int& i)
     else if (arg == "-airECAL") {
         args_.airECAL = true;
     }
-    else if (arg == "-f_ECAL") {
-        if (!need_value(arg)) return false;
-        args_.f_ECAL = std::stod(argv_[++i]);
-    }
-    else if (arg == "-f_HCAL") {
-        if (!need_value(arg)) return false;
-        args_.f_HCAL = std::stod(argv_[++i]);
-    }
     else if (arg == "-enableSecondaryTrackInfo") {
         args_.secondaryTrackInfo = true;
     }

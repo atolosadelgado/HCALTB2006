@@ -35,9 +35,6 @@ struct YourInputArgs {
 
     bool visSensitiveOnly = false;
 
-    double f_ECAL = {1.};
-    double f_HCAL = {1.};
-
     bool secondaryTrackInfo = {false};
 
     bool histoProfileInfo = {false};
@@ -70,8 +67,6 @@ struct YourInputArgs {
         (new TParameter<double>("particle_energy_GeV", particle_energy_GeV))->Write();
         (new TParameter<int>("nevents", nevents))->Write();
         (new TParameter<int>("nthreads", nthreads))->Write();
-        (new TParameter<double>("f_ECAL", f_ECAL))->Write();
-        (new TParameter<double>("f_HCAL", f_HCAL))->Write();
 
         // ---------- Boolean ----------
         (new TParameter<bool>("vis_mode", vis_mode))->Write();
@@ -113,9 +108,6 @@ struct YourInputArgs {
         os << "  Air ECAL         : " << (a.airECAL ? "TRUE" : "FALSE") << "\n";
         os << "  Vis Sensitive    : " << (a.visSensitiveOnly ? "TRUE" : "FALSE") << "\n";
         os << "  Number threads   : " << a.nthreads << "\n";
-        os << "  Energy calibration factors ECAL/HCAL : "
-               << std::fixed << std::setprecision(3)
-               << a.f_ECAL << " / " << a.f_HCAL << "\n";
 
         return os;
     }
