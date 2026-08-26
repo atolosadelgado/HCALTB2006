@@ -1,7 +1,15 @@
+# CERN Batch System (HTCondor)
+
 Files used to submit jobs to the CERN batch system (HTCondor):
 
-* particle_energy.scan: table containing the Geant4 particle name and its kinetic energy. Each entry corresponds to one simulation run/job
+* **`production.scan`**: Table containing the Geant4 particle name and its kinetic energy. Each entry corresponds to one simulation run/job.
 
-* run.sh: sets up the LCG software stack and passes the arguments received by the script to the Geant4 applicatio
+* **`calibration.scan`**: Table containing the Geant4 particle name and its kinetic energy for the calibration runs. The same file is used by both calibration configurations.
 
-* condor.sub: HTCondor submission file. It defines the arguments passed to the Geant4 application, including the number of threads and events (currently hardcoded). One job is scheduled for each entry in particle_energy.scan
+* **`run.sh`**: Sets up the LCG software stack and passes the arguments received by the script to the Geant4 application.
+
+* **`production.sub`**: HTCondor submission file for the standard production runs. It defines the arguments passed to the Geant4 application, including the number of threads and events (currently hardcoded). One job is scheduled for each entry in `production.scan`.
+
+* **`calibrationHCAL.sub`**: HTCondor submission file for the HCAL calibration runs. It uses `calibration.scan` and passes the HCAL-specific flag (`-airECAL`)to the Geant4 application to remove ECAL.
+
+* **`calibrationECAL.sub`**: HTCondor submission file for the ECAL calibration runs. It uses `calibration.scan` and passes same configuration as in production.
