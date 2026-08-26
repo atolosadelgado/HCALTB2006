@@ -1,0 +1,7 @@
+Files used to submit jobs to the CERN batch system (HTCondor):
+
+* particle_energy.scan: table containing the Geant4 particle name and its kinetic energy. Each entry corresponds to one simulation run/job
+
+* run.sh: sets up the LCG software stack and passes the arguments received by the script to the Geant4 applicatio
+
+* condor.sub: HTCondor submission file. It defines the arguments passed to the Geant4 application, including the number of threads and events (currently hardcoded). One job is scheduled for each entry in particle_energy.scan
