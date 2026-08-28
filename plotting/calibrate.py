@@ -127,6 +127,7 @@ def plot_calibration(filename, detector):
     # ------------------------------------------------------------------------
 
     canvas.SaveAs(f"{detector}_calibration.png")
+    canvas.SaveAs(f"{detector}_calibration.root")
 
 
 # ============================================================================
