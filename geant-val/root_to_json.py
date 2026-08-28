@@ -1,4 +1,3 @@
-```python
 #!/usr/bin/env python3
 
 import argparse
@@ -43,10 +42,7 @@ def graph_to_json(
     y_values = []
 
     for i in range(n_points):
-        x = ROOT.Double(0)
-        y = ROOT.Double(0)
-
-        graph.GetPoint(i, x, y)
+        x, y = graph.GetPoint(i)
 
         x_values.append(float(x))
         y_values.append(float(y))
