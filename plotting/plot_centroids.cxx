@@ -308,6 +308,9 @@ void plot_centroids(
         cResponse->SaveAs(
             Form("response_%s.png", particle.c_str())
         );
+        gResponse->SaveAs(
+            Form("response_%s.root", particle.c_str())
+        );
 
 
         // ================================================================
@@ -362,6 +365,10 @@ void plot_centroids(
 
         cSigma->SaveAs(
             Form("sigma_%s.png", particle.c_str())
+        );
+
+        gSigma->SaveAs(
+            Form("sigma_%s.root", particle.c_str())
         );
 
 
