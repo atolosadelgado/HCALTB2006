@@ -12,5 +12,11 @@ while read -r pname penergy xmin xmax; do
     [[ "$pname" =~ ^# ]] && continue
 
     # compute calorimeter response
-    python compute_response.py $pname $penergy $xmin $xmax --nevents $nevents --airECAL $airECAL
+    python compute_response.py  $pname $penergy $xmin $xmax \
+                                --nevents $nevents          \
+                                --airECAL $airECAL          \
+                                --ECAL-calibrationFactor 1.01  \
+                                --HCAL-calibrationFactor 106.5 \
+                                --ECAL-smearing 0.362 \
+                                --HCAL-smearing 0.64
 done < "$input_file"
