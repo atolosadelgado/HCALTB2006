@@ -26,9 +26,10 @@ pname_pmassGeV = {
 
 MeV_to_GeV = 1.e-3
 
+# Passed as arguments when launching the script
+# Default values as used by CMSSW 15.0.10
 ECAL_calibrationFactor = 1.01
 HCAL_calibrationFactor = 106.5
-
 ECAL_smearing = 0.362  # GeV
 HCAL_smearing = 0.64   # GeV
 
@@ -349,7 +350,40 @@ if __name__ == "__main__":
         help="Use air ECAL (default: 0)"
     )
 
+    parser.add_argument(
+        "--ECAL-calibrationFactor",
+        type=float,
+        default=1.01,
+        help="ECAL calibration factor (default: 1.01)"
+    )
+
+    parser.add_argument(
+        "--HCAL-calibrationFactor",
+        type=float,
+        default=106.5,
+        help="HCAL calibration factor (default: 106.5)"
+    )
+
+    parser.add_argument(
+        "--ECAL-smearing",
+        type=float,
+        default=0.362,
+        help="ECAL smearing in GeV (default: 0.362)"
+    )
+
+    parser.add_argument(
+        "--HCAL-smearing",
+        type=float,
+        default=0.64,
+        help="HCAL smearing in GeV (default: 0.64)"
+    )
+
     args = parser.parse_args()
+
+    ECAL_calibrationFactor=args.ECAL_calibrationFactor
+    HCAL_calibrationFactor=args.HCAL_calibrationFactor
+    ECAL_smearing=args.ECAL_smearing
+    HCAL_smearing=args.HCAL_smearing
 
     compute_response(
         pname=args.pname,
