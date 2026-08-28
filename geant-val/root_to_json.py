@@ -38,14 +38,8 @@ def graph_to_json(
     # Extract graph points
     n_points = graph.GetN()
 
-    x_values = []
-    y_values = []
-
-    for i in range(n_points):
-        x, y = graph.GetPoint(i)
-
-        x_values.append(float(x))
-        y_values.append(float(y))
+    x_values = [float(graph.GetPointX(i)) for i in range(n_points)]
+    y_values = [float(graph.GetPointY(i)) for i in range(n_points)]
 
     # Axis titles
     x_axis_name = ""
