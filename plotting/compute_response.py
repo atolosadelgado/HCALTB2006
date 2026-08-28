@@ -116,7 +116,7 @@ def fitAroundMaximum(h, nBinsAround):
 # Main analysis function
 # -------------------------------------------------------------------------
 
-def plot_reco(
+def compute_response(
     pname="pi-",
     penergy_GeV=49.861,
     xmin=20.0,
@@ -351,7 +351,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    plot_reco(
+    compute_response(
         pname=args.pname,
         penergy_GeV=args.energy,
         xmin=args.xmin,

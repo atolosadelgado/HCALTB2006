@@ -11,7 +11,6 @@ while read -r pname penergy xmin xmax; do
     # skip lines starting with '#'
     [[ "$pname" =~ ^# ]] && continue
 
-    # run root
-    #root -l -b -q "plot_reco.cxx(\"$pname\", $penergy, $xmin, $xmax, $nevents, $airECAL)"
-    python plot_reco.py $pname $penergy $xmin $xmax --nevents $nevents --airECAL $airECAL
+    # compute calorimeter response
+    python compute_response.py $pname $penergy $xmin $xmax --nevents $nevents --airECAL $airECAL
 done < "$input_file"
