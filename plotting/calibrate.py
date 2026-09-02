@@ -138,6 +138,7 @@ def calibrate(
     detector="ECAL",
     scanFile="calibration.scan",
     nevents=2000,
+    directoryROOTfiles="",
     doPlot=True
 ):
 
@@ -226,6 +227,8 @@ def calibrate(
             f"HCALTB2006_{pname}_{energy:.6f}_"
             f"{nevents}evt_CMS_airECAL{airECAL}.root"
         )
+        if len(directoryROOTfiles) > 0:
+            filename = f"{directoryROOTfiles}/{filename}"
 
         print(f"Processing {filename}")
 
@@ -371,12 +374,19 @@ if __name__ == "__main__":
         help="Do not produce calibration plot"
     )
 
+    parser.add_argument(
+        "--directoryROOTfiles",
+        default="",
+        help="Directory where the ROOT files are"
+    )
+
     args = parser.parse_args()
 
     calibrate(
         detector=args.detector,
         scanFile=args.scan_file,
         nevents=args.nevents,
+        directoryROOTfiles=args.directoryROOTfiles,
         doPlot=not args.no_plot
     )
 

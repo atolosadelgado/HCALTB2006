@@ -62,6 +62,7 @@ void plot_centroids(
     std::map<std::string, std::vector<double>> momentum;
     std::map<std::string, std::vector<double>> response;
     std::map<std::string, std::vector<double>> sigma;
+    std::map<std::string, std::vector<double>> eleak;
 
     std::ifstream file(filename);
 
@@ -77,17 +78,20 @@ void plot_centroids(
     double sigmaValue;
     double p;
     double responseValue;
+    double eleakValue;
 
     while (file >> pname
                 >> kineticEnergy
                 >> centroid
                 >> sigmaValue
                 >> p
-                >> responseValue) {
+                >> responseValue
+                >> eleakValue) {
 
         momentum[pname].push_back(p);
         response[pname].push_back(responseValue);
         sigma[pname].push_back(sigmaValue);
+        eleak[pname].push_back(eleakValue);
     }
 
     file.close();
@@ -371,6 +375,63 @@ void plot_centroids(
             Form("sigma_%s.root", particle.c_str())
         );
 
+        // ================================================================
+        // Eleak plot
+        // ================================================================
+
+        TGraph* gEleak =
+            new TGraph(
+                n,
+                momentum[particle].data(),
+                eleak[particle].data()
+            );
+
+        gEleak->SetMarkerStyle(20);
+        gEleak->SetMarkerSize(1.1);
+        gEleak->SetLineWidth(2);
+
+        gEleak->SetTitle(
+            Form("%s Mean Energy leakage", particle.c_str())
+        );
+
+        gEleak->GetXaxis()->SetTitle(
+            "Momentum [GeV]"
+        );
+
+        gEleak->GetYaxis()->SetTitle(
+            "Mean Energy leakage [GeV]"
+        );
+
+        gEleak->GetXaxis()->SetLimits(
+            0.0,
+            1.05 * maxMomentum
+        );
+
+
+        TCanvas* cEleak =
+            new TCanvas(
+                Form("cEleak_%s", particle.c_str()),
+                Form("%s Eleak", particle.c_str()),
+                800,
+                600
+            );
+
+        cEleak->SetGrid();
+
+        gEleak->Draw("APL");
+
+
+        // ---------------------------------------------------------------
+        // Save sigma plot
+        // ---------------------------------------------------------------
+
+        cEleak->SaveAs(
+            Form("eleak_%s.png", particle.c_str())
+        );
+
+        gEleak->SaveAs(
+            Form("eleak_%s.root", particle.c_str())
+        );
 
         // ---------------------------------------------------------------
         // Cleanup

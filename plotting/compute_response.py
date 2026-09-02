@@ -123,22 +123,25 @@ def compute_response(
     xmin=20.0,
     xmax=80.0,
     nevents=20000,
+    directoryROOTfiles="",
     airECAL=0
 ):
 
     # Use a fixed seed for reproducibility
     ROOT.gRandom.SetSeed(12345)
 
-    standalone_filename = (
+    filename = (
         f"HCALTB2006_{pname}_{penergy_GeV:.6f}_"
         f"{nevents}evt_CMS_airECAL{airECAL}.root"
     )
+    if len(directoryROOTfiles) > 0:
+        filename=f"{directoryROOTfiles}/{filename}"
 
-    file = ROOT.TFile.Open(standalone_filename)
+    file = ROOT.TFile.Open(filename)
 
     if file is None or file.IsZombie():
         print(
-            f"File <{standalone_filename}> "
+            f"File <{filename}> "
             "could not be opened"
         )
         return
@@ -148,7 +151,7 @@ def compute_response(
     if tree is None:
         print(
             f"Could not find TTree <tree> "
-            f"in file <{standalone_filename}>"
+            f"in file <{filename}>"
         )
         file.Close()
         return
@@ -167,13 +170,11 @@ def compute_response(
         xmax
     )
 
-    # Process each event explicitly.
-    #
-    # This is slightly different from the C++ version, where the
-    # processing functions were passed to TTree::Draw as a formula.
-    # Doing it explicitly in Python is considerably easier and clearer.
-    #
-    # Get the branches through a Python loop.
+    # Process each event explicitly
+
+    # Calculate mean energy flux out-in from calorimeter
+    nEventsPositiveCaloEflux=0
+    CaloEflux=0
 
     for event in tree:
 
@@ -186,6 +187,14 @@ def compute_response(
         )
 
         h.Fill(reco_energy)
+        CaloEflux_evt = event.CaloEfluxOut-event.CaloEfluxIn
+        if CaloEflux_evt > 0:
+            CaloEflux += CaloEflux_evt
+            nEventsPositiveCaloEflux += 1
+
+    # Calculate mean energy flux out-in from calorimeter
+    CaloEflux /= nEventsPositiveCaloEflux
+    CaloEflux = CaloEflux * MeV_to_GeV
 
     # ---------------------------------------------------------------------
     # Histogram settings
@@ -291,6 +300,7 @@ def compute_response(
                 f"{hsigma}\t"
                 f"{pmomentum_GeV}\t"
                 f"{response}\t"
+                f"{CaloEflux}\t"
                 f"\n"
             )
 
@@ -378,6 +388,12 @@ if __name__ == "__main__":
         help="HCAL smearing in GeV (default: 0.64)"
     )
 
+    parser.add_argument(
+        "--directoryROOTfiles",
+        default="",
+        help="Directory where the ROOT files are"
+    )
+
     args = parser.parse_args()
 
     ECAL_calibrationFactor=args.ECAL_calibrationFactor
@@ -391,5 +407,6 @@ if __name__ == "__main__":
         xmin=args.xmin,
         xmax=args.xmax,
         nevents=args.nevents,
+        directoryROOTfiles=args.directoryROOTfiles,
         airECAL=args.airECAL
     )
