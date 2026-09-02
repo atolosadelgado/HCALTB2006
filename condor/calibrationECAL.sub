@@ -26,4 +26,4 @@ request_cpus   = $(NTHREADS)
 
 +AccountingGroup = "group_u_CMS.u_zh.users"
 
-queue pname, penergy from calibration.scan
+queue pname, penergy from ../data/scan/calibration.scan
