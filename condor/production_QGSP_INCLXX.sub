@@ -1,0 +1,29 @@
+executable = run.sh
+
+NUM_EVENTS = 80000
+NTHREADS = 16
+
+arguments = -g geometryTB2006H2.gdml \
+            -pl QGSP_INCLXX \
+            -m gps_singlerun.mac \
+            -pname $(pname) \
+            -penergy $(penergy) \
+            -nevents $(NUM_EVENTS) \
+            -nthreads $(NTHREADS) \
+            -enableRadialCutSD
+
+output = out.$(pname).$(penergy).out
+error  = err.$(pname).$(penergy).err
+log    = log.$(ClusterId)
+
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = ../build/gdml_sim, ../data/geometry/geometryTB2006H2.gdml, ../gps_singlerun.mac
+
+request_cpus   = $(NTHREADS)
+
++JobFlavour = "tomorrow"
+
++AccountingGroup = "group_u_CMS.u_zh.users"
+
+queue pname, penergy from production.scan
