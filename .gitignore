@@ -1,6 +1,8 @@
+outputFiles
 build*
 *.root
 *.kdev*
 *sif
 *txt
+*png
 tmp
