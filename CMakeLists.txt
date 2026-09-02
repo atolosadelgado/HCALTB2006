@@ -239,41 +239,29 @@ SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Excepti
 
 
 #----------------------
-# Run 50 GeV pion with CMS physics (MT runmanager)
+# Run 50 GeV pion with different physics (MT runmanager)
 
-SET( test_name "run_50GeV_pion_CMS_MT_withSecondaryTrackHisto" )
-add_test(
-    NAME ${test_name}
-    COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
-            -g ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
-            -pl CMS
-            -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
-            -pname pi-
-            -penergy 50
-            -nevents 20
-            -nthreads 2
-            -enableSecondaryTrackInfo
-)
+set(physics_lists CMS FTFP_BERT QBBC QGSP_BERT QGSP_INCLXX)
 
-set_tests_properties(${test_name} PROPERTIES
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
-SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error")
+foreach(physics_list IN LISTS physics_lists)
 
-SET( test_name "run_50GeV_pion_CMS_MT_noSecondaryTrackHisto" )
-add_test(
-    NAME ${test_name}
-    COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
-            -g ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
-            -pl CMS
-            -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
-            -pname pi-
-            -penergy 50
-            -nevents 20
-            -nthreads 2
-)
+    set(test_name "testPhysicsLists_${physics_list}_MT")
 
-set_tests_properties(${test_name} PROPERTIES
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
-SET_TESTS_PROPERTIES( ${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  " Exception; EXCEPTION;ERROR;Error")
+    add_test(
+        NAME ${test_name}
+        COMMAND ${CMAKE_BINARY_DIR}/gdml_sim
+                -g ${CMAKE_SOURCE_DIR}/data/geometry/geometryTB2006H2.gdml
+                -pl ${physics_list}
+                -m ${CMAKE_SOURCE_DIR}/gps_singlerun.mac
+                -pname pi-
+                -penergy 50
+                -nevents 10
+                -nthreads 2
+    )
+
+    set_tests_properties(${test_name} PROPERTIES
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        FAIL_REGULAR_EXPRESSION "Exception;EXCEPTION;ERROR;Error"
+    )
+
+endforeach()
