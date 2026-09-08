@@ -68,6 +68,7 @@ public:
                                                         {"ionIoni", 43},
                                                         {"hBrems", 44},
                                                     };
+    const int fUseModelIndex = true;
 };
 
 #endif

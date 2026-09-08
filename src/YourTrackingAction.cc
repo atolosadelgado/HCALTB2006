@@ -52,33 +52,38 @@ void YourTrackingAction::PostUserTrackingAction(const G4Track* track)
     double ef = track->GetKineticEnergy();
     double tf = track->GetLocalTime();
 
-    // MSC and other EM models do not assign modelID...
-    // int modelIndex = track->GetCreatorModelIndex();
+    int creatorIndex = 0;
 
-    int pindex = 0;
-    auto procIt = fProcNameId.find(track_creator_process->GetProcessName());
-    if(fProcNameId.end() == procIt ){
-        pindex = 0;
+    // MSC and other EM models do not assign modelID...
+    if(fUseModelIndex)
+    {
+        creatorIndex = track->GetCreatorModelIndex();
     }
-    else
-        pindex = procIt->second + 1;
+    else{
+        auto procIt = fProcNameId.find(track_creator_process->GetProcessName());
+        if(fProcNameId.end() == procIt ){
+            creatorIndex = 0;
+        }
+        else
+            creatorIndex = procIt->second + 1;
+    }
 
     auto analysisManager = G4AnalysisManager::Instance();
-    analysisManager->FillH2(hIDe0, std::log10(e0) ,pindex);
+    analysisManager->FillH2(hIDe0, std::log10(e0) ,creatorIndex);
     if(auto it = trackIDmap.find(track->GetParentID()); it != trackIDmap.end()){
         if(G4Neutron::Neutron() == it->second.first)
         {
-            analysisManager->FillH2(hIDe0+1, std::log10(e0) ,pindex);
+            analysisManager->FillH2(hIDe0+1, std::log10(e0) ,creatorIndex);
         }
         else if(G4PionMinus::PionMinus() == it->second.first ||
                 G4PionPlus::PionPlus() == it->second.first ||
                 G4PionZero::PionZero() == it->second.first
                 )
         {
-            analysisManager->FillH2(hIDe0+2, std::log10(e0) ,pindex);
+            analysisManager->FillH2(hIDe0+2, std::log10(e0) ,creatorIndex);
         }
     }
-    analysisManager->FillH2(hIDef, std::log10(ef) ,pindex);
-    analysisManager->FillH2(hIDtf, std::log10(tf) ,pindex);
+    analysisManager->FillH2(hIDef, std::log10(ef) ,creatorIndex);
+    analysisManager->FillH2(hIDtf, std::log10(tf) ,creatorIndex);
 
 }
