@@ -37,8 +37,8 @@ class YourDetectorConstructor : public G4VUserDetectorConstruction
       G4String fEcalSDname = {"ecalSD"};
       G4String fHcalSDname = {"hcalSD"};
       G4VPhysicalVolume * worldPV;
-      bool ECALAsAir = false;;
-      bool visSensitiveOnly = false;;
+      bool ECALAsAir = false;
+      bool visSensitiveOnly = false;
       void MakeECALAsAir();
       void ReplaceMaterialInTree(G4VPhysicalVolume* rootPV, G4Material* newMat);
       void HighlightMaterial(const G4String& targetMaterialName, bool makeOtherInvisible, G4Colour & color);

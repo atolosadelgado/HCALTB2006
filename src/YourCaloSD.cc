@@ -2,7 +2,15 @@
 #include "YourVCaloResponse.hh"
 #include "YourClusterCut.hh"
 
+#include "G4Version.hh"
+
+#if G4VERSION_NUMBER >= 1100
 #include "G4AnalysisManager.hh"
+using AnalysisManager = G4AnalysisManager;
+#else
+#include "G4RootAnalysisManager.hh"
+using AnalysisManager = G4RootAnalysisManager;
+#endif
 
 YourCaloSD::YourCaloSD(std::string name,
                        std::unique_ptr<YourVCaloResponse> response,
@@ -11,7 +19,7 @@ YourCaloSD::YourCaloSD(std::string name,
   fCaloResponse(std::move(response)),
   fClusterCut(std::move(clustercut)){}
 
-bool YourCaloSD::ProcessHits(G4Step* aStep, G4TouchableHistory* ROhist)
+bool YourCaloSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 {
     // early return if hit away
     if (fClusterCut && !fClusterCut->IsInside(aStep)) return false;
@@ -30,7 +38,7 @@ void YourCaloSD::Initialize(G4HCofThisEvent*)
 
 void YourCaloSD::EndOfEvent(G4HCofThisEvent*)
 {
-    auto* ana = G4AnalysisManager::Instance();
+    auto* ana = AnalysisManager::Instance();
     ana->FillNtupleDColumn(fNTupleColumnID, fTotalEnergy);
     ana->FillNtupleDColumn(fNTupleColumnID+1, fTotalEnergy_raw);
     if(0<fVerbosity)

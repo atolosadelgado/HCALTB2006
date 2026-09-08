@@ -11,7 +11,8 @@
 /event/verbose 0
 /tracking/verbose 0
 /gps/verbose 0
-
+#/process/had/applyCuts true
+/run/physicsModified
 ###############################################
 # 1. Particle type
 ###############################################
@@ -42,7 +43,7 @@
 ###############################################
 
 /analysis/setFileName HCALTB2006_{PARTICLE_NAME}_{PARTICLE_ENERGY_GEV}_{NEVENTS}evt.root
-/analysis/setDefaultFileType root
+#/analysis/setDefaultFileType root
 
 #/run/printProgress 50
 

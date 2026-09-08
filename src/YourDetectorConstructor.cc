@@ -222,7 +222,7 @@ void YourDetectorConstructor::AssignSDtoLV(std::vector<std::string>& lvnames, G4
       int lvcounter = 0;
       for(auto lv : *lvstore)
       {
-        if(lv->GetName() == lvname)
+        if(lv->GetName() == G4String(lvname) )
         {
           lv->SetSensitiveDetector(sd);
           ++lvcounter;

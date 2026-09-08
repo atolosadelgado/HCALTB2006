@@ -61,6 +61,7 @@ void CMSHadronPhysicsFTFP_BERT::ConstructProcess() {
 }
 
 void CMSHadronPhysicsFTFP_BERT::Neutron() {
+#if G4VERSION_NUMBER >= 1100
   G4bool useNGeneral = G4HadronicParameters::Instance()->EnableNeutronGeneralProcess();
   if (useNGeneral) {
     auto theFTFP = new G4TheoFSGenerator("FTFP");
@@ -80,6 +81,6 @@ void CMSHadronPhysicsFTFP_BERT::Neutron() {
     G4HadProcesses::BuildNeutronInelasticAndCapture(ni);
     return;
   }
-
+#endif
   G4HadronPhysicsFTFP_BERT::Neutron();
 }

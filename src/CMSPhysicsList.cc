@@ -13,6 +13,8 @@
 #include "G4HadronicParameters.hh"
 #include "G4EmParameters.hh"
 
+#include "G4Version.hh"
+
 CMSPhysicsList::CMSPhysicsList()
 {
   G4int ver = 1;
@@ -89,8 +91,10 @@ void CMSPhysicsList::SetCMSParameters()
   hadronic_parameters->SetMaxEnergyTransitionFTF_Cascade(6*GeV);
   hadronic_parameters->SetMinEnergyTransitionQGS_FTF(12*GeV);
   hadronic_parameters->SetMaxEnergyTransitionQGS_FTF(25*GeV);
+#if G4VERSION_NUMBER >= 1100
   hadronic_parameters->SetMinEnergyINCLXX_Pbar(0);
   hadronic_parameters->SetMaxEnergyINCLXX_Pbar(10*GeV);
+#endif
   hadronic_parameters->SetEnergyThresholdForHeavyHadrons(1.1*GeV);
 
   // XS Nucleon Inelastic               = 1
@@ -117,19 +121,25 @@ void CMSPhysicsList::SetCMSParameters()
   // Neutron General Process            = 0
   // Coherent Charge Exchange           = 0
   hadronic_parameters->SetEnableBCParticles(true);
+#if G4VERSION_NUMBER >= 1100
   hadronic_parameters->SetEnableHyperNuclei(false);
+#endif
   hadronic_parameters->SetApplyFactorXS(false);
   hadronic_parameters->SetEnableCRCoalescence(false);
+#if G4VERSION_NUMBER >= 1100
   hadronic_parameters->SetEnableIntegralElasticXS(true);
   hadronic_parameters->SetEnableIntegralInelasticXS(true);
   hadronic_parameters->SetEnableDiffDissociationForBGreater10(false);
   hadronic_parameters->SetEnableNeutronGeneralProcess(false);
   hadronic_parameters->SetEnableCoherentChargeExchange(false);
+#endif
 
   // Neutron SVT threshold              = -1 MeV
   // Radioactive decay time threshold   = -1e-09 s
+#if G4VERSION_NUMBER >= 1100
   hadronic_parameters->SetNeutronKineticEnergyThresholdForSVT(-1*CLHEP::MeV);
   hadronic_parameters->SetTimeThresholdForRadioactiveDecay(-1e-6*CLHEP::s);
+#endif
 
   G4EmParameters * em_parameters = G4EmParameters::Instance();
   // LPM effect enabled                                 1
@@ -143,10 +153,14 @@ void CMSPhysicsList::SetCMSParameters()
   em_parameters->SetLPM(true);
   em_parameters->SetEnableSamplingTable(false);
   em_parameters->SetApplyCuts(false);
+#if G4VERSION_NUMBER >= 1100
   em_parameters->SetTransportationWithMsc(G4TransportationWithMscType::fMultipleSteps);
+#endif
   em_parameters->SetGeneralProcessActive(true);
   em_parameters->SetEnablePolarisation(false);
+#if G4VERSION_NUMBER >= 1100
   em_parameters->SetPhotoeffectBelowKShell(false);
+#endif
   em_parameters->SetQuantumEntanglement(false);
   // X-section factor for integral approach             0.8 ->which method??
   // Min kinetic energy for tables                      100 eV
@@ -195,8 +209,9 @@ void CMSPhysicsList::SetCMSParameters()
 
     // dE/dx fluctuations
     em_parameters->SetLossFluctuations(true);
+#if G4VERSION_NUMBER >= 1100
     em_parameters->SetFluctuationType(fUrbanFluctuation);
-
+#endif
     // Birks saturation
     em_parameters->SetBirksActive(false);
 

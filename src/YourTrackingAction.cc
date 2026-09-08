@@ -1,7 +1,6 @@
 #include "YourTrackingAction.hh"
 
 #include "G4Track.hh"
-#include "G4AnalysisManager.hh"
 #include "G4VProcess.hh"
 #include "G4RegionStore.hh"
 #include "G4Proton.hh"
@@ -9,6 +8,15 @@
 #include "G4PionPlus.hh"
 #include "G4PionMinus.hh"
 #include "G4PionZero.hh"
+#include "G4Version.hh"
+
+#if G4VERSION_NUMBER >= 1100
+#include "G4AnalysisManager.hh"
+using AnalysisManager = G4AnalysisManager;
+#else
+#include "G4RootAnalysisManager.hh"
+using AnalysisManager = G4RootAnalysisManager;
+#endif
 
 #include "YourEventAction.hh"
 
@@ -57,7 +65,13 @@ void YourTrackingAction::PostUserTrackingAction(const G4Track* track)
     // MSC and other EM models do not assign modelID...
     if(fUseModelIndex)
     {
+
+#if G4VERSION_NUMBER >= 1100
         creatorIndex = track->GetCreatorModelIndex();
+#else
+        // before v11.0, only model ID (which corresponds to model Index)
+        creatorIndex = track->GetCreatorModelID();
+#endif
     }
     else{
         auto procIt = fProcNameId.find(track_creator_process->GetProcessName());
@@ -68,7 +82,7 @@ void YourTrackingAction::PostUserTrackingAction(const G4Track* track)
             creatorIndex = procIt->second + 1;
     }
 
-    auto analysisManager = G4AnalysisManager::Instance();
+    auto analysisManager = AnalysisManager::Instance();
     analysisManager->FillH2(hIDe0, std::log10(e0) ,creatorIndex);
     if(auto it = trackIDmap.find(track->GetParentID()); it != trackIDmap.end()){
         if(G4Neutron::Neutron() == it->second.first)

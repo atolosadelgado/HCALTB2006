@@ -9,7 +9,15 @@
 #include "YourDetectorConstructor.hh"
 
 
+#include "G4Version.hh"
+
+#if G4VERSION_NUMBER >= 1100
 #include "G4AnalysisManager.hh"
+using AnalysisManager = G4AnalysisManager;
+#else
+#include "G4RootAnalysisManager.hh"
+using AnalysisManager = G4RootAnalysisManager;
+#endif
 #include "tools/histo/h1d"
 #include "G4SDManager.hh"
 #include "G4PhysicsModelCatalog.hh"
@@ -42,7 +50,7 @@ YourRunAction::YourRunAction(const YourInputArgs * args, const YourDetectorConst
           fDetector(detector)
           {
             // to make UI commands available
-            auto analysisManager = G4AnalysisManager::Instance();
+            auto analysisManager = AnalysisManager::Instance();
             (void)analysisManager; // trick to avoid error: unused variable
 }
 
@@ -67,7 +75,10 @@ void YourRunAction::BeginOfRunAction(const G4Run*)
   fEnergyProfile = std::vector<double>( nlayers , 0.0 );
   fRadiusProfile = std::vector<double>( nlayers , 0.0 );
 
-  auto analysisManager = G4AnalysisManager::Instance();
+  auto analysisManager = AnalysisManager::Instance();
+#if G4VERSION_NUMBER >= 1100
+  analysisManager->SetDefaultFileType("root");
+#endif
   // histogram containing the total energy deposited in the layer, where
   // with bin=layer, with the numbering as coded in the "layerInfo" object
   // layer = 0 -> volume not assigned to any layer
@@ -124,7 +135,7 @@ void YourRunAction::EndOfRunAction(const G4Run* ){
     // we have to normalize by Energy and make the sqrt for each layer,
     if(G4Threading::IsMasterThread())
     {
-        auto analysisManager = G4AnalysisManager::Instance();
+        auto analysisManager = AnalysisManager::Instance();
         auto hEprofile = analysisManager->GetH1(hIDeprofile);
         auto hRprofile = analysisManager->GetH1(hIDrprofile);
         int nbins = hEprofile->axis().bins();
@@ -162,7 +173,7 @@ void YourRunAction::EndOfRunAction(const G4Run* ){
 
 #if HAVE_ROOT
     if (G4Threading::IsMasterThread()){
-        fInputArgs->SaveToROOTfile( G4AnalysisManager::Instance()->GetFileName());
+        fInputArgs->SaveToROOTfile( AnalysisManager::Instance()->GetFileName());
     }
 #endif
 }
@@ -174,7 +185,7 @@ void YourRunAction::BeginOutputTree()
   auto* ecalSD = dynamic_cast<YourCaloSD*>(SDmanager->FindSensitiveDetector(fDetector->GetEcalSDname() ));
   auto* hcalSD = dynamic_cast<YourCaloSD*>(SDmanager->FindSensitiveDetector(fDetector->GetHcalSDname() ));
 
-  auto analysisManager = G4AnalysisManager::Instance();
+  auto analysisManager = AnalysisManager::Instance();
   // analysisManager->SetDefaultFileType("root"); // set in macrofile
   analysisManager->SetVerboseLevel(1);
 
@@ -247,7 +258,7 @@ void YourRunAction::BeginOutputTree()
 void YourRunAction::InitializeSecondaryTrackHistogram()
 {
   // create histograms of initial and final energy, and lifetime of particles
-  auto analysisManager = G4AnalysisManager::Instance();
+  auto analysisManager = AnalysisManager::Instance();
   if(particleInfoMap.empty()){
       int nmodels = G4PhysicsModelCatalog::Entries();
 
@@ -290,7 +301,7 @@ void YourRunAction::InitializeSecondaryTrackHistogram()
 
 void YourRunAction::EndOutputTree()
 {
-    G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+    AnalysisManager* analysisManager = AnalysisManager::Instance();
     analysisManager->Write();
     analysisManager->CloseFile();
 
@@ -483,10 +494,12 @@ void YourRunAction::PrintGeant4Configuration()
     G4cout << "MaxEnergyTransitionQGS_FTF: "
               << hadronic_params->GetMaxEnergyTransitionQGS_FTF() << "\n";
 
+#if G4VERSION_NUMBER >= 1100
     G4cout << "MinEnergyINCLXX_Pbar: "
               << hadronic_params->GetMinEnergyINCLXX_Pbar() << "\n";
     G4cout << "MaxEnergyINCLXX_Pbar: "
               << hadronic_params->GetMaxEnergyINCLXX_Pbar() << "\n";
+#endif
 
     G4cout << "EnergyThresholdForHeavyHadrons: "
               << hadronic_params->EnergyThresholdForHeavyHadrons() << "\n";
@@ -513,14 +526,18 @@ void YourRunAction::PrintGeant4Configuration()
     // Flags
     G4cout << "EnableBCParticles: "
               << hadronic_params->EnableBCParticles() << "\n";
+#if G4VERSION_NUMBER >= 1100
     G4cout << "EnableHyperNuclei: "
               << hadronic_params->EnableHyperNuclei() << "\n";
+#endif
+
     G4cout << "ApplyFactorXS: "
               << hadronic_params->ApplyFactorXS() << "\n";
 
     G4cout << "EnableCRCoalescence: "
               << hadronic_params->EnableCRCoalescence() << "\n";
 
+#if G4VERSION_NUMBER >= 1100
     G4cout << "EnableIntegralInelasticXS: "
               << hadronic_params->EnableIntegralInelasticXS() << "\n";
     G4cout << "EnableIntegralElasticXS: "
@@ -534,11 +551,12 @@ void YourRunAction::PrintGeant4Configuration()
 
     G4cout << "EnableNeutronGeneralProcess: "
               << hadronic_params->EnableNeutronGeneralProcess() << "\n";
+#endif
 
     // Verbosity
     G4cout << "VerboseLevel: "
               << hadronic_params->GetVerboseLevel() << "\n";
-
+#if G4VERSION_NUMBER >= 1100
     // Energy-momentum conservation parameters
     G4cout << "EPRelativeLevel: "
               << hadronic_params->GetEPRelativeLevel() << "\n";
@@ -564,7 +582,7 @@ void YourRunAction::PrintGeant4Configuration()
 
     G4cout << "TimeThresholdForRadioactiveDecay: "
               << hadronic_params->GetTimeThresholdForRadioactiveDecay() << "\n";
-
+#endif
     G4cout << "================================\n";
     G4DeexPrecoParameters* deex = G4NuclearLevelData::GetInstance()->GetParameters();
     deex->StreamInfo(G4cout);
@@ -572,10 +590,26 @@ void YourRunAction::PrintGeant4Configuration()
     G4cout << "================================\n";
     G4cout << "===== G4HadronicProcessStore =====\n";
     G4HadronicProcessStore::Instance()->Dump(1);
-
+#if G4VERSION_NUMBER >= 1100
     G4cout << "================================\n";
     G4PhysicsModelCatalog::PrintAllInformation();
+#else
+    G4cout << G4endl
+         << "=== Physics Model Catalog ===" << G4endl;
 
+    const G4int nModels = G4PhysicsModelCatalog::Entries();
+
+    G4cout << "Number of models: " << nModels << G4endl;
+
+    for (G4int i = 0; i < nModels; ++i) {
+        G4cout << "  index=" << i
+            << "  modelName="
+            << G4PhysicsModelCatalog::GetModelName(i)
+            << G4endl;
+    }
+
+    G4cout << G4endl;
+#endif
 
     dumpFile.flush();
     G4cout.rdbuf(cout_buf);

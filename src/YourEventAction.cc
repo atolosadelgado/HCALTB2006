@@ -1,6 +1,15 @@
 #include "YourEventAction.hh"
 
+#include "G4Version.hh"
+
+#if G4VERSION_NUMBER >= 1100
 #include "G4AnalysisManager.hh"
+using AnalysisManager = G4AnalysisManager;
+#else
+#include "G4RootAnalysisManager.hh"
+using AnalysisManager = G4RootAnalysisManager;
+#endif
+
 #include "G4Event.hh"
 #include "G4RegionStore.hh"
 
@@ -23,7 +32,7 @@ void YourEventAction::BeginOfEventAction(const G4Event* evt) {
 void YourEventAction::EndOfEventAction(const G4Event* /*evt*/)
 {
     this->FinalizeProfileHistograms();
-    auto* ana = G4AnalysisManager::Instance();
+    auto* ana = AnalysisManager::Instance();
 
     ana->FillNtupleDColumn(fEcalAccum.fNtupleId, fEcalAccum.fTotalEnergy );
     ana->FillNtupleDColumn(fHcalAccum.fNtupleId, fHcalAccum.fTotalEnergy );
@@ -43,7 +52,7 @@ void YourEventAction::UpdateProfileHistograms(G4LogicalVolume* lv, double edep, 
 {
   auto l = fLayerInfo.GetLayer(lv);
   double edepr2 = edep*radius*radius;
-  auto analysisManager = G4AnalysisManager::Instance();
+  auto analysisManager = AnalysisManager::Instance();
   analysisManager->FillH1(fHidEprofile,l,edep);
   analysisManager->FillH1(fHidRprofile,l,edepr2);
 
