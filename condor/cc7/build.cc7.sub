@@ -1,0 +1,22 @@
+universe = docker
+
+docker_image = gitlab-registry.cern.ch/sft/docker/centos7-dev
+
+executable = build.cc7.sh
+
+output = build-old.$(ClusterId).out
+error  = build-old.$(ClusterId).err
+log    = build-old.$(ClusterId).log
+
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+
+transfer_input_files = build.cc7.sh
+
+transfer_output_files = HCALTB2006/build/gdml_sim
+
+request_cpus = 1
+
++JobFlavour = "espresso"
+
+queue 1
