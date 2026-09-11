@@ -2,7 +2,7 @@ universe = docker
 
 docker_image = gitlab-registry.cern.ch/sft/docker/centos7-dev
 
-executable = run.sh
+executable = run.cc7.sh
 
 NUM_EVENTS = 2000
 NTHREADS = 1

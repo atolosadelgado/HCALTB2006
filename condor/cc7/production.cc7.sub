@@ -2,9 +2,9 @@ universe = docker
 
 docker_image = gitlab-registry.cern.ch/sft/docker/centos7-dev
 
-executable = run.sh
+executable = run.cc7.sh
 
-NUM_EVENTS = 10000
+NUM_EVENTS = 70000
 NTHREADS = 1
 
 arguments = -g geometryTB2006H2.gdml \
@@ -22,7 +22,7 @@ log    = log.$(ClusterId)
 
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT
-transfer_input_files = ../build/gdml_sim, ../data/geometry/geometryTB2006H2.gdml, ../gps_singlerun.mac
+transfer_input_files = ../../build/gdml_sim, ../../data/geometry/geometryTB2006H2.gdml, ../../gps_singlerun.mac
 
 request_cpus   = $(NTHREADS)
 
@@ -30,4 +30,4 @@ request_cpus   = $(NTHREADS)
 
 +AccountingGroup = "group_u_CMS.u_zh.users"
 
-queue pname, penergy from ../data/scan/production.scan
+queue pname, penergy from ../../data/scan/production.scan
