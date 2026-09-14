@@ -8,7 +8,7 @@ NUM_EVENTS = 80000
 NTHREADS = 1
 
 arguments = -g geometryTB2006H2.gdml \
-            -pl CMS \
+            -pl QGSP_INCLXX \
             -m gps_singlerun.mac \
             -pname $(pname) \
             -penergy $(penergy) \
