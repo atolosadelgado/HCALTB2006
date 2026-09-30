@@ -192,7 +192,7 @@ void YourRunAction::BeginOutputTree()
   // analysisManager->SetDefaultFileType("root"); // set in macrofile
   analysisManager->SetVerboseLevel(1);
 
-#if G4VERSION_NUMBER >= 1020
+#if G4VERSION_NUMBER >= 1070
   // just to avoid a warning from G4Analysis
   if(1<fInputArgs->nthreads)
       analysisManager->SetNtupleMerging(true);  // important for MT

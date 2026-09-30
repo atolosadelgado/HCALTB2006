@@ -45,7 +45,7 @@
 
 inline G4bool IsMasterThreadCompat()
 {
-#if G4VERSION_NUMBER >= 1020
+#if G4VERSION_NUMBER >= 1070
     return G4Threading::IsMasterThread();
 #else
     return G4Threading::G4GetThreadId() == G4Threading::MASTER_ID;
@@ -64,7 +64,7 @@ inline void get_bin_content_compat(
     double& Sx2w)
 {
 
-#if G4VERSION_NUMBER >= 1020
+#if G4VERSION_NUMBER >= 1070
     h->get_bin_content(i, entries, Sw, Sw2, Sxw, Sx2w);
 #else
     const tools::histo::h1d::hd_t data = h->get_histo_data();
