@@ -32,6 +32,11 @@ G4VPhysicalVolume * YourDetectorConstructor::Construct(){
   G4GDMLParser Parser;
   Parser.Read(gdml_filename, false);
   worldPV = Parser.GetWorldVolume();
+
+#if G4VERSION_NUMBER < 1070
+  G4CompatCreateHCALTB2006Regions();
+#endif
+
   // The first 4 levels of the geometry tree are shown below
   // The tree is generated with Geant4 /vis/drawTree + grep -E '^ {4,10}"'
   // Format is: PV:n / LV (SD,RO)
