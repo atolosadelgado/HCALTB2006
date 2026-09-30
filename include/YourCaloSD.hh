@@ -7,7 +7,7 @@
 #include "G4VSensitiveDetector.hh"
 
 class YourVCaloResponse;
-class YourClusterCut;;
+class YourClusterCut;
 
 /* class YourCaloSD
  * reimplements CMSSW classes

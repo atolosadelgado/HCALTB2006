@@ -9,7 +9,6 @@
 
 #include "G4GDMLParser.hh"
 #include "G4VSensitiveDetector.hh"
-#include "G4Exception.hh"
 #include "G4PhysicalVolumeStore.hh"
 #include "G4LogicalVolumeStore.hh"
 #include "G4LogicalVolume.hh"
@@ -18,10 +17,14 @@
 #include "G4Colour.hh"
 #include "G4SDManager.hh"
 
+#include "G4Compat.hh"
+
 YourDetectorConstructor::YourDetectorConstructor(std::string fname) :  G4VUserDetectorConstruction() {
     if (fname.empty())
-        G4Exception("YourDetectorConstructor", "InvalidGDML",
-                    FatalException, "Filename cannot be empty");
+    {
+      MY_G4_FATAL("YourDetectorConstructor", "InvalidGDML", "Filename cannot be empty");
+    }
+
     gdml_filename = fname;
 }
 
@@ -105,9 +108,9 @@ void YourDetectorConstructor::ConstructSDandField()
   // register SD objects
   std::unique_ptr<YourClusterCut> ecalClusterCut(nullptr);
   if(fRadialCutSD)
-    ecalClusterCut = std::make_unique<YourClusterCut>(8.5*CLHEP::cm);
+    ecalClusterCut.reset( new YourClusterCut(8.5*CLHEP::cm) );
   YourCaloSD * ecalSD = new YourCaloSD(fEcalSDname,
-                                       std::make_unique<YourEcalResponse>(),
+                                       std::unique_ptr<YourVCaloResponse>(new YourEcalResponse()),
                                        std::move(ecalClusterCut)
                                        );
   G4SDManager::GetSDMpointer()->AddNewDetector(ecalSD);
@@ -116,9 +119,9 @@ void YourDetectorConstructor::ConstructSDandField()
 
   std::unique_ptr<YourClusterCut> hcalClusterCut(nullptr);
   if(fRadialCutSD)
-    hcalClusterCut = std::make_unique<YourClusterCut>(28.2*CLHEP::cm);
+    hcalClusterCut.reset( new YourClusterCut(28.2*CLHEP::cm) );
   YourCaloSD * hcalSD = new YourCaloSD(fHcalSDname,
-                                       std::make_unique<YourHcalResponse>(),
+                                       std::unique_ptr<YourVCaloResponse>(new YourHcalResponse()),
                                        std::move(hcalClusterCut)
                                        );
   G4SDManager::GetSDMpointer()->AddNewDetector(hcalSD);
@@ -246,25 +249,31 @@ void YourDetectorConstructor::FillLayerInfo(G4LogicalVolume* lv)
   std::string  lvname = lv->GetName();
 
   // if ECAL
-  if(std::size_t found = lvname.find("EBRY_"); found!=std::string::npos){
+  std::size_t found = lvname.find("EBRY_");
+  if(found!=std::string::npos){
     // ECAL crystals are named as EBRY_*
     // ECAL is homogeneous, 1 single layer
     // assigning 1 as layer number for convenience
     fLayerInfo.AddLV(lv,1);
   }
   // if HCAL barrel
-  else if(std::size_t found = lvname.find("HBScintillatorLayer"); found!=std::string::npos){
-    // number of HCAL layer is extracted from LV name
-    size_t posLayer = lvname.find("Layer") + 5;
-    size_t posIn = lvname.size() - 3; // "In1" o "In2"
-    int hcal_nlayer = std::stoi(lvname.substr(posLayer, posIn - posLayer));
-    // HCAL layers will start at layer 2, but in the name they start at 0
-    // so we add an offset of 2
-    fLayerInfo.AddLV(lv,hcal_nlayer+2);
-  }
-  else
+  else {
+    found = lvname.find("HBScintillatorLayer");
+
+    if (found != std::string::npos) {
+      // number of HCAL layer is extracted from LV name
+      size_t posLayer = lvname.find("Layer") + 5;
+      size_t posIn = lvname.size() - 3; // "In1" o "In2"
+      int hcal_nlayer = std::stoi(lvname.substr(posLayer, posIn - posLayer));
+      // HCAL layers will start at layer 2, but in the name they start at 0
+      // so we add an offset of 2
+      fLayerInfo.AddLV(lv,hcal_nlayer+2);
+    }
+    else
     // default layer of anything else
     fLayerInfo.AddLV(lv,0);
+  }
+
 
 }
 #include "G4RegionStore.hh"
@@ -280,8 +289,10 @@ void YourDetectorConstructor::ShowLVperRegion() const
       region_lv_map[lv->GetRegion()].push_back(lv);
 
   G4cout << "List of logical volumes in each region:\n";
-  for(auto [region, LVvector] : region_lv_map)
-  {
+  for (auto it = region_lv_map.begin(); it != region_lv_map.end(); ++it) {
+      const auto& region = it->first;
+      const auto& LVvector = it->second;
+
     G4cout << "-Region: " << region->GetName() << G4endl;
     for(auto lv : LVvector)
       G4cout << "\t" << lv->GetName() << G4endl;

@@ -84,7 +84,8 @@ void YourTrackingAction::PostUserTrackingAction(const G4Track* track)
 
     auto analysisManager = AnalysisManager::Instance();
     analysisManager->FillH2(hIDe0, std::log10(e0) ,creatorIndex);
-    if(auto it = trackIDmap.find(track->GetParentID()); it != trackIDmap.end()){
+    auto it = trackIDmap.find(track->GetParentID());
+    if(it != trackIDmap.end()){
         if(G4Neutron::Neutron() == it->second.first)
         {
             analysisManager->FillH2(hIDe0+1, std::log10(e0) ,creatorIndex);

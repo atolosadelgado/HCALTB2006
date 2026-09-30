@@ -32,16 +32,19 @@ using AnalysisManager = G4RootAnalysisManager;
 #include "G4ProcessVector.hh"
 #include "G4UserLimits.hh"
 #include "G4ios.hh"
+#if G4VERSION_NUMBER >= 1070
 #include "G4HadronicParameters.hh"
-#include "G4EmParameters.hh"
-#include "G4HadronicProcessStore.hh"
 #include "G4DeexPrecoParameters.hh"
 #include "G4NuclearLevelData.hh"
+#include "G4EmParameters.hh"
+#endif
+#include "G4HadronicProcessStore.hh"
 #include "G4PhysicsModelCatalog.hh"
 #include "G4HadronicProcess.hh"
 #include "G4EnergyRangeManager.hh"
 #include "G4HadronicInteraction.hh"
 #include <fstream>
+#include <set>
 
 YourRunAction::YourRunAction(const YourInputArgs * args, const YourDetectorConstructor * detector):
           G4UserRunAction(),
@@ -61,7 +64,7 @@ YourRunAction::~YourRunAction() {}
 void YourRunAction::BeginOfRunAction(const G4Run*)
 {
 
-  if(G4Threading::IsMasterThread() && 0<verbosity)
+  if(IsMasterThreadCompat() && 0<verbosity)
         this->PrintGeant4Configuration();
 
   // the layerInfo is a map that relates the LV which are sensitive
@@ -133,7 +136,7 @@ void YourRunAction::EndOfRunAction(const G4Run* ){
     // so RMS_r = sqrt( <r^2>)
     // however, we saved E*r^2 in the histogram,
     // we have to normalize by Energy and make the sqrt for each layer,
-    if(G4Threading::IsMasterThread())
+    if(IsMasterThreadCompat())
     {
         auto analysisManager = AnalysisManager::Instance();
         auto hEprofile = analysisManager->GetH1(hIDeprofile);
@@ -146,8 +149,8 @@ void YourRunAction::EndOfRunAction(const G4Run* ){
             double e_Sw, e_Sw2, e_Sxw, e_Sx2w;
             double r_Sw, r_Sw2, r_Sxw, r_Sx2w;
 
-            hEprofile->get_bin_content(i, e_entries, e_Sw, e_Sw2, e_Sxw, e_Sx2w);
-            hRprofile->get_bin_content(i, r_entries, r_Sw, r_Sw2, r_Sxw, r_Sx2w);
+            get_bin_content_compat(hEprofile, i, e_entries, e_Sw, e_Sw2, e_Sxw, e_Sx2w);
+            get_bin_content_compat(hRprofile, i, r_entries, r_Sw, r_Sw2, r_Sxw, r_Sx2w);
 
             double E   = e_Sw;
             double ER2 = r_Sw;
@@ -172,7 +175,7 @@ void YourRunAction::EndOfRunAction(const G4Run* ){
     this->EndOutputTree();
 
 #if HAVE_ROOT
-    if (G4Threading::IsMasterThread()){
+    if (IsMasterThreadCompat()){
         fInputArgs->SaveToROOTfile( AnalysisManager::Instance()->GetFileName());
     }
 #endif
@@ -189,9 +192,11 @@ void YourRunAction::BeginOutputTree()
   // analysisManager->SetDefaultFileType("root"); // set in macrofile
   analysisManager->SetVerboseLevel(1);
 
+#if G4VERSION_NUMBER >= 1020
   // just to avoid a warning from G4Analysis
   if(1<fInputArgs->nthreads)
       analysisManager->SetNtupleMerging(true);  // important for MT
+#endif
 
   analysisManager->CreateNtuple("tree", "tree for HCAL 2006 TB experiment");
   G4int id = -1;
@@ -273,7 +278,11 @@ void YourRunAction::InitializeSecondaryTrackHistogram()
             {YourParticleInfo::PDG_OTHER, "others"}
 
       };
-      for (const auto& [pdg, name] : particles) {
+      for (std::vector<std::pair<int, G4String> >::const_iterator it = particles.begin();
+            it != particles.end(); ++it) {
+
+            int pdg = it->first;
+            const std::string& name = it->second;
             YourParticleInfo info;
             info.pdg = pdg;
 
@@ -472,8 +481,9 @@ void YourRunAction::PrintGeant4Configuration()
         G4cout << "\t{\"" << procname.c_str() << "\", " << std::to_string(counter) <<"}, " <<  std::endl;
         counter++;
     }
-    G4cout << "\n\n================================\n";
 
+#if G4VERSION_NUMBER >= 1070
+    G4cout << "\n\n================================\n";
     G4cout << "===== G4EmParameters =====\n";
     G4EmParameters::Instance()->StreamInfo(G4cout);
     G4EmParameters::Instance()->Dump();
@@ -582,11 +592,11 @@ void YourRunAction::PrintGeant4Configuration()
 
     G4cout << "TimeThresholdForRadioactiveDecay: "
               << hadronic_params->GetTimeThresholdForRadioactiveDecay() << "\n";
-#endif
+#endif // #if G4VERSION_NUMBER >= 1100
     G4cout << "================================\n";
     G4DeexPrecoParameters* deex = G4NuclearLevelData::GetInstance()->GetParameters();
     deex->StreamInfo(G4cout);
-
+#endif // #if G4VERSION_NUMBER >= 1070
     G4cout << "================================\n";
     G4cout << "===== G4HadronicProcessStore =====\n";
     G4HadronicProcessStore::Instance()->Dump(1);

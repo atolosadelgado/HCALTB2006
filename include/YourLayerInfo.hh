@@ -1,11 +1,13 @@
 #ifndef YOURLAYERINFO_HH
 #define YOURLAYERINFO_HH
 
-#include "G4LogicalVolume.hh"
-#include "G4Exception.hh"
-
 #include <unordered_map>
 #include <limits>
+#include <iostream>
+#include <sstream>
+#include "G4LogicalVolume.hh"
+
+#include "G4Compat.hh"
 
 struct YourLayerInfo
 {
@@ -14,13 +16,14 @@ struct YourLayerInfo
     layerNumber_t GetMaxLayerNumber() const {return maxLayer;}
 
     void AddLV(G4LogicalVolume* lv, layerNumber_t nlayer) {
-        auto [it, inserted] = fLayerInfo.emplace(lv, nlayer);
-        if (inserted)
+        auto result = fLayerInfo.emplace(lv, nlayer);
+
+        if (result.second)
             maxLayer = std::max(maxLayer, nlayer);
         else{
             G4ExceptionDescription msg;
             msg << "Logical Volume <" << lv->GetName() << ">already inserted in Layer info map" << G4endl;
-            G4Exception("YourLayerInfo::AddLV", "Code001", JustWarning, msg);
+            MY_G4_WARNING("YourLayerInfo::AddLV", "Code001", msg);
         }
 
     }
@@ -34,7 +37,9 @@ struct YourLayerInfo
 
     void Print(){
         G4cout << "YourLayerInfo::Print\n";
-        for(auto & [lv, n] : fLayerInfo){
+        for(auto& entry : fLayerInfo) {
+            auto* lv = entry.first;
+            auto n = entry.second;
             G4cout << "\t" << lv->GetName() << "\t->\t" << n << std::endl;
         }
     }

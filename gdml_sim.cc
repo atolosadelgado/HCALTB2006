@@ -1,8 +1,12 @@
+#include "G4Version.hh"
 // for building the detector
 #include "G4GDMLParser.hh"
 // run manager
+#if G4VERSION_NUMBER >= 1073
 #include "G4RunManagerFactory.hh"
-// UI + vis
+#else
+#include "G4MTRunManager.hh"
+#endif// UI + vis
 #include "G4UIExecutive.hh"
 #include "G4UImanager.hh"
 #ifdef G4VIS_USE
@@ -54,12 +58,29 @@ int main(int argc, char** argv)
 
     // create run manager
     G4RunManager* runManager;
-    if(1 < iargs.nthreads){
-        runManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::MTOnly);
-        runManager->SetNumberOfThreads( iargs.nthreads );
+    if (1 < iargs.nthreads) {
+        // ---- select MT ----
+    #if G4VERSION_NUMBER >= 1070
+        runManager = G4RunManagerFactory::CreateRunManager(
+            G4RunManagerType::MTOnly
+        );
+    #else
+        runManager = new G4MTRunManager;
+    #endif
+        static_cast<G4MTRunManager*>(runManager)->SetNumberOfThreads(iargs.nthreads);
     }
-    else
-        runManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::SerialOnly);
+    else {
+        // ---- select Serial ----
+    #if G4VERSION_NUMBER >= 1070
+        runManager = G4RunManagerFactory::CreateRunManager(
+            G4RunManagerType::SerialOnly
+        );
+    #else
+        runManager = new G4RunManager;
+
+    #endif
+
+    }
 
     // create detector from GDML file
     YourDetectorConstructor * user_detector_constructor = new YourDetectorConstructor(iargs.geometry);
@@ -77,9 +98,18 @@ int main(int argc, char** argv)
     // create Physics factory
     if("CMS" == iargs.physics_list)
     {
+
+    #if G4VERSION_NUMBER >= 1070
         auto * pl = new CMSPhysicsList;
         runManager->SetUserInitialization(pl);
         pl->SetCMSParameters();
+    #else
+        MY_G4_FATAL(
+        "YourRunAction",
+        "CMS_PHYSICS_UNSUPPORTED",
+        "The CMS physics list requires Geant4 >= 10.7."
+    );
+    #endif
     }
     else
     {

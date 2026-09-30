@@ -1,8 +1,16 @@
 #----------------------------------------------------------------------------
 # Setup the project
-cmake_minimum_required(VERSION 3.16...3.27)
+cmake_minimum_required(VERSION 2.8)
 project(G01)
+
 set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# For old version of CMake
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
 #----------------------------------------------------------------------------
 # Find Geant4 package
 find_package(Geant4 REQUIRED gdml vis_all)
@@ -10,6 +18,11 @@ find_package(Geant4 REQUIRED gdml vis_all)
 # argument is set. This is because these options do not depend on specific
 # components being available. Further details in Geant4Config.cmake.in
 
+message(STATUS "========================================")
+message(STATUS "Geant4_VERSION      = ${Geant4_VERSION}")
+message(STATUS "Geant4_INCLUDE_DIR  = ${Geant4_INCLUDE_DIR}")
+message(STATUS "Geant4_LIBRARIES    = ${Geant4_LIBRARIES}")
+message(STATUS "========================================")
 #----------------------------------------------------------------------------
 # Setup Geant4 include directories and compile definitions
 #
@@ -22,37 +35,54 @@ include_directories(${PROJECT_SOURCE_DIR}/include
                     ${Geant4_INCLUDE_DIR}
                     )
 
-file(GLOB sources   ${PROJECT_SOURCE_DIR}/src/YourDetectorConstructor.cc
-                    ${PROJECT_SOURCE_DIR}/src/CMSPhysicsList.cc
-                    ${PROJECT_SOURCE_DIR}/src/CMSHadronPhysicsFTFP_BERT.cc
-                    ${PROJECT_SOURCE_DIR}/src/YourActionInitialization.cc
-                    ${PROJECT_SOURCE_DIR}/src/YourRunAction.cc
-                    ${PROJECT_SOURCE_DIR}/src/YourEventAction.cc
-                    ${PROJECT_SOURCE_DIR}/src/YourTrackingAction.cc
-                    ${PROJECT_SOURCE_DIR}/src/YourSteppingAction.cc
-                    ${PROJECT_SOURCE_DIR}/src/YourPrimaryGenerator.cc
-                    ${PROJECT_SOURCE_DIR}/src/YourCaloSD.cc
-                    ${PROJECT_SOURCE_DIR}/src/YourClusterCut.cc
-                    ${PROJECT_SOURCE_DIR}/src/YourVCaloResponse.cc
-                    ${PROJECT_SOURCE_DIR}/src/YourInputArgsParser.cc
-                  )
-file(GLOB headers   ${PROJECT_SOURCE_DIR}/include/YourDetectorConstructor.hh
-                    ${PROJECT_SOURCE_DIR}/include/YourActionInitialization.hh
-                    ${PROJECT_SOURCE_DIR}/include/CMSPhysicsList.hh
-                    ${PROJECT_SOURCE_DIR}/include/CMSHadronPhysicsFTFP_BERT.hh
-                    ${PROJECT_SOURCE_DIR}/include/YourRunAction.hh
-                    ${PROJECT_SOURCE_DIR}/include/YourEventAction.hh
-                    ${PROJECT_SOURCE_DIR}/include/YourTrackingAction.hh
-                    ${PROJECT_SOURCE_DIR}/include/YourSteppingAction.hh
-                    ${PROJECT_SOURCE_DIR}/include/YourEventInfo.hh
-                    ${PROJECT_SOURCE_DIR}/include/YourPrimaryGenerator.hh
-                    ${PROJECT_SOURCE_DIR}/include/YourCaloSD.hh
-                    ${PROJECT_SOURCE_DIR}/include/YourClusterCut.hh
-                    ${PROJECT_SOURCE_DIR}/include/YourVCaloResponse.hh
-                    ${PROJECT_SOURCE_DIR}/include/YourEcalResponse.hh
-                    ${PROJECT_SOURCE_DIR}/include/YourHcalResponse.hh
-                    ${PROJECT_SOURCE_DIR}/include/YourInputArgsParser.hh
-                    )
+file(GLOB sources
+    ${PROJECT_SOURCE_DIR}/src/YourDetectorConstructor.cc
+    ${PROJECT_SOURCE_DIR}/src/YourActionInitialization.cc
+    ${PROJECT_SOURCE_DIR}/src/YourRunAction.cc
+    ${PROJECT_SOURCE_DIR}/src/YourEventAction.cc
+    ${PROJECT_SOURCE_DIR}/src/YourTrackingAction.cc
+    ${PROJECT_SOURCE_DIR}/src/YourSteppingAction.cc
+    ${PROJECT_SOURCE_DIR}/src/YourPrimaryGenerator.cc
+    ${PROJECT_SOURCE_DIR}/src/YourCaloSD.cc
+    ${PROJECT_SOURCE_DIR}/src/YourClusterCut.cc
+    ${PROJECT_SOURCE_DIR}/src/YourVCaloResponse.cc
+    ${PROJECT_SOURCE_DIR}/src/YourInputArgsParser.cc
+)
+
+file(GLOB headers
+    ${PROJECT_SOURCE_DIR}/include/YourDetectorConstructor.hh
+    ${PROJECT_SOURCE_DIR}/include/YourActionInitialization.hh
+    ${PROJECT_SOURCE_DIR}/include/YourRunAction.hh
+    ${PROJECT_SOURCE_DIR}/include/YourEventAction.hh
+    ${PROJECT_SOURCE_DIR}/include/YourTrackingAction.hh
+    ${PROJECT_SOURCE_DIR}/include/YourSteppingAction.hh
+    ${PROJECT_SOURCE_DIR}/include/YourEventInfo.hh
+    ${PROJECT_SOURCE_DIR}/include/YourPrimaryGenerator.hh
+    ${PROJECT_SOURCE_DIR}/include/YourCaloSD.hh
+    ${PROJECT_SOURCE_DIR}/include/YourClusterCut.hh
+    ${PROJECT_SOURCE_DIR}/include/YourVCaloResponse.hh
+    ${PROJECT_SOURCE_DIR}/include/YourEcalResponse.hh
+    ${PROJECT_SOURCE_DIR}/include/YourHcalResponse.hh
+    ${PROJECT_SOURCE_DIR}/include/YourInputArgsParser.hh
+    ${PROJECT_SOURCE_DIR}/include/G4Compat.hh
+)
+
+# CMS physics list is only available for Geant4 >= 10.2.0
+if(Geant4_VERSION VERSION_GREATER "10.2")
+    message(STATUS "Geant4 >= 10.2: enabling CMS physics list")
+
+    list(APPEND sources
+        ${PROJECT_SOURCE_DIR}/src/CMSPhysicsList.cc
+        ${PROJECT_SOURCE_DIR}/src/CMSHadronPhysicsFTFP_BERT.cc
+    )
+
+    list(APPEND headers
+        ${PROJECT_SOURCE_DIR}/include/CMSPhysicsList.hh
+        ${PROJECT_SOURCE_DIR}/include/CMSHadronPhysicsFTFP_BERT.hh
+    )
+else()
+    message(STATUS "Geant4 < 10.2: CMS physics list DISABLED")
+endif()
 
 #----------------------------------------------------------------------------
 # include ROOT dependency for histograming
