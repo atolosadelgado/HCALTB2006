@@ -124,7 +124,8 @@ def compute_response(
     xmax=80.0,
     nevents=20000,
     directoryROOTfiles="",
-    airECAL=0
+    airECAL=0.,
+    PhysicsList="CMS"
 ):
 
     # Use a fixed seed for reproducibility
@@ -132,7 +133,7 @@ def compute_response(
 
     filename = (
         f"HCALTB2006_{pname}_{penergy_GeV:.6f}_"
-        f"{nevents}evt_CMS_airECAL{airECAL}.root"
+        f"{nevents}evt_{PhysicsList}_airECAL{airECAL}.root"
     )
     if len(directoryROOTfiles) > 0:
         filename=f"{directoryROOTfiles}/{filename}"
@@ -308,7 +309,7 @@ def compute_response(
 
     canvasFileName = (
         f"HCALTB2006_{pname}_{penergy_GeV:.6f}_"
-        f"{nevents}evt_CMS_airECAL{airECAL}_reco.png"
+        f"{nevents}evt_{PhysicsList}_airECAL{airECAL}_reco.png"
     )
 
     c1.SaveAs(canvasFileName)
@@ -393,6 +394,12 @@ if __name__ == "__main__":
         default="",
         help="Directory where the ROOT files are"
     )
+    
+    parser.add_argument(
+        "--physics-list",
+        default="CMS",
+        help="Physics list used (CMS, or Geant4 reference)"
+    )
 
     args = parser.parse_args()
 
@@ -400,6 +407,7 @@ if __name__ == "__main__":
     HCAL_calibrationFactor=args.HCAL_calibrationFactor
     ECAL_smearing=args.ECAL_smearing
     HCAL_smearing=args.HCAL_smearing
+    
 
     compute_response(
         pname=args.pname,
@@ -408,5 +416,6 @@ if __name__ == "__main__":
         xmax=args.xmax,
         nevents=args.nevents,
         directoryROOTfiles=args.directoryROOTfiles,
-        airECAL=args.airECAL
+        airECAL=args.airECAL,
+        PhysicsList = args.physics_list
     )
